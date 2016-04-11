@@ -122,9 +122,8 @@ public class DialingActivity extends Fragment {
             }
             if(v.getId() ==R.id.back) {
                 if(tel.getText().toString().length()!=0) {
-                    Toast.makeText(getActivity(),"into",Toast.LENGTH_SHORT).show();
                     temp = tel.getText().toString();
-                    temp.substring(0, temp.length() - 1);
+                    temp = temp.substring(0, temp.length() - 1);
                 }
             }
             if(v.getId() ==R.id.tab_call) {
