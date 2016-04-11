@@ -18,6 +18,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".WeatherService"
+            android:enabled="true"/>
+        <receiver android:name=".StartupReceiver">
+            <intent-filter>
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+                <action android:name="com.noandroid.familycontacts.test_broadcast"/>
+                <!--<category android:name="android.intent.category.HOME"/>-->
+            </intent-filter>
+        </receiver>
     </application>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
 </manifest>

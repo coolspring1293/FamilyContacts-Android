@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">FamilyContacts</string>
     <string name="action_settings">Settings</string>
+    <string name="STATION_URL">http://106.120.82.180/static/site/nmc/themes/basic/js/common.js?v=1.0.2</string>
+    <string name="PREDICT_WEATHER_URL">http://106.120.82.180/service/data/predict/%s.json"</string>
+    <string name="REAL_TIME_WEATHER_URL">http://106.120.82.180/service/data/real/%s.json</string>
 </resources>
