@@ -29,6 +29,8 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         public final static Property Avatar = new Property(3, String.class, "avatar", false, "AVATAR");
     };
 
+    private DaoSession daoSession;
+
 
     public ContactDao(DaoConfig config) {
         super(config);
@@ -36,6 +38,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
     
     public ContactDao(DaoConfig config, DaoSession daoSession) {
         super(config, daoSession);
+        this.daoSession = daoSession;
     }
 
     /** Creates the underlying database table. */
@@ -74,6 +77,12 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (avatar != null) {
             stmt.bindString(4, avatar);
         }
+    }
+
+    @Override
+    protected void attachEntity(Contact entity) {
+        super.attachEntity(entity);
+        entity.__setDaoSession(daoSession);
     }
 
     /** @inheritdoc */

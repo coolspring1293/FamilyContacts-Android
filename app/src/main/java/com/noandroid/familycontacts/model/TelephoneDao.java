@@ -10,6 +10,8 @@ import de.greenrobot.dao.AbstractDao;
 import de.greenrobot.dao.Property;
 import de.greenrobot.dao.internal.SqlUtils;
 import de.greenrobot.dao.internal.DaoConfig;
+import de.greenrobot.dao.query.Query;
+import de.greenrobot.dao.query.QueryBuilder;
 
 import com.noandroid.familycontacts.model.Telephone;
 
@@ -17,7 +19,7 @@ import com.noandroid.familycontacts.model.Telephone;
 /** 
  * DAO for table "TELEPHONE".
 */
-public class TelephoneDao extends AbstractDao<Telephone, String> {
+public class TelephoneDao extends AbstractDao<Telephone, Long> {
 
     public static final String TABLENAME = "TELEPHONE";
 
@@ -26,13 +28,15 @@ public class TelephoneDao extends AbstractDao<Telephone, String> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Number = new Property(0, String.class, "number", true, "NUMBER");
-        public final static Property Id = new Property(1, Long.class, "id", true, "_id");
-        public final static Property Id = new Property(2, Long.class, "id", true, "_id");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Number = new Property(1, String.class, "number", false, "NUMBER");
+        public final static Property ContactId = new Property(2, Long.class, "contactId", false, "CONTACT_ID");
+        public final static Property CityId = new Property(3, Long.class, "cityId", false, "CITY_ID");
     };
 
     private DaoSession daoSession;
 
+    private Query<Telephone> contact_TelephonesQuery;
 
     public TelephoneDao(DaoConfig config) {
         super(config);
@@ -47,9 +51,13 @@ public class TelephoneDao extends AbstractDao<Telephone, String> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TELEPHONE\" (" + //
-                "\"NUMBER\" TEXT PRIMARY KEY NOT NULL ," + // 0: number
-                "\"_id\" INTEGER PRIMARY KEY ," + // 1: id
-                "\"_id\" INTEGER PRIMARY KEY );"); // 2: id
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"NUMBER\" TEXT," + // 1: number
+                "\"CONTACT_ID\" INTEGER," + // 2: contactId
+                "\"CITY_ID\" INTEGER);"); // 3: cityId
+        // Add Indexes
+        db.execSQL("CREATE INDEX " + constraint + "IDX_TELEPHONE_NUMBER ON TELEPHONE" +
+                " (\"NUMBER\");");
     }
 
     /** Drops the underlying database table. */
@@ -63,9 +71,24 @@ public class TelephoneDao extends AbstractDao<Telephone, String> {
     protected void bindValues(SQLiteStatement stmt, Telephone entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String number = entity.getNumber();
         if (number != null) {
-            stmt.bindString(1, number);
+            stmt.bindString(2, number);
+        }
+ 
+        Long contactId = entity.getContactId();
+        if (contactId != null) {
+            stmt.bindLong(3, contactId);
+        }
+ 
+        Long cityId = entity.getCityId();
+        if (cityId != null) {
+            stmt.bindLong(4, cityId);
         }
     }
 
@@ -77,15 +100,18 @@ public class TelephoneDao extends AbstractDao<Telephone, String> {
 
     /** @inheritdoc */
     @Override
-    public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public Telephone readEntity(Cursor cursor, int offset) {
         Telephone entity = new Telephone( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0) // number
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // number
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // contactId
+            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // cityId
         );
         return entity;
     }
@@ -93,20 +119,24 @@ public class TelephoneDao extends AbstractDao<Telephone, String> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, Telephone entity, int offset) {
-        entity.setNumber(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setNumber(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setContactId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setCityId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
      }
     
     /** @inheritdoc */
     @Override
-    protected String updateKeyAfterInsert(Telephone entity, long rowId) {
-        return entity.getNumber();
+    protected Long updateKeyAfterInsert(Telephone entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public String getKey(Telephone entity) {
+    public Long getKey(Telephone entity) {
         if(entity != null) {
-            return entity.getNumber();
+            return entity.getId();
         } else {
             return null;
         }
@@ -118,6 +148,21 @@ public class TelephoneDao extends AbstractDao<Telephone, String> {
         return true;
     }
     
+    /** Internal query to resolve the "telephones" to-many relationship of Contact. */
+    public List<Telephone> _queryContact_Telephones(Long contactId) {
+        synchronized (this) {
+            if (contact_TelephonesQuery == null) {
+                QueryBuilder<Telephone> queryBuilder = queryBuilder();
+                queryBuilder.where(Properties.ContactId.eq(null));
+                queryBuilder.orderRaw("T.'_id' ASC");
+                contact_TelephonesQuery = queryBuilder.build();
+            }
+        }
+        Query<Telephone> query = contact_TelephonesQuery.forCurrentThread();
+        query.setParameter(0, contactId);
+        return query.list();
+    }
+
     private String selectDeep;
 
     protected String getSelectDeep() {
@@ -129,8 +174,8 @@ public class TelephoneDao extends AbstractDao<Telephone, String> {
             builder.append(',');
             SqlUtils.appendColumns(builder, "T1", daoSession.getCityDao().getAllColumns());
             builder.append(" FROM TELEPHONE T");
-            builder.append(" LEFT JOIN CONTACT T0 ON T.\"_id\"=T0.\"_id\"");
-            builder.append(" LEFT JOIN CITY T1 ON T.\"_id\"=T1.\"_id\"");
+            builder.append(" LEFT JOIN CONTACT T0 ON T.\"CONTACT_ID\"=T0.\"_id\"");
+            builder.append(" LEFT JOIN CITY T1 ON T.\"CITY_ID\"=T1.\"_id\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }

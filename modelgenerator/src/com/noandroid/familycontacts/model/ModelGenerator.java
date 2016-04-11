@@ -1,9 +1,6 @@
 package com.noandroid.familycontacts.model;
 
-import de.greenrobot.daogenerator.DaoGenerator;
-import de.greenrobot.daogenerator.Entity;
-import de.greenrobot.daogenerator.Property;
-import de.greenrobot.daogenerator.Schema;
+import de.greenrobot.daogenerator.*;
 
 /**
  * Created by leasunhy on 4/12/16.
@@ -19,21 +16,29 @@ public class ModelGenerator {
         record.addStringProperty("telephoneNumber").notNull();
 
         Entity contact = schema.addEntity("Contact");
-        Property contactId = contact.addIdProperty().getProperty();
+        contact.addIdProperty().getProperty();
         contact.addStringProperty("name").notNull();
         contact.addStringProperty("relationship");
         contact.addStringProperty("avatar");
 
         Entity city = schema.addEntity("City");
-        Property cityId = city.addIdProperty().getProperty();
+        city.addIdProperty().getProperty();
         city.addStringProperty("province").notNull();
         city.addStringProperty("cityname").notNull();
         city.addStringProperty("weatherCode").notNull();
 
         Entity telephone = schema.addEntity("Telephone");
-        telephone.addStringProperty("number").primaryKey();
+        Property telephoneOriId = telephone.addIdProperty().getProperty();
+        telephone.addStringProperty("number").index();
+        Property contactId = telephone.addLongProperty("contactId").getProperty();
+        Property cityId = telephone.addLongProperty("cityId").getProperty();
+
         telephone.addToOne(contact, contactId);
         telephone.addToOne(city, cityId);
+
+        ToMany contactToTelephones = contact.addToMany(telephone, contactId);
+        contactToTelephones.setName("telephones");
+        contactToTelephones.orderAsc(telephoneOriId);
 
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }
