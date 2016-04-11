@@ -26,6 +26,8 @@ public class ModelGenerator {
         city.addStringProperty("province").notNull();
         city.addStringProperty("cityname").notNull();
         city.addStringProperty("weatherCode").notNull();
+        city.addStringProperty("weatherInfo");
+        city.addStringProperty("temperature");
 
         Entity telephone = schema.addEntity("Telephone");
         Property telephoneOriId = telephone.addIdProperty().getProperty();

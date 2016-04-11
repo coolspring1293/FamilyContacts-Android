@@ -13,6 +13,8 @@ public class City {
     private String cityname;
     /** Not-null value. */
     private String weatherCode;
+    private String weatherInfo;
+    private String temperature;
 
     public City() {
     }
@@ -21,11 +23,13 @@ public class City {
         this.id = id;
     }
 
-    public City(Long id, String province, String cityname, String weatherCode) {
+    public City(Long id, String province, String cityname, String weatherCode, String weatherInfo, String temperature) {
         this.id = id;
         this.province = province;
         this.cityname = cityname;
         this.weatherCode = weatherCode;
+        this.weatherInfo = weatherInfo;
+        this.temperature = temperature;
     }
 
     public Long getId() {
@@ -64,6 +68,22 @@ public class City {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setWeatherCode(String weatherCode) {
         this.weatherCode = weatherCode;
+    }
+
+    public String getWeatherInfo() {
+        return weatherInfo;
+    }
+
+    public void setWeatherInfo(String weatherInfo) {
+        this.weatherInfo = weatherInfo;
+    }
+
+    public String getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(String temperature) {
+        this.temperature = temperature;
     }
 
 }
