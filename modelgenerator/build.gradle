@@ -1,0 +1,28 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'application'
+
+group = 'org.greenrobot'
+archivesBaseName = 'familycontacts-model-generator'
+version = '1.0.0'
+sourceCompatibility = 1.6
+mainClassName = "com.noandroid.familycontacts.model.ModelGenerator"
+
+dependencies {
+    compile 'de.greenrobot:greendao-generator:2.1.0'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+            srcDir 'src-gen'
+        }
+    }
+}
+
+artifacts {
+    archives jar
+}
+
+
