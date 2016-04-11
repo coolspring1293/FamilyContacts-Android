@@ -21,7 +21,7 @@ public class DialingActivity extends Fragment {
     private FragmentActivity mActivity;
 
     private TextView mText;
-    private Button tab_1,tab_2,tab_3,tab_4,tab_5,tab_6,tab_7,tab_8,tab_9,tab_0,tab_star,tab_jing,tab_call;
+    private Button tab_1,tab_2,tab_3,tab_4,tab_5,tab_6,tab_7,tab_8,tab_9,tab_0,tab_star,tab_jing,tab_call,back;
     private TextView tel;
     public static DialingActivity newInstance(int index) {
         DialingActivity f = new DialingActivity();
@@ -64,6 +64,7 @@ public class DialingActivity extends Fragment {
         tab_star = (Button)mParent.findViewById(R.id.tab_star);
         tab_jing = (Button)mParent.findViewById(R.id.tab_jing);
         tab_call = (Button)mParent.findViewById(R.id.tab_call);
+        back = (Button)mParent.findViewById(R.id.back);
         tel = (TextView)mParent.findViewById(R.id.text_show);
         tab_1.setOnClickListener(new tabClick());
         tab_2.setOnClickListener(new tabClick());
@@ -76,6 +77,9 @@ public class DialingActivity extends Fragment {
         tab_9.setOnClickListener(new tabClick());
         tab_0.setOnClickListener(new tabClick());
         tab_call.setOnClickListener(new tabClick());
+        tab_jing.setOnClickListener(new tabClick());
+        tab_star.setOnClickListener(new tabClick());
+        back.setOnClickListener(new tabClick());
 
     }
     private class tabClick implements View.OnClickListener {
@@ -115,6 +119,13 @@ public class DialingActivity extends Fragment {
             }
             if(v.getId() ==R.id.tab_jing) {
                 temp = tel.getText().toString() + "#";
+            }
+            if(v.getId() ==R.id.back) {
+                if(tel.getText().toString().length()!=0) {
+                    Toast.makeText(getActivity(),"into",Toast.LENGTH_SHORT).show();
+                    temp = tel.getText().toString();
+                    temp.substring(0, temp.length() - 1);
+                }
             }
             if(v.getId() ==R.id.tab_call) {
                 if(tel.getText().toString().length()!= 0 ) {
