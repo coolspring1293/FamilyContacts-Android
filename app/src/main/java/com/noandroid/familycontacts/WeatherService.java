@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,9 +21,11 @@ public class WeatherService extends IntentService {
     public static final String ACTION = "ACTION";
     public static final int REFRESH_STATION_LIST = 0;
     public static final int REFRESH_WEATHER_PREDICT = 1;
-    private static final String stationUrl;
-    private static final String realtimeWeatherUrl;
-    private static final String predictWeatherUrl;
+    private static String stationUrl;
+    private static String realtimeWeatherUrl;
+    private static String predictWeatherUrl;
+    private static ObjectMapper jsonMapper = new ObjectMapper();
+
     final String appname = "Weather Service";
     public WeatherService() {
         super("WeatherService");
@@ -30,13 +34,21 @@ public class WeatherService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (stationUrl == null) {
+            stationUrl = getString(R.string.STATION_URL);
+        }
+        if (realtimeWeatherUrl == null) {
+            realtimeWeatherUrl = getString(R.string.REAL_TIME_WEATHER_URL);
+        }
+        if (predictWeatherUrl == null) {
+            predictWeatherUrl = getString(R.string.PREDICT_WEATHER_URL);
+        }
         Log.d(appname, "Weather onCreate");
     }
 
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-        if
 
         Log.d(appname, "Weather onStart");
     }
@@ -60,7 +72,8 @@ public class WeatherService extends IntentService {
                 break;
         }
     }
-    private static String getContent(String URLStr, int trylimits) {
+
+    private static String getUrlContent(String URLStr, int trylimits) {
         int tryCount = 0;
         String result = null;
         HttpURLConnection connection = null;
