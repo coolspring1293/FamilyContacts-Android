@@ -14,7 +14,8 @@ import android.widget.Toast;
  * Created by Hsiaotsefeng on 2016/4/7.
  */
 public class StartupReceiver extends BroadcastReceiver {
-    static final int ALARM_ID = 0;
+    static final int ALARM_REFRESH_STATION = 0;
+    static final int ALARM_REFRESH_CITY_LIST = 1;
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(context.getString(R.string.app_name), "StartupReceiver received");
@@ -23,7 +24,7 @@ public class StartupReceiver extends BroadcastReceiver {
 //        context.startService(serviceIntent);
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getService(context, ALARM_ID, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getService(context, ALARM_REFRESH_STATION, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),
                 10 * 1000, pendingIntent);
 
