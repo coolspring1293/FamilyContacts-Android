@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <RelativeLayout
+        android:id="@+id/current_task_title"
+        android:layout_height="wrap_content"
+        android:background="#093D5A"
+        android:layout_width="fill_parent">"
+        <TextView
+            android:id="@+id/fragment_home_text"
+            android:layout_width="fill_parent"
+            android:paddingTop="6sp"
+            android:paddingBottom="6sp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/tab_contacts"
+            android:textSize="20sp"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textScaleX="1.1"/>"
+    </RelativeLayout>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight = "40dp"
+        android:layout_height="40dp"
+        android:id="@+id/text_show"
+        android:background="#ffffff"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="20dp"/>
+   <LinearLayout
+       android:layout_height="wrap_content"
+       android:layout_width="match_parent"
+       android:layout_below="@id/text_show"
+       android:id="@+id/number_row1"
+       android:orientation="horizontal"
+       android:layout_marginTop="20dp">
+
+       <Button
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:background="@layout/shape"
+           android:text = "@string/tab_1"
+           android:id= "@+id/tab_1"
+           android:textColor="#FFFFFF"
+           android:layout_marginLeft="20dp"/>
+       <Button
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:background="@layout/shape"
+           android:text = "@string/tab_2"
+           android:id= "@+id/tab_2"
+           android:textColor="#FFFFFF"
+           android:layout_marginLeft="20dp"/>
+       <Button
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:background="@layout/shape"
+           android:text = "@string/tab_3"
+           android:id= "@+id/tab_3"
+           android:textColor="#FFFFFF"
+           android:layout_marginLeft="20dp"
+           android:layout_marginRight="20dp"/>
+   </LinearLayout>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/number_row2"
+        android:layout_below="@id/number_row1"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_4"
+            android:id= "@+id/tab_4"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_5"
+            android:id= "@+id/tab_5"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_6"
+            android:id= "@+id/tab_6"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/number_row3"
+        android:layout_below="@id/number_row2"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_7"
+            android:id= "@+id/tab_7"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_8"
+            android:id= "@+id/tab_8"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_9"
+            android:id= "@+id/tab_9"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:id="@+id/number_row4"
+        android:layout_below="@id/number_row3"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_star"
+            android:id= "@+id/tab_star"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_0"
+            android:id= "@+id/tab_0"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@layout/shape"
+            android:text = "@string/tab_jing"
+            android:id= "@+id/tab_jing"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/number_row4"
+        android:layout_marginTop="20dp">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tab_call"
+            android:text="@string/tab_call"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@layout/shape_white"
+            />
+    </LinearLayout>
+</RelativeLayout>
+</LinearLayout>
