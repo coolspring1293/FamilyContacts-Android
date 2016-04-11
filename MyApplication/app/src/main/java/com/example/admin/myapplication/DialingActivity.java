@@ -116,16 +116,18 @@ public class DialingActivity extends Fragment {
             if(v.getId() ==R.id.tab_jing) {
                 temp = tel.getText().toString() + "#";
             }
-            tel.setText(temp);
             if(v.getId() ==R.id.tab_call) {
                 if(tel.getText().toString().length()!= 0 ) {
+                    Toast.makeText(getActivity(),tel.getText().toString(),Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel://" + tel.getText().toString()));
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getActivity(),tel.getText().toString().length(),Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity(),tel.getText().toString().length(),Toast.LENGTH_SHORT).show();
                     Toast.makeText(getActivity(),"请输入号码",Toast.LENGTH_SHORT).show();
                 }
             }
+            tel.setText(temp);
+
         }
     }
 
