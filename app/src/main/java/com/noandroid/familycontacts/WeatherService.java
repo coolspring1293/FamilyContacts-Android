@@ -18,6 +18,7 @@ import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import com.noandroid.familycontacts.model.City
 
 /**
  * Created by Hsiaotsefeng on 2016/4/7.
@@ -27,6 +28,7 @@ public class WeatherService extends IntentService {
     public static final String CITYCODE = "CityCode";
     public static final int REFRESH_STATION_LIST = 0;
     public static final int REFRESH_WEATHER_PREDICT = 1;
+    public static final int REFRESH_REAL_WEATHER_LIST = 2;
     private static String stationUrl;
     private static String realtimeWeatherUrl;
     private static String predictWeatherUrl;
@@ -55,7 +57,6 @@ public class WeatherService extends IntentService {
     @Override
     public void onStart(Intent intent, int startId) {
         super.onStart(intent, startId);
-
         Log.d(appname, "Weather onStart");
     }
 
@@ -86,12 +87,16 @@ public class WeatherService extends IntentService {
                 break;
             case REFRESH_WEATHER_PREDICT:
                 Log.d(appname, "RREFRESH_WEATHER_PREDICT");
-                String cityCode = workIntent.getStringExtra(CITYCODE);
-                RealTimeWeather w = getRealTimeWeather(cityCode);
-                if (w != null) {
-                    Log.d(appname, w.toString());
-                }
+//                String cityCode = workIntent.getStringExtra(CITYCODE);
+//                RealTimeWeather w = getRealTimeWeather(cityCode);
+//                if (w != null) {
+//                    Log.d(appname, w.toString());
+//                }
                 break;
+            case REFRESH_REAL_WEATHER_LIST:
+                Log.d(appname, "REFRESH_REAL_WEATHER_LIST");
+                break;
+
         }
     }
 
@@ -114,12 +119,12 @@ public class WeatherService extends IntentService {
         }
         HashMap<String, Hashtable<String, String>> cityList = new HashMap<>();
         for (JsonNode provinceNode: rootNode) {
-            Province province = Province.fromJsonNode(provinceNode);
+            ProvinceJsonHelper provinceJsonHelper = ProvinceJsonHelper.fromJsonNode(provinceNode);
             Hashtable<String, String> provCities = new Hashtable<>();
-            for (City city : province.getCities()) {
-                provCities.put(city.getName(), city.getLongCode());
+            for (CityJsonHelper cityJsonHelper : provinceJsonHelper.getCities()) {
+                provCities.put(cityJsonHelper.getName(), cityJsonHelper.getLongCode());
             }
-            cityList.put(province.getName(), provCities);
+            cityList.put(provinceJsonHelper.getName(), provCities);
         }
         return cityList;
     }
@@ -136,6 +141,7 @@ public class WeatherService extends IntentService {
         }
         return null;
     }
+
     private static String getUrlContent(String URLStr, int trylimits) {
         int tryCount = 0;
         String result = null;
@@ -179,13 +185,13 @@ public class WeatherService extends IntentService {
 
 }
 
-class Province {
+class ProvinceJsonHelper {
     public static final int PCODEIdx = 0;
     public static final int NAMEIdx = 1;
     public static final int CITIESIdx = 2;
     private final String pCode;
     private final String name;
-    private final List<City> cities;
+    private final List<CityJsonHelper> cities;
 
 
     public String getCode() {
@@ -196,11 +202,11 @@ class Province {
         return name;
     }
 
-    public List<City> getCities() {
+    public List<CityJsonHelper> getCities() {
         return cities;
     }
 
-    public Province(String name, String pCode, List<City> cities) {
+    public ProvinceJsonHelper(String name, String pCode, List<CityJsonHelper> cities) {
         this.name = name;
         this.pCode = pCode;
         this.cities = cities;
@@ -208,26 +214,26 @@ class Province {
 
     @Override
     public String toString() {
-        return "WeatherFactory.Province{" +
+        return "WeatherFactory.ProvinceJsonHelper{" +
                 "pCode=" + pCode +
                 ", name='" + name + '\'' +
                 ", cities=" + cities +
                 '}';
     }
 
-    public static Province fromJsonNode(JsonNode provinceNode) {
-        LinkedList<City> cities = new LinkedList<City>();
-        for (JsonNode city : provinceNode.get(Province.CITIESIdx)) {
-            cities.add(City.fromJsonNode(city));
+    public static ProvinceJsonHelper fromJsonNode(JsonNode provinceNode) {
+        LinkedList<CityJsonHelper> cities = new LinkedList<CityJsonHelper>();
+        for (JsonNode city : provinceNode.get(ProvinceJsonHelper.CITIESIdx)) {
+            cities.add(CityJsonHelper.fromJsonNode(city));
         }
-        return new Province(
-                provinceNode.get(Province.NAMEIdx).asText(),
-                provinceNode.get(Province.PCODEIdx).asText(),
+        return new ProvinceJsonHelper(
+                provinceNode.get(ProvinceJsonHelper.NAMEIdx).asText(),
+                provinceNode.get(ProvinceJsonHelper.PCODEIdx).asText(),
                 cities);
     }
 }
 
-class City {
+class CityJsonHelper {
     private String name;
     private String shortCode;
     private String longCode;
@@ -237,7 +243,7 @@ class City {
     private static final int SHORTCODEIdx = 2;
     private static final int PINYINIdx = 3;
 
-    public City(String name, String shortCode, String longCode, String pinyin) {
+    public CityJsonHelper(String name, String shortCode, String longCode, String pinyin) {
         this.name = name;
         this.shortCode = shortCode;
         this.longCode = longCode;
@@ -265,18 +271,18 @@ class City {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        City city = (City) o;
+        CityJsonHelper cityJsonHelper = (CityJsonHelper) o;
 
-        if (longCode.equals(city.longCode)) return false;
-        if (shortCode.equals(city.shortCode)) return false;
-        if (name != null ? !name.equals(city.name) : city.name != null) return false;
-        return !(pinyin != null ? !pinyin.equals(city.pinyin) : city.pinyin != null);
+        if (longCode.equals(cityJsonHelper.longCode)) return false;
+        if (shortCode.equals(cityJsonHelper.shortCode)) return false;
+        if (name != null ? !name.equals(cityJsonHelper.name) : cityJsonHelper.name != null) return false;
+        return !(pinyin != null ? !pinyin.equals(cityJsonHelper.pinyin) : cityJsonHelper.pinyin != null);
 
     }
 
     @Override
     public String toString() {
-        return "WeatherFactory.City{" +
+        return "WeatherFactory.CityJsonHelper{" +
                 "name='" + name + '\'' +
                 ", shortCode=" + shortCode +
                 ", longCode=" + longCode +
@@ -284,11 +290,11 @@ class City {
                 '}';
     }
 
-    public static City fromJsonNode(JsonNode jsonNode) {
-        return new City(jsonNode.get(City.NAMEIdx).asText(),
-                jsonNode.get(City.SHORTCODEIdx).asText(),
-                jsonNode.get(City.LONGCODEIdx).asText(),
-                jsonNode.get(City.PINYINIdx).asText());
+    public static CityJsonHelper fromJsonNode(JsonNode jsonNode) {
+        return new CityJsonHelper(jsonNode.get(CityJsonHelper.NAMEIdx).asText(),
+                jsonNode.get(CityJsonHelper.SHORTCODEIdx).asText(),
+                jsonNode.get(CityJsonHelper.LONGCODEIdx).asText(),
+                jsonNode.get(CityJsonHelper.PINYINIdx).asText());
     }
 }
 
