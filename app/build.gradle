@@ -34,11 +34,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.android.support:design:23.2.1'
-<<<<<<< HEAD
     compile 'com.fasterxml.jackson.core:jackson-core:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
-=======
     compile 'de.greenrobot:greendao:2.1.0'
->>>>>>> 6fec04b5728b8be3bee989f9fd295cd3adc1bf5c
 }
