@@ -21,7 +21,7 @@ public class DatabaseHelper {
         if (firstTime) {
             // copy default database
             if (copyDatabase(context))
-                prefs.edit().putBoolean("FIRST_TIME", false);
+                prefs.edit().putBoolean("FIRST_TIME", false).commit();
         }
         return new DaoMaster.DevOpenHelper(context, "contacts-db", null);
     }
