@@ -13,10 +13,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
-import com.noandroid.familycontacts.model.Contact;
-import com.noandroid.familycontacts.model.ContactDao;
-import com.noandroid.familycontacts.model.DaoMaster;
-import com.noandroid.familycontacts.model.DaoSession;
+import com.noandroid.familycontacts.model.*;
+
+import java.io.IOException;
 
 public class ModelExampleActivity extends AppCompatActivity {
 
@@ -33,21 +32,25 @@ public class ModelExampleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // TODO(leasunhy): add more examples on using the database
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "contacts-db", null);
+        DaoMaster.DevOpenHelper helper = DatabaseHelper.getDB(this);
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         contactDao = daoSession.getContactDao();
-
         updateListContent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addContact();
-                Snackbar.make(view, "Added contact", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                addContact();
+//                Snackbar.make(view, "Added contact", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                City myCity = daoSession.getTelInitialDao().queryBuilder().where(
+                        TelInitialDao.Properties.Initial.eq("1881946")).build().unique().getCity();
+                String displayStr = String.format("1881946 is in %s, the weather code of which is %s.",
+                        myCity.getCityname(), myCity.getWeatherCode());
+                Snackbar.make(view, displayStr, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
     }
