@@ -1,6 +1,7 @@
 package com.noandroid.familycontacts;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import com.noandroid.familycontacts.model.*;
 
@@ -51,6 +54,16 @@ public class ModelExampleActivity extends AppCompatActivity {
                 String displayStr = String.format("1881946 is in %s, the weather code of which is %s.",
                         myCity.getCityname(), myCity.getWeatherCode());
                 Snackbar.make(view, displayStr, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
+
+        Button btn = (Button) findViewById(R.id.button);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addContact();
+                Snackbar.make(view, "Added contact", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
     }
