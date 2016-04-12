@@ -7,7 +7,7 @@ import de.greenrobot.daogenerator.*;
  */
 public class ModelGenerator {
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1000, "com.noandroid.familycontacts.model");
+        Schema schema = new Schema(1001, "com.noandroid.familycontacts.model");
 
         // Record
         Entity record = schema.addEntity("Record");
@@ -36,17 +36,30 @@ public class ModelGenerator {
         Entity telephone = schema.addEntity("Telephone");
         Property telephoneOriId = telephone.addIdProperty().getProperty();
         telephone.addStringProperty("number").index();
-        Property contactId = telephone.addLongProperty("contactId").getProperty();
-        Property cityId = telephone.addLongProperty("cityId").getProperty();
 
         // Relationship: Telephone-City
-        telephone.addToOne(city, cityId);
+        {
+            Property telCityId = telephone.addLongProperty("telCityId").getProperty();
+            telephone.addToOne(city, telCityId);
+        }
 
         // Relationship: Telephone-Contact
-        telephone.addToOne(contact, contactId);
-        ToMany contactToTelephones = contact.addToMany(telephone, contactId);
-        contactToTelephones.setName("telephones");
-        contactToTelephones.orderAsc(telephoneOriId);
+        {
+            Property contactId = telephone.addLongProperty("contactId").getProperty();
+            telephone.addToOne(contact, contactId);
+            ToMany contactToTelephones = contact.addToMany(telephone, contactId);
+            contactToTelephones.setName("telephones");
+            contactToTelephones.orderAsc(telephoneOriId);
+        }
+
+        // TelephoneInitial
+        Entity telInitial = schema.addEntity("TelInitial");
+        telInitial.addStringProperty("initial").primaryKey();
+        // Relationship: TelephoneInitial-City
+        {
+            Property cityId = telInitial.addLongProperty("telinitCityId").getProperty();
+            telInitial.addToOne(city, cityId);
+        }
 
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }

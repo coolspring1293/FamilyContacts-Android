@@ -33,7 +33,7 @@ public class ModelExampleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // TODO(leasunhy): add more examples on using the database
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "contacts-db", null);
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();

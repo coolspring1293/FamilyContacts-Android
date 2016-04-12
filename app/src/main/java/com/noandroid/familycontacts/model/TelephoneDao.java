@@ -30,8 +30,8 @@ public class TelephoneDao extends AbstractDao<Telephone, Long> {
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Number = new Property(1, String.class, "number", false, "NUMBER");
-        public final static Property ContactId = new Property(2, Long.class, "contactId", false, "CONTACT_ID");
-        public final static Property CityId = new Property(3, Long.class, "cityId", false, "CITY_ID");
+        public final static Property TelCityId = new Property(2, Long.class, "telCityId", false, "TEL_CITY_ID");
+        public final static Property ContactId = new Property(3, Long.class, "contactId", false, "CONTACT_ID");
     };
 
     private DaoSession daoSession;
@@ -53,8 +53,8 @@ public class TelephoneDao extends AbstractDao<Telephone, Long> {
         db.execSQL("CREATE TABLE " + constraint + "\"TELEPHONE\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NUMBER\" TEXT," + // 1: number
-                "\"CONTACT_ID\" INTEGER," + // 2: contactId
-                "\"CITY_ID\" INTEGER);"); // 3: cityId
+                "\"TEL_CITY_ID\" INTEGER," + // 2: telCityId
+                "\"CONTACT_ID\" INTEGER);"); // 3: contactId
         // Add Indexes
         db.execSQL("CREATE INDEX " + constraint + "IDX_TELEPHONE_NUMBER ON TELEPHONE" +
                 " (\"NUMBER\");");
@@ -81,14 +81,14 @@ public class TelephoneDao extends AbstractDao<Telephone, Long> {
             stmt.bindString(2, number);
         }
  
-        Long contactId = entity.getContactId();
-        if (contactId != null) {
-            stmt.bindLong(3, contactId);
+        Long telCityId = entity.getTelCityId();
+        if (telCityId != null) {
+            stmt.bindLong(3, telCityId);
         }
  
-        Long cityId = entity.getCityId();
-        if (cityId != null) {
-            stmt.bindLong(4, cityId);
+        Long contactId = entity.getContactId();
+        if (contactId != null) {
+            stmt.bindLong(4, contactId);
         }
     }
 
@@ -110,8 +110,8 @@ public class TelephoneDao extends AbstractDao<Telephone, Long> {
         Telephone entity = new Telephone( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // number
-            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // contactId
-            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // cityId
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2), // telCityId
+            cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3) // contactId
         );
         return entity;
     }
@@ -121,8 +121,8 @@ public class TelephoneDao extends AbstractDao<Telephone, Long> {
     public void readEntity(Cursor cursor, Telephone entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setNumber(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setContactId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
-        entity.setCityId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
+        entity.setTelCityId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
+        entity.setContactId(cursor.isNull(offset + 3) ? null : cursor.getLong(offset + 3));
      }
     
     /** @inheritdoc */
@@ -170,12 +170,12 @@ public class TelephoneDao extends AbstractDao<Telephone, Long> {
             StringBuilder builder = new StringBuilder("SELECT ");
             SqlUtils.appendColumns(builder, "T", getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T0", daoSession.getContactDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T0", daoSession.getCityDao().getAllColumns());
             builder.append(',');
-            SqlUtils.appendColumns(builder, "T1", daoSession.getCityDao().getAllColumns());
+            SqlUtils.appendColumns(builder, "T1", daoSession.getContactDao().getAllColumns());
             builder.append(" FROM TELEPHONE T");
-            builder.append(" LEFT JOIN CONTACT T0 ON T.\"CONTACT_ID\"=T0.\"_id\"");
-            builder.append(" LEFT JOIN CITY T1 ON T.\"CITY_ID\"=T1.\"_id\"");
+            builder.append(" LEFT JOIN CITY T0 ON T.\"TEL_CITY_ID\"=T0.\"_id\"");
+            builder.append(" LEFT JOIN CONTACT T1 ON T.\"CONTACT_ID\"=T1.\"_id\"");
             builder.append(' ');
             selectDeep = builder.toString();
         }
@@ -186,12 +186,12 @@ public class TelephoneDao extends AbstractDao<Telephone, Long> {
         Telephone entity = loadCurrent(cursor, 0, lock);
         int offset = getAllColumns().length;
 
-        Contact contact = loadCurrentOther(daoSession.getContactDao(), cursor, offset);
-        entity.setContact(contact);
-        offset += daoSession.getContactDao().getAllColumns().length;
-
         City city = loadCurrentOther(daoSession.getCityDao(), cursor, offset);
         entity.setCity(city);
+        offset += daoSession.getCityDao().getAllColumns().length;
+
+        Contact contact = loadCurrentOther(daoSession.getContactDao(), cursor, offset);
+        entity.setContact(contact);
 
         return entity;    
     }
