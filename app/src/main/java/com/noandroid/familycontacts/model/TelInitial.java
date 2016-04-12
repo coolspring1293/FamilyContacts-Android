@@ -9,6 +9,7 @@ import de.greenrobot.dao.DaoException;
  */
 public class TelInitial {
 
+    private Long id;
     private String initial;
     private Long telinitCityId;
 
@@ -25,11 +26,12 @@ public class TelInitial {
     public TelInitial() {
     }
 
-    public TelInitial(String initial) {
-        this.initial = initial;
+    public TelInitial(Long id) {
+        this.id = id;
     }
 
-    public TelInitial(String initial, Long telinitCityId) {
+    public TelInitial(Long id, String initial, Long telinitCityId) {
+        this.id = id;
         this.initial = initial;
         this.telinitCityId = telinitCityId;
     }
@@ -38,6 +40,14 @@ public class TelInitial {
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getTelInitialDao() : null;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getInitial() {

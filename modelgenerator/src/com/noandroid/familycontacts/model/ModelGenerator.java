@@ -28,7 +28,7 @@ public class ModelGenerator {
         city.addIdProperty().getProperty();
         city.addStringProperty("province").notNull();
         city.addStringProperty("cityname").notNull();
-        city.addStringProperty("weatherCode").notNull();
+        city.addStringProperty("weatherCode");
         city.addStringProperty("weatherInfo");
         city.addStringProperty("temperature");
 
@@ -38,10 +38,7 @@ public class ModelGenerator {
         telephone.addStringProperty("number").index();
 
         // Relationship: Telephone-City
-        {
-            Property telCityId = telephone.addLongProperty("telCityId").getProperty();
-            telephone.addToOne(city, telCityId);
-        }
+        telephone.addToOne(city, telephone.addLongProperty("telCityId").getProperty());
 
         // Relationship: Telephone-Contact
         {
@@ -54,12 +51,11 @@ public class ModelGenerator {
 
         // TelephoneInitial
         Entity telInitial = schema.addEntity("TelInitial");
-        telInitial.addStringProperty("initial").primaryKey();
+        telInitial.addIdProperty();
+        telInitial.addStringProperty("initial").index();
+
         // Relationship: TelephoneInitial-City
-        {
-            Property cityId = telInitial.addLongProperty("telinitCityId").getProperty();
-            telInitial.addToOne(city, cityId);
-        }
+        telInitial.addToOne(city, telInitial.addLongProperty("telinitCityId").getProperty());
 
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }

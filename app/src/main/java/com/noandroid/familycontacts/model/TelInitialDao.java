@@ -17,7 +17,7 @@ import com.noandroid.familycontacts.model.TelInitial;
 /** 
  * DAO for table "TEL_INITIAL".
 */
-public class TelInitialDao extends AbstractDao<TelInitial, String> {
+public class TelInitialDao extends AbstractDao<TelInitial, Long> {
 
     public static final String TABLENAME = "TEL_INITIAL";
 
@@ -26,8 +26,9 @@ public class TelInitialDao extends AbstractDao<TelInitial, String> {
      * Can be used for QueryBuilder and for referencing column names.
     */
     public static class Properties {
-        public final static Property Initial = new Property(0, String.class, "initial", true, "INITIAL");
-        public final static Property TelinitCityId = new Property(1, Long.class, "telinitCityId", false, "TELINIT_CITY_ID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Initial = new Property(1, String.class, "initial", false, "INITIAL");
+        public final static Property TelinitCityId = new Property(2, Long.class, "telinitCityId", false, "TELINIT_CITY_ID");
     };
 
     private DaoSession daoSession;
@@ -46,8 +47,12 @@ public class TelInitialDao extends AbstractDao<TelInitial, String> {
     public static void createTable(SQLiteDatabase db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"TEL_INITIAL\" (" + //
-                "\"INITIAL\" TEXT PRIMARY KEY NOT NULL ," + // 0: initial
-                "\"TELINIT_CITY_ID\" INTEGER);"); // 1: telinitCityId
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"INITIAL\" TEXT," + // 1: initial
+                "\"TELINIT_CITY_ID\" INTEGER);"); // 2: telinitCityId
+        // Add Indexes
+        db.execSQL("CREATE INDEX " + constraint + "IDX_TEL_INITIAL_INITIAL ON TEL_INITIAL" +
+                " (\"INITIAL\");");
     }
 
     /** Drops the underlying database table. */
@@ -61,14 +66,19 @@ public class TelInitialDao extends AbstractDao<TelInitial, String> {
     protected void bindValues(SQLiteStatement stmt, TelInitial entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String initial = entity.getInitial();
         if (initial != null) {
-            stmt.bindString(1, initial);
+            stmt.bindString(2, initial);
         }
  
         Long telinitCityId = entity.getTelinitCityId();
         if (telinitCityId != null) {
-            stmt.bindLong(2, telinitCityId);
+            stmt.bindLong(3, telinitCityId);
         }
     }
 
@@ -80,16 +90,17 @@ public class TelInitialDao extends AbstractDao<TelInitial, String> {
 
     /** @inheritdoc */
     @Override
-    public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     /** @inheritdoc */
     @Override
     public TelInitial readEntity(Cursor cursor, int offset) {
         TelInitial entity = new TelInitial( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // initial
-            cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1) // telinitCityId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // initial
+            cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2) // telinitCityId
         );
         return entity;
     }
@@ -97,21 +108,23 @@ public class TelInitialDao extends AbstractDao<TelInitial, String> {
     /** @inheritdoc */
     @Override
     public void readEntity(Cursor cursor, TelInitial entity, int offset) {
-        entity.setInitial(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setTelinitCityId(cursor.isNull(offset + 1) ? null : cursor.getLong(offset + 1));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setInitial(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setTelinitCityId(cursor.isNull(offset + 2) ? null : cursor.getLong(offset + 2));
      }
     
     /** @inheritdoc */
     @Override
-    protected String updateKeyAfterInsert(TelInitial entity, long rowId) {
-        return entity.getInitial();
+    protected Long updateKeyAfterInsert(TelInitial entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     /** @inheritdoc */
     @Override
-    public String getKey(TelInitial entity) {
+    public Long getKey(TelInitial entity) {
         if(entity != null) {
-            return entity.getInitial();
+            return entity.getId();
         } else {
             return null;
         }
