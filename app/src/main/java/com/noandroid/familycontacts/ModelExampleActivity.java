@@ -1,6 +1,7 @@
 package com.noandroid.familycontacts;
 
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,11 +13,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
-import com.noandroid.familycontacts.model.Contact;
-import com.noandroid.familycontacts.model.ContactDao;
-import com.noandroid.familycontacts.model.DaoMaster;
-import com.noandroid.familycontacts.model.DaoSession;
+import com.noandroid.familycontacts.model.*;
+
+import java.io.IOException;
 
 public class ModelExampleActivity extends AppCompatActivity {
 
@@ -33,16 +35,30 @@ public class ModelExampleActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // TODO(leasunhy): add more examples on using the database
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "notes-db", null);
+        DaoMaster.DevOpenHelper helper = DatabaseHelper.getDB(this);
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         contactDao = daoSession.getContactDao();
-
         updateListContent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                addContact();
+//                Snackbar.make(view, "Added contact", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                City myCity = daoSession.getTelInitialDao().queryBuilder().where(
+                        TelInitialDao.Properties.Initial.eq("1881946")).build().unique().getCity();
+                String displayStr = String.format("1881946 is in %s, the weather code of which is %s.",
+                        myCity.getCityname(), myCity.getWeatherCode());
+                Snackbar.make(view, displayStr, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
+
+        Button btn = (Button) findViewById(R.id.button);
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addContact();

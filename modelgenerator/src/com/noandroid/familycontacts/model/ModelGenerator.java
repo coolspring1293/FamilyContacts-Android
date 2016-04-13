@@ -7,7 +7,7 @@ import de.greenrobot.daogenerator.*;
  */
 public class ModelGenerator {
     public static void main(String[] args) throws Exception {
-        Schema schema = new Schema(1000, "com.noandroid.familycontacts.model");
+        Schema schema = new Schema(1001, "com.noandroid.familycontacts.model");
 
         // Record
         Entity record = schema.addEntity("Record");
@@ -28,7 +28,7 @@ public class ModelGenerator {
         city.addIdProperty().getProperty();
         city.addStringProperty("province").notNull();
         city.addStringProperty("cityname").notNull();
-        city.addStringProperty("weatherCode").notNull();
+        city.addStringProperty("weatherCode");
         city.addStringProperty("weatherInfo");
         city.addStringProperty("temperature");
 
@@ -36,17 +36,26 @@ public class ModelGenerator {
         Entity telephone = schema.addEntity("Telephone");
         Property telephoneOriId = telephone.addIdProperty().getProperty();
         telephone.addStringProperty("number").index();
-        Property contactId = telephone.addLongProperty("contactId").getProperty();
-        Property cityId = telephone.addLongProperty("cityId").getProperty();
 
         // Relationship: Telephone-City
-        telephone.addToOne(city, cityId);
+        telephone.addToOne(city, telephone.addLongProperty("telCityId").getProperty());
 
         // Relationship: Telephone-Contact
-        telephone.addToOne(contact, contactId);
-        ToMany contactToTelephones = contact.addToMany(telephone, contactId);
-        contactToTelephones.setName("telephones");
-        contactToTelephones.orderAsc(telephoneOriId);
+        {
+            Property contactId = telephone.addLongProperty("contactId").getProperty();
+            telephone.addToOne(contact, contactId);
+            ToMany contactToTelephones = contact.addToMany(telephone, contactId);
+            contactToTelephones.setName("telephones");
+            contactToTelephones.orderAsc(telephoneOriId);
+        }
+
+        // TelephoneInitial
+        Entity telInitial = schema.addEntity("TelInitial");
+        telInitial.addIdProperty();
+        telInitial.addStringProperty("initial").index();
+
+        // Relationship: TelephoneInitial-City
+        telInitial.addToOne(city, telInitial.addLongProperty("telinitCityId").getProperty());
 
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }

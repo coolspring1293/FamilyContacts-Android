@@ -11,8 +11,8 @@ public class Telephone {
 
     private Long id;
     private String number;
+    private Long telCityId;
     private Long contactId;
-    private Long cityId;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -20,11 +20,11 @@ public class Telephone {
     /** Used for active entity operations. */
     private transient TelephoneDao myDao;
 
-    private Contact contact;
-    private Long contact__resolvedKey;
-
     private City city;
     private Long city__resolvedKey;
+
+    private Contact contact;
+    private Long contact__resolvedKey;
 
 
     public Telephone() {
@@ -34,11 +34,11 @@ public class Telephone {
         this.id = id;
     }
 
-    public Telephone(Long id, String number, Long contactId, Long cityId) {
+    public Telephone(Long id, String number, Long telCityId, Long contactId) {
         this.id = id;
         this.number = number;
+        this.telCityId = telCityId;
         this.contactId = contactId;
-        this.cityId = cityId;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -63,6 +63,14 @@ public class Telephone {
         this.number = number;
     }
 
+    public Long getTelCityId() {
+        return telCityId;
+    }
+
+    public void setTelCityId(Long telCityId) {
+        this.telCityId = telCityId;
+    }
+
     public Long getContactId() {
         return contactId;
     }
@@ -71,12 +79,29 @@ public class Telephone {
         this.contactId = contactId;
     }
 
-    public Long getCityId() {
-        return cityId;
+    /** To-one relationship, resolved on first access. */
+    public City getCity() {
+        Long __key = this.telCityId;
+        if (city__resolvedKey == null || !city__resolvedKey.equals(__key)) {
+            if (daoSession == null) {
+                throw new DaoException("Entity is detached from DAO context");
+            }
+            CityDao targetDao = daoSession.getCityDao();
+            City cityNew = targetDao.load(__key);
+            synchronized (this) {
+                city = cityNew;
+            	city__resolvedKey = __key;
+            }
+        }
+        return city;
     }
 
-    public void setCityId(Long cityId) {
-        this.cityId = cityId;
+    public void setCity(City city) {
+        synchronized (this) {
+            this.city = city;
+            telCityId = city == null ? null : city.getId();
+            city__resolvedKey = telCityId;
+        }
     }
 
     /** To-one relationship, resolved on first access. */
@@ -101,31 +126,6 @@ public class Telephone {
             this.contact = contact;
             contactId = contact == null ? null : contact.getId();
             contact__resolvedKey = contactId;
-        }
-    }
-
-    /** To-one relationship, resolved on first access. */
-    public City getCity() {
-        Long __key = this.cityId;
-        if (city__resolvedKey == null || !city__resolvedKey.equals(__key)) {
-            if (daoSession == null) {
-                throw new DaoException("Entity is detached from DAO context");
-            }
-            CityDao targetDao = daoSession.getCityDao();
-            City cityNew = targetDao.load(__key);
-            synchronized (this) {
-                city = cityNew;
-            	city__resolvedKey = __key;
-            }
-        }
-        return city;
-    }
-
-    public void setCity(City city) {
-        synchronized (this) {
-            this.city = city;
-            cityId = city == null ? null : city.getId();
-            city__resolvedKey = cityId;
         }
     }
 
