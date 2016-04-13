@@ -47,7 +47,7 @@ public class CityDao extends AbstractDao<City, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"PROVINCE\" TEXT NOT NULL ," + // 1: province
                 "\"CITYNAME\" TEXT NOT NULL ," + // 2: cityname
-                "\"WEATHER_CODE\" TEXT NOT NULL ," + // 3: weatherCode
+                "\"WEATHER_CODE\" TEXT," + // 3: weatherCode
                 "\"WEATHER_INFO\" TEXT," + // 4: weatherInfo
                 "\"TEMPERATURE\" TEXT);"); // 5: temperature
     }
@@ -69,7 +69,11 @@ public class CityDao extends AbstractDao<City, Long> {
         }
         stmt.bindString(2, entity.getProvince());
         stmt.bindString(3, entity.getCityname());
-        stmt.bindString(4, entity.getWeatherCode());
+ 
+        String weatherCode = entity.getWeatherCode();
+        if (weatherCode != null) {
+            stmt.bindString(4, weatherCode);
+        }
  
         String weatherInfo = entity.getWeatherInfo();
         if (weatherInfo != null) {
@@ -95,7 +99,7 @@ public class CityDao extends AbstractDao<City, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // province
             cursor.getString(offset + 2), // cityname
-            cursor.getString(offset + 3), // weatherCode
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // weatherCode
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // weatherInfo
             cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5) // temperature
         );
@@ -108,7 +112,7 @@ public class CityDao extends AbstractDao<City, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setProvince(cursor.getString(offset + 1));
         entity.setCityname(cursor.getString(offset + 2));
-        entity.setWeatherCode(cursor.getString(offset + 3));
+        entity.setWeatherCode(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setWeatherInfo(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
         entity.setTemperature(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
      }

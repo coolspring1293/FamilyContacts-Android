@@ -11,7 +11,6 @@ public class City {
     private String province;
     /** Not-null value. */
     private String cityname;
-    /** Not-null value. */
     private String weatherCode;
     private String weatherInfo;
     private String temperature;
@@ -60,12 +59,10 @@ public class City {
         this.cityname = cityname;
     }
 
-    /** Not-null value. */
     public String getWeatherCode() {
         return weatherCode;
     }
 
-    /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setWeatherCode(String weatherCode) {
         this.weatherCode = weatherCode;
     }
