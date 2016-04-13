@@ -22,8 +22,7 @@ public class StartupReceiver extends BroadcastReceiver {
         Intent serviceIntent = new Intent(context, WeatherService.class);
 //        serviceIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_STATION_LIST);
 //        context.startService(serviceIntent);
-        serviceIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_WEATHER_PREDICT);
-        serviceIntent.putExtra(WeatherService.CITYCODE, "101280101");
+        serviceIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_REAL_WEATHER_LIST);
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getService(context, ALARM_REFRESH_STATION, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);

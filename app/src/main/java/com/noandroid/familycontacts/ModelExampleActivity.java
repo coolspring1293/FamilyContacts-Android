@@ -1,5 +1,6 @@
 package com.noandroid.familycontacts;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -34,6 +35,9 @@ public class ModelExampleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent intent = new Intent("com.noandroid.familycontacts.test_broadcast");
+        sendBroadcast(intent);
+
         // TODO(leasunhy): add more examples on using the database
         DaoMaster.DevOpenHelper helper = DatabaseHelper.getDB(this);
         db = helper.getWritableDatabase();
@@ -41,6 +45,8 @@ public class ModelExampleActivity extends AppCompatActivity {
         daoSession = daoMaster.newSession();
         contactDao = daoSession.getContactDao();
         updateListContent();
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
