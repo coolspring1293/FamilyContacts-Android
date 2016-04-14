@@ -1,7 +1,6 @@
 package com.noandroid.familycontacts;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,33 +9,49 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AdapterView;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import com.noandroid.familycontacts.model.*;
 
-import java.io.IOException;
+import com.noandroid.familycontacts.model.City;
+import com.noandroid.familycontacts.model.Contact;
+import com.noandroid.familycontacts.model.ContactDao;
+import com.noandroid.familycontacts.model.DaoMaster;
+import com.noandroid.familycontacts.model.DaoSession;
+import com.noandroid.familycontacts.model.DatabaseHelper;
+import com.noandroid.familycontacts.model.TelInitialDao;
+import android.support.v7.widget.AppCompatImageButton;
 
-public class ModelExampleActivity extends AppCompatActivity {
+/**
+ * Created by liuw53 on 4/14/16.
+ */
+public class DetailsActivity extends AppCompatActivity {
 
     private SQLiteDatabase db;
     private DaoMaster daoMaster;
     private DaoSession daoSession;
     private ContactDao contactDao;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modelexample);
+        setContentView(R.layout.details_scrolling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+        toolbar.setTitle("Allen Xie");
+        toolbar.setSubtitle("18819461662");
+        //toolbar.setLogo(R.drawable.allen_xie_icon);
+
         setSupportActionBar(toolbar);
 
 
 
-        // TODO(leasunhy): add more examples on using the database
+        // (TODO):Liu Wang
         DaoMaster.DevOpenHelper helper = DatabaseHelper.getDB(this);
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
@@ -45,21 +60,20 @@ public class ModelExampleActivity extends AppCompatActivity {
         updateListContent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        assert fab != null;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                addContact();
-//                Snackbar.make(view, "Added contact", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
+
                 City myCity = daoSession.getTelInitialDao().queryBuilder().where(
-                        TelInitialDao.Properties.Initial.eq("1881946")).build().unique().getCity();
-                String displayStr = String.format("1881946 is in %s, the weather code of which is %s.",
+                        TelInitialDao.Properties.Initial.eq("1301996")).build().unique().getCity();
+                String displayStr = String.format("1301996 is in %s, the weather code of which is %s.",
                         myCity.getCityname(), myCity.getWeatherCode());
                 Snackbar.make(view, displayStr, Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
         });
 
-        Button btn = (Button) findViewById(R.id.button);
+        AppCompatImageButton btn = (AppCompatImageButton) findViewById(R.id.button_add);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +83,7 @@ public class ModelExampleActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void updateListContent() {
         Cursor cursor = db.query(contactDao.getTablename(), contactDao.getAllColumns(), null, null, null, null, null);
@@ -81,7 +96,7 @@ public class ModelExampleActivity extends AppCompatActivity {
     }
 
     private void addContact() {
-        Contact contact = new Contact(null, "Wang Liu", "Dad", "");
+        Contact contact = new Contact(null, "Wang Liu", "Grandpa", "");
         contactDao.insert(contact);
         Log.d("Model", "Inserted new Contact, ID: " + contact.getId());
         updateListContent();
@@ -105,7 +120,6 @@ public class ModelExampleActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

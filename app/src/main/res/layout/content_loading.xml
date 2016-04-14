@@ -11,10 +11,18 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ModelExampleActivity"
     tools:showIn="@layout/activity_loading">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Recent Call"
+        android:textSize="60px"/>
 
     <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/listView"
-            android:layout_alignParentTop="true" android:layout_alignParentStart="false"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="36dp" />
 </RelativeLayout>
