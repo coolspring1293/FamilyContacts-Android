@@ -43,7 +43,7 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 app:civ_border_width="15px"
-                app:civ_border_color="#8FFFFFFF"
+                app:civ_border_color="@color/colorIconCycle"
                 android:layout_marginTop="300px"
                 android:layout_marginLeft="110px"
                 android:layout_width="250px"
@@ -70,7 +70,7 @@
 
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:backgroundTint="#40B920"
+        app:backgroundTint="@color/colorCall"
         android:src="@drawable/ic_call_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
