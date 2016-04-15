@@ -57,6 +57,11 @@ public class ModelGenerator {
         // Relationship: TelephoneInitial-City
         telInitial.addToOne(city, telInitial.addLongProperty("telinitCityId").getProperty());
 
+        // Blacklist
+        Entity blacklist = schema.addEntity("Blacklist");
+        blacklist.addIdProperty();
+        blacklist.addStringProperty("PhoneNumber").index();
+
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }
 }
