@@ -21,6 +21,9 @@
         <service
             android:name=".WeatherService"
             android:enabled="true"/>
+        <service
+            android:name=".PhoneMonitorSevice"
+            android:enabled="true" />
         <receiver android:name=".StartupReceiver">
             <intent-filter>
                 <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
@@ -30,6 +33,7 @@
         </receiver>
     </application>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
 </manifest>

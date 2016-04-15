@@ -35,9 +35,11 @@ public class ModelExampleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Intent intent = new Intent("com.noandroid.familycontacts.test_broadcast");
-        sendBroadcast(intent);
-
+//         test weatherservice
+//        Intent intent = new Intent("com.noandroid.familycontacts.test_broadcast");
+//        sendBroadcast(intent);
+        Intent intent = new Intent(this, PhoneMonitorSevice.class);
+        startService(intent);
         // TODO(leasunhy): add more examples on using the database
         DaoMaster.DevOpenHelper helper = DatabaseHelper.getDB(this);
         db = helper.getWritableDatabase();

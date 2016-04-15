@@ -14,18 +14,15 @@ import android.widget.Toast;
  * Created by Hsiaotsefeng on 2016/4/7.
  */
 public class StartupReceiver extends BroadcastReceiver {
-    static final int ALARM_REFRESH_STATION = 0;
-    static final int ALARM_REFRESH_CITY_LIST = 1;
+    static final int ALARM_REFRESH_CITY_LIST = 0;
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(context.getString(R.string.app_name), "StartupReceiver received");
         Intent serviceIntent = new Intent(context, WeatherService.class);
-//        serviceIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_STATION_LIST);
-//        context.startService(serviceIntent);
         serviceIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_REAL_WEATHER_LIST);
 
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent pendingIntent = PendingIntent.getService(context, ALARM_REFRESH_STATION, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getService(context, ALARM_REFRESH_CITY_LIST, serviceIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmMgr.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(),
                 60 * 1000, pendingIntent);
 

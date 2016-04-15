@@ -25,15 +25,20 @@ import com.noandroid.familycontacts.model.CityDao;
 import com.noandroid.familycontacts.model.DaoMaster;
 import com.noandroid.familycontacts.model.DaoSession;
 import com.noandroid.familycontacts.model.DatabaseHelper;
+import com.noandroid.familycontacts.model.TelInitialDao;
+import com.noandroid.familycontacts.model.Telephone;
+import com.noandroid.familycontacts.model.TelephoneDao;
+
+import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * Created by Hsiaotsefeng on 2016/4/7.
  */
 public class WeatherService extends IntentService {
     public static final String ACTION = "ACTION";
-    public static final String CITYCODE = "CityCode";
+    public static final String CITYCODE = "CITYCODE";
     public static final int REFRESH_STATION_LIST = 0;
-    public static final int REFRESH_WEATHER_PREDICT = 1;
+    public static final int REFRESH_REAL_WEATHER = 1;
     public static final int REFRESH_REAL_WEATHER_LIST = 2;
     private static String stationUrl;
     private static String realtimeWeatherUrl;
@@ -42,7 +47,6 @@ public class WeatherService extends IntentService {
     private SQLiteDatabase db;
     private DaoMaster daoMaster;
     private DaoSession daoSession;
-    private CityDao citysDao;
 
     final String appname = "Weather Service";
     public WeatherService() {
@@ -65,7 +69,6 @@ public class WeatherService extends IntentService {
         db = helper.getWritableDatabase();
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
-        citysDao = daoSession.getCityDao();
 //        citysDao.insert(new City(null, "广东省", "广州", "101280101", null, null));
         Log.d(appname, "Weather onCreate");
     }
@@ -101,20 +104,15 @@ public class WeatherService extends IntentService {
 //                }
 //                Log.d(appname, strBuilder.toString());
                 break;
-            case REFRESH_WEATHER_PREDICT:
-                Log.d(appname, "RREFRESH_WEATHER_PREDICT");
+            case REFRESH_REAL_WEATHER:
+                Log.d(appname, "REFRESH_REAL_WEATHER");
+
                 break;
             case REFRESH_REAL_WEATHER_LIST:
+                TelephoneDao telDao = daoSession.getTelephoneDao();
+                QueryBuilder<Telephone> builder = telDao.queryBuilder();
                 Log.d(appname, "REFRESH_REAL_WEATHER_LIST");
-                List<City> cities = citysDao.loadAll();
-                for (City city : cities) {
-                    RealTimeWeather weather = getRealTimeWeather(city.getWeatherCode());
-                    if (weather != null) {
-                        city.setTemperature(String.valueOf(weather.getTemperature()));
-                        city.setWeatherInfo(weather.getWeatherInfo());
-                    }
-                }
-                citysDao.updateInTx(cities);
+
                 break;
 
         }
