@@ -145,6 +145,11 @@ public class Contact {
         this.relationship = relationship;
         this.pinyin = Pinyin.getPinyinForString(this.name);
     }
+
+    public void setNameAndPinyin(String name) {
+        this.name = name;
+        this.pinyin = Pinyin.getPinyinForString(name);
+    }
     // KEEP METHODS END
 
 }

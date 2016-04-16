@@ -58,7 +58,6 @@ public class Pinyin {
         DaoMaster daoMaster = new DaoMaster(DatabaseHelper.getDB(null).getReadableDatabase());
         PinyinDao pinyinDao = daoMaster.newSession().getPinyinDao();
         String res = "";
-        // TODO(leasunhy): implement this
         for (int i = 0; i < str.length(); ++i) {
             char c = str.charAt(i);
             Pinyin py = pinyinDao.queryBuilder().where(PinyinDao.Properties.Zi.eq(c)).unique();
