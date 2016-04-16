@@ -31,6 +31,20 @@ public class Contact {
     // KEEP FIELDS - put your custom fields here
     // KEEP FIELDS END
 
+    public Contact() {
+    }
+
+    public Contact(Long id) {
+        this.id = id;
+    }
+
+    public Contact(Long id, String name, String relationship, String avatar, String pinyin) {
+        this.id = id;
+        this.name = name;
+        this.relationship = relationship;
+        this.avatar = avatar;
+        this.pinyin = pinyin;
+    }
 
     /** called by internal mechanisms, do not call yourself. */
     public void __setDaoSession(DaoSession daoSession) {
@@ -127,17 +141,6 @@ public class Contact {
     }
 
     // KEEP METHODS - put your custom methods here
-
-    public Contact() {}
-
-    public Contact(Long id) { this.id = id; }
-
-    public Contact(Long id, String name, String relationship, String avatar, String pinyin) {
-        this.id = id;
-        this.name = name;
-        this.relationship = relationship;
-        this.pinyin = pinyin;
-    }
 
     public Contact(Long id, String name, String relationship, String avatar) {
         this.id = id;

@@ -24,7 +24,6 @@ public class ModelGenerator {
         contact.addStringProperty("avatar");
         contact.addStringProperty("pinyin");
         contact.setHasKeepSections(true);
-        contact.setConstructors(false);
 
         // City
         Entity city = schema.addEntity("City");
