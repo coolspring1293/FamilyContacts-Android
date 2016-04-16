@@ -27,6 +27,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Relationship = new Property(2, String.class, "relationship", false, "RELATIONSHIP");
         public final static Property Avatar = new Property(3, String.class, "avatar", false, "AVATAR");
+        public final static Property Pinyin = new Property(4, String.class, "pinyin", false, "PINYIN");
     };
 
     private DaoSession daoSession;
@@ -48,7 +49,8 @@ public class ContactDao extends AbstractDao<Contact, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"RELATIONSHIP\" TEXT," + // 2: relationship
-                "\"AVATAR\" TEXT);"); // 3: avatar
+                "\"AVATAR\" TEXT," + // 3: avatar
+                "\"PINYIN\" TEXT);"); // 4: pinyin
     }
 
     /** Drops the underlying database table. */
@@ -77,6 +79,11 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (avatar != null) {
             stmt.bindString(4, avatar);
         }
+ 
+        String pinyin = entity.getPinyin();
+        if (pinyin != null) {
+            stmt.bindString(5, pinyin);
+        }
     }
 
     @Override
@@ -98,7 +105,8 @@ public class ContactDao extends AbstractDao<Contact, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // relationship
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3) // avatar
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatar
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // pinyin
         );
         return entity;
     }
@@ -110,6 +118,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         entity.setName(cursor.getString(offset + 1));
         entity.setRelationship(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setPinyin(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     /** @inheritdoc */

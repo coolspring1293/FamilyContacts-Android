@@ -22,6 +22,7 @@ public class ModelGenerator {
         contact.addStringProperty("name").notNull();
         contact.addStringProperty("relationship");
         contact.addStringProperty("avatar");
+        contact.addStringProperty("pinyin");
 
         // City
         Entity city = schema.addEntity("City");
@@ -61,6 +62,12 @@ public class ModelGenerator {
         Entity blacklist = schema.addEntity("Blacklist");
         blacklist.addIdProperty();
         blacklist.addStringProperty("PhoneNumber").index();
+
+        // Pinyin
+        Entity pinyin = schema.addEntity("Pinyin");
+        pinyin.addIdProperty();
+        pinyin.addStringProperty("zi").index();
+        pinyin.addStringProperty("pinyin");
 
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }

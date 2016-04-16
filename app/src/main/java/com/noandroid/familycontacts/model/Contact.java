@@ -15,6 +15,7 @@ public class Contact {
     private String name;
     private String relationship;
     private String avatar;
+    private String pinyin;
 
     /** Used to resolve relations */
     private transient DaoSession daoSession;
@@ -31,11 +32,12 @@ public class Contact {
         this.id = id;
     }
 
-    public Contact(Long id, String name, String relationship, String avatar) {
+    public Contact(Long id, String name, String relationship, String avatar, String pinyin) {
         this.id = id;
         this.name = name;
         this.relationship = relationship;
         this.avatar = avatar;
+        this.pinyin = pinyin;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -76,6 +78,14 @@ public class Contact {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getPinyin() {
+        return pinyin;
+    }
+
+    public void setPinyin(String pinyin) {
+        this.pinyin = pinyin;
     }
 
     /** To-many relationship, resolved on first access (and after reset). Changes to to-many relations are not persisted, make changes to the target entity. */
