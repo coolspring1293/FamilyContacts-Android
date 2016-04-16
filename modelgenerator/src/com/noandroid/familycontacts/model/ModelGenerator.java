@@ -23,6 +23,8 @@ public class ModelGenerator {
         contact.addStringProperty("relationship");
         contact.addStringProperty("avatar");
         contact.addStringProperty("pinyin");
+        contact.setHasKeepSections(true);
+        contact.setConstructors(false);
 
         // City
         Entity city = schema.addEntity("City");
@@ -68,6 +70,7 @@ public class ModelGenerator {
         pinyin.addIdProperty();
         pinyin.addStringProperty("zi").index();
         pinyin.addStringProperty("pinyin");
+        pinyin.setHasKeepSections(true);
 
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }

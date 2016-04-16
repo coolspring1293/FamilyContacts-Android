@@ -15,7 +15,9 @@ import java.io.OutputStream;
  * Created by leasunhy on 4/13/16.
  */
 public class DatabaseHelper {
+    private static DaoMaster.DevOpenHelper helper;
     public static DaoMaster.DevOpenHelper getDB(Context context) {
+        if (helper != null) return helper;
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         boolean firstTime = prefs.getBoolean("FIRST_TIME", true);
         if (firstTime) {
@@ -23,7 +25,7 @@ public class DatabaseHelper {
             if (copyDatabase(context))
                 prefs.edit().putBoolean("FIRST_TIME", false).commit();
         }
-        return new DaoMaster.DevOpenHelper(context, "contacts-db", null);
+        return helper = new DaoMaster.DevOpenHelper(context, "contacts-db", null);
     }
 
     private static boolean copyDatabase(Context context) {

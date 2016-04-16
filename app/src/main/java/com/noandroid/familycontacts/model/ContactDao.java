@@ -101,13 +101,8 @@ public class ContactDao extends AbstractDao<Contact, Long> {
     /** @inheritdoc */
     @Override
     public Contact readEntity(Cursor cursor, int offset) {
-        Contact entity = new Contact( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // relationship
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatar
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // pinyin
-        );
+        Contact entity = new Contact();
+        readEntity(cursor, entity, offset);
         return entity;
     }
      
