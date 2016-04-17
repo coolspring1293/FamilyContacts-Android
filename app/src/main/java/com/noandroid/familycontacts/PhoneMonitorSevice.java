@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.telecom.Call;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -41,9 +42,10 @@ public class PhoneMonitorSevice extends Service {
     }
 
     private class CallListener extends PhoneStateListener {
-        public PhoneStateListener() {
+        private final String token;
+        public CallListener() {
             super();
-
+            token = this.getClass().getName();
         }
 
         @Override
@@ -52,19 +54,20 @@ public class PhoneMonitorSevice extends Service {
             try {
                 switch (state) {
                     case TelephonyManager.CALL_STATE_RINGING:
-                        if (incomingNumber.equals("110")) {
-                            Toast.makeText(PhoneMonitorSevice.this, "110 end", Toast.LENGTH_LONG).show();
-                            TelephonyManager tm = (TelephonyManager) PhoneMonitorSevice.this
-                                    .getSystemService(Context.TELEPHONY_SERVICE);
-                            Class c = Class.forName(tm.getClass().getName());
-                            Method endCallMthd = c.getDeclaredMethod("getITelephony");
-                            endCallMthd.setAccessible(true);
-                            Object telephonyService = endCallMthd.invoke(tm); // Get the internal ITelephony object
-                            c = Class.forName(telephonyService.getClass().getName()); // Get its class
-                            endCallMthd = c.getDeclaredMethod("endCall"); // Get the "endCall()" method
-                            endCallMthd.setAccessible(true); // Make it accessible
-                            endCallMthd.invoke(telephonyService); // invoke endCall()
-                        }
+                        Log
+//                        if (incomingNumber.equals("110")) {
+//                            Toast.makeText(PhoneMonitorSevice.this, "110 end", Toast.LENGTH_LONG).show();
+//                            TelephonyManager tm = (TelephonyManager) PhoneMonitorSevice.this
+//                                    .getSystemService(Context.TELEPHONY_SERVICE);
+//                            Class c = Class.forName(tm.getClass().getName());
+//                            Method endCallMthd = c.getDeclaredMethod("getITelephony");
+//                            endCallMthd.setAccessible(true);
+//                            Object telephonyService = endCallMthd.invoke(tm); // Get the internal ITelephony object
+//                            c = Class.forName(telephonyService.getClass().getName()); // Get its class
+//                            endCallMthd = c.getDeclaredMethod("endCall"); // Get the "endCall()" method
+//                            endCallMthd.setAccessible(true); // Make it accessible
+//                            endCallMthd.invoke(telephonyService); // invoke endCall()
+//                        }
                         break;
                 }
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException|InvocationTargetException e) {
