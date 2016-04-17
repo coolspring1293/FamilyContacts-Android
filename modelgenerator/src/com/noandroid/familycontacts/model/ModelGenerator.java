@@ -15,6 +15,7 @@ public class ModelGenerator {
         record.addDateProperty("time").notNull();
         record.addIntProperty("status").notNull();
         record.addStringProperty("telephoneNumber").notNull();
+        record.addIntProperty("duration");
 
         // Contact
         Entity contact = schema.addEntity("Contact");
