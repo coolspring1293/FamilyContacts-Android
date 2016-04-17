@@ -21,14 +21,14 @@
             android:textStyle="bold"
             android:textScaleX="1.1"/>"
     </RelativeLayout>
-    <se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView
+    <!--<ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/contact_list"
+        android:fastScrollEnabled="true">
+    </ListView>-->
+    <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+        android:id="@+id/test_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:drawSelectorOnTop="true"
-        android:padding="16dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:fastScrollEnabled="true"
-        android:overScrollMode="never"/>
+        android:layout_height="match_parent"/>
 </LinearLayout>

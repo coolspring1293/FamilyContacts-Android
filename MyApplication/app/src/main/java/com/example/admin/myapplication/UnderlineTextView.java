@@ -1,4 +1,4 @@
-package com.example.admin.myapplication.views;
+package com.example.admin.myapplication;
 
 import android.content.Context;
 import android.content.res.Resources;
