@@ -165,4 +165,23 @@
         completions."
     </string>
 
+
+    <!-- String in the edit or add contact page only, the sample is string_edit_* -->
+
+    <string name="string_edit_name">Name</string>
+    <string name="string_edit_phone">Telephone</string>
+    <string name="string_edit_relationship">Relationship</string>
+    <string name="string_edit_avatar">Avatar</string>
+    <string name="string_edit_pinyin">Pinyin</string>
+
+    <string name="string_edit_ok">ok</string>
+
+
+    <!--  Temp String Values-->
+
+    <string name="tmp_edit_show">This is a textview to show the results</string>
+    <string name="tmp_edit_title">Edit or Add Contact</string>
+
+
+
 </resources>
