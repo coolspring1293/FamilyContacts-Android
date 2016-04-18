@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    
+    <color name="colorIconCycle">#99999955</color>
+
+    <color name="colorCivBorder">#8FFFFFFF</color>
+
+    <color name="colorCall">#40B920</color>
+
 </resources>

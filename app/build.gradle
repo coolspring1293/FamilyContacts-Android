@@ -38,4 +38,5 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.7.3'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.3'
     compile 'de.greenrobot:greendao:2.1.0'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 }

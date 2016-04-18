@@ -15,6 +15,7 @@ public class ModelGenerator {
         record.addDateProperty("time").notNull();
         record.addIntProperty("status").notNull();
         record.addStringProperty("telephoneNumber").notNull();
+        record.addIntProperty("duration");
 
         // Contact
         Entity contact = schema.addEntity("Contact");
@@ -22,6 +23,8 @@ public class ModelGenerator {
         contact.addStringProperty("name").notNull();
         contact.addStringProperty("relationship");
         contact.addStringProperty("avatar");
+        contact.addStringProperty("pinyin");
+        contact.setHasKeepSections(true);
 
         // City
         Entity city = schema.addEntity("City");
@@ -56,6 +59,18 @@ public class ModelGenerator {
 
         // Relationship: TelephoneInitial-City
         telInitial.addToOne(city, telInitial.addLongProperty("telinitCityId").getProperty());
+
+        // Blacklist
+        Entity blacklist = schema.addEntity("Blacklist");
+        blacklist.addIdProperty();
+        blacklist.addStringProperty("PhoneNumber").index();
+
+        // Pinyin
+        Entity pinyin = schema.addEntity("Pinyin");
+        pinyin.addIdProperty();
+        pinyin.addStringProperty("zi").index();
+        pinyin.addStringProperty("pinyin");
+        pinyin.setHasKeepSections(true);
 
         new DaoGenerator().generateAll(schema, "app/src/main/java");
     }

@@ -40,6 +40,8 @@ public class ModelExampleActivity extends AppCompatActivity {
 //        sendBroadcast(intent);
         Intent intent = new Intent(this, PhoneMonitorSevice.class);
         startService(intent);
+
+
         // TODO(leasunhy): add more examples on using the database
         DaoMaster.DevOpenHelper helper = DatabaseHelper.getDB(this);
         db = helper.getWritableDatabase();
@@ -87,7 +89,7 @@ public class ModelExampleActivity extends AppCompatActivity {
     }
 
     private void addContact() {
-        Contact contact = new Contact(null, "Siyuan Liu", "Dad", "");
+        Contact contact = new Contact(null, "Siyuan Liu", "Dad", "", "Siyuan Liu");
         contactDao.insert(contact);
         Log.d("Model", "Inserted new Contact, ID: " + contact.getId());
         updateListContent();

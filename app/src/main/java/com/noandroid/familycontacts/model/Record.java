@@ -12,6 +12,7 @@ public class Record {
     private int status;
     /** Not-null value. */
     private String telephoneNumber;
+    private Integer duration;
 
     public Record() {
     }
@@ -20,11 +21,12 @@ public class Record {
         this.id = id;
     }
 
-    public Record(Long id, java.util.Date time, int status, String telephoneNumber) {
+    public Record(Long id, java.util.Date time, int status, String telephoneNumber, Integer duration) {
         this.id = id;
         this.time = time;
         this.status = status;
         this.telephoneNumber = telephoneNumber;
+        this.duration = duration;
     }
 
     public Long getId() {
@@ -61,6 +63,14 @@ public class Record {
     /** Not-null value; ensure this value is available before it is saved to the database. */
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = telephoneNumber;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
     }
 
 }
