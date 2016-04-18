@@ -36,4 +36,5 @@ dependencies {
     compile 'com.android.support:design:23.2.1'
     compile 'de.greenrobot:greendao:2.1.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
+    compile 'com.android.support:support-v4:23.2.1'
 }

@@ -27,6 +27,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
         public final static Property Time = new Property(1, java.util.Date.class, "time", false, "TIME");
         public final static Property Status = new Property(2, int.class, "status", false, "STATUS");
         public final static Property TelephoneNumber = new Property(3, String.class, "telephoneNumber", false, "TELEPHONE_NUMBER");
+        public final static Property Duration = new Property(4, Integer.class, "duration", false, "DURATION");
     };
 
 
@@ -45,7 +46,8 @@ public class RecordDao extends AbstractDao<Record, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"TIME\" INTEGER NOT NULL ," + // 1: time
                 "\"STATUS\" INTEGER NOT NULL ," + // 2: status
-                "\"TELEPHONE_NUMBER\" TEXT NOT NULL );"); // 3: telephoneNumber
+                "\"TELEPHONE_NUMBER\" TEXT NOT NULL ," + // 3: telephoneNumber
+                "\"DURATION\" INTEGER);"); // 4: duration
     }
 
     /** Drops the underlying database table. */
@@ -66,6 +68,11 @@ public class RecordDao extends AbstractDao<Record, Long> {
         stmt.bindLong(2, entity.getTime().getTime());
         stmt.bindLong(3, entity.getStatus());
         stmt.bindString(4, entity.getTelephoneNumber());
+ 
+        Integer duration = entity.getDuration();
+        if (duration != null) {
+            stmt.bindLong(5, duration);
+        }
     }
 
     /** @inheritdoc */
@@ -81,7 +88,8 @@ public class RecordDao extends AbstractDao<Record, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             new java.util.Date(cursor.getLong(offset + 1)), // time
             cursor.getInt(offset + 2), // status
-            cursor.getString(offset + 3) // telephoneNumber
+            cursor.getString(offset + 3), // telephoneNumber
+            cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4) // duration
         );
         return entity;
     }
@@ -93,6 +101,7 @@ public class RecordDao extends AbstractDao<Record, Long> {
         entity.setTime(new java.util.Date(cursor.getLong(offset + 1)));
         entity.setStatus(cursor.getInt(offset + 2));
         entity.setTelephoneNumber(cursor.getString(offset + 3));
+        entity.setDuration(cursor.isNull(offset + 4) ? null : cursor.getInt(offset + 4));
      }
     
     /** @inheritdoc */
