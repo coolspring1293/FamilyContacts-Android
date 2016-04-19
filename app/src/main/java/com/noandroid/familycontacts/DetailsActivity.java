@@ -1,5 +1,6 @@
 package com.noandroid.familycontacts;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -42,6 +43,12 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.details_scrolling);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        // test phonemonitor
+        Intent intent = new Intent(this, PhoneMonitorSevice.class);
+        startService(intent);
+        // test startupreceiver
+        intent = new Intent(getString(R.string.START_SERVICE));
+        sendBroadcast(intent);
 
         toolbar.setTitle("Allen Xie");
         toolbar.setSubtitle("18819461662");
