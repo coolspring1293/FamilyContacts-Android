@@ -8,6 +8,7 @@ import android.util.Log;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,10 +16,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.noandroid.familycontacts.model.City;
 import com.noandroid.familycontacts.model.CityDao;
@@ -44,11 +47,11 @@ public class WeatherService extends IntentService {
     private static String realtimeWeatherUrl;
     private static String predictWeatherUrl;
     private static ObjectMapper jsonMapper = new ObjectMapper();
-    private SQLiteDatabase db;
-    private DaoMaster daoMaster;
     private DaoSession daoSession;
 
-    final String appname = "Weather Service";
+    private final String appname = "Weather Service";
+    private TelephoneDao telDao;
+
     public WeatherService() {
         super("WeatherService");
     }
@@ -66,10 +69,9 @@ public class WeatherService extends IntentService {
             predictWeatherUrl = getString(R.string.PREDICT_WEATHER_URL);
         }
         DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "contacts-db", null);
-        db = helper.getWritableDatabase();
-        daoMaster = new DaoMaster(db);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        DaoMaster daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
-//        citysDao.insert(new City(null, "广东省", "广州", "101280101", null, null));
         Log.d(appname, "Weather onCreate");
     }
 
@@ -79,15 +81,9 @@ public class WeatherService extends IntentService {
         Log.d(appname, "Weather onStart");
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(appname, "Weather onDestory");
-    }
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        Log.d(appname, "Weather Service Intent");
         int action = workIntent.getIntExtra(ACTION, -1);
         switch (action) {
             case REFRESH_STATION_LIST:
@@ -109,8 +105,26 @@ public class WeatherService extends IntentService {
 
                 break;
             case REFRESH_REAL_WEATHER_LIST:
-                TelephoneDao telDao = daoSession.getTelephoneDao();
-                QueryBuilder<Telephone> builder = telDao.queryBuilder();
+                telDao = daoSession.getTelephoneDao();
+                // test
+                // telDao.insert(new Telephone(null, "15626470723", 50L, null));
+                List<Telephone> tels = telDao.queryBuilder().list();
+                Set<Long> cityIds = new HashSet<>();
+                for (Telephone tel : tels) {
+                    Long cityId = tel.getTelCityId();
+                    cityIds.add(cityId);
+                }
+                CityDao cityDao = daoSession.getCityDao();
+                for (Long id : cityIds) {
+                    City city = cityDao.load(id);
+                    RealTimeWeather rtw = getRealTimeWeather(city.getWeatherCode());
+                    if (rtw != null) {
+                        city.setTemperature(String.valueOf(rtw.getTemperature()));
+                        city.setWeatherInfo(String.valueOf(rtw.getWeatherInfo()));
+                        cityDao.update(city);
+                    }
+                }
+
                 Log.d(appname, "REFRESH_REAL_WEATHER_LIST");
 
                 break;
@@ -136,7 +150,7 @@ public class WeatherService extends IntentService {
             return null;
         }
         HashMap<String, Hashtable<String, String>> cityList = new HashMap<>();
-        for (JsonNode provinceNode: rootNode) {
+        for (JsonNode provinceNode : rootNode) {
             ProvinceJsonHelper provinceJsonHelper = ProvinceJsonHelper.fromJsonNode(provinceNode);
             Hashtable<String, String> provCities = new Hashtable<>();
             for (CityJsonHelper cityJsonHelper : provinceJsonHelper.getCities()) {
@@ -150,7 +164,7 @@ public class WeatherService extends IntentService {
     private static RealTimeWeather getRealTimeWeather(String citycode) {
         String weatherStr = getUrlContent(String.format(realtimeWeatherUrl, citycode), 3);
         if (weatherStr != null) {
-            Log.d("CITY_WEATHER", weatherStr);
+//            Log.d("CITY_WEATHER", weatherStr);
             try {
                 return jsonMapper.readValue(weatherStr, RealTimeWeather.class);
             } catch (IOException e) {
@@ -293,7 +307,8 @@ class CityJsonHelper {
 
         if (longCode.equals(cityJsonHelper.longCode)) return false;
         if (shortCode.equals(cityJsonHelper.shortCode)) return false;
-        if (name != null ? !name.equals(cityJsonHelper.name) : cityJsonHelper.name != null) return false;
+        if (name != null ? !name.equals(cityJsonHelper.name) : cityJsonHelper.name != null)
+            return false;
         return !(pinyin != null ? !pinyin.equals(cityJsonHelper.pinyin) : cityJsonHelper.pinyin != null);
 
     }

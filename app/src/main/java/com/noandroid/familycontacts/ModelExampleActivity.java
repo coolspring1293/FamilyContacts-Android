@@ -35,11 +35,7 @@ public class ModelExampleActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//         test weatherservice
-//        Intent intent = new Intent("com.noandroid.familycontacts.test_broadcast");
-//        sendBroadcast(intent);
-        Intent intent = new Intent(this, PhoneMonitorSevice.class);
-        startService(intent);
+
 
 
         // TODO(leasunhy): add more examples on using the database

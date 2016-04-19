@@ -26,14 +26,17 @@
             android:enabled="true" />
         <receiver android:name=".StartupReceiver">
             <intent-filter>
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-                <action android:name="com.noandroid.familycontacts.test_broadcast"/>
-                <!--<category android:name="android.intent.category.HOME"/>-->
+                <action android:name="com.noandroid.familycontacts.START_SERVICE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <category android:name="android.intent.category.HOME"/>
             </intent-filter>
         </receiver>
     </application>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
