@@ -44,7 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
 
 
         toolbar.setTitle("Allen Xie");
-        toolbar.setSubtitle("18819461662");
+        //toolbar.setSubtitle("18819461662");
         //toolbar.setLogo(R.drawable.allen_xie_icon);
 
         setSupportActionBar(toolbar);
@@ -59,8 +59,16 @@ public class DetailsActivity extends AppCompatActivity {
         contactDao = daoSession.getContactDao();
         updateListContent();
 
+        Contact c = getContactbyId("1");
+
+        toolbar.setTitle(c.getName());
+
+        setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         assert fab != null;
+
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,11 +95,38 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void updateListContent() {
         Cursor cursor = db.query(contactDao.getTablename(), contactDao.getAllColumns(), null, null, null, null, null);
-        String[] from = { ContactDao.Properties.Name.columnName, ContactDao.Properties.Relationship.columnName };
+        String[] from = {
+                ContactDao.Properties.Name.columnName,
+                ContactDao.Properties.Id.columnName
+        };
         int[] to = { android.R.id.text1, android.R.id.text2 };
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2, cursor,
                 from, to, 0);
         ((ListView)findViewById(R.id.listView)).setAdapter(adapter);
+
+    }
+
+    Contact getContactbyId(String contact_id) {
+        String selection = "_id=?" ;
+        int offset = 0;
+        String[] selectionArgs = new String[]{ "1" };
+        Long tmp_id = Long.valueOf(1);
+        Cursor cursor = db.query(contactDao.getTablename(), contactDao.getAllColumns(), selection,
+                selectionArgs, null, null, null);
+
+        // TODO(Liu Wang) Pseudo Method
+        Contact contact =  new Contact(tmp_id, "Liu Siyuan", "Father", "1.png", "liu siyuan");
+
+        // TODO the real
+        // Contact contact =  contactDao.readEntity(cursor, 0);
+        /* {
+                cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+                cursor.getString(offset + 1), // name
+                cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // relationship
+                cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatar
+                cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // pinyin
+        );*/
+        return contact;
 
     }
 
