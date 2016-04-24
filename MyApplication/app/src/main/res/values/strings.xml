@@ -4,6 +4,8 @@
     <string name="tab_contacts">Contacts</string>
     <string name="tab_dialing">Dialing</string>
     <string name="tab_records">Records</string>
+    <string name="tab_gallery">Gallery</string>
+    <string name="tab_back">Back</string>
     <string name="tab_1">1</string>
     <string name="tab_2">2</string>
     <string name="tab_3">3</string>

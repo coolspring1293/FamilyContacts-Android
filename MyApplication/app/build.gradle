@@ -27,4 +27,5 @@ dependencies {
     compile 'com.android.support:design:23.+'
     compile project(':library')
     compile 'de.greenrobot:greendao:2.1.0'
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

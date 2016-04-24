@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,8 +50,10 @@ public class ContactsActivity extends Fragment{
 
     private FragmentActivity mActivity;
 
-    private ListView list;
     private List<Map<String,Object>> data;
+
+    private StickyListHeadersListView stickyList;
+
 
 
     public static ContactsActivity newInstance(int index) {
@@ -67,6 +70,7 @@ public class ContactsActivity extends Fragment{
     public int getShownIndex() {
         return getArguments().getInt("index",0);
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
@@ -175,26 +179,12 @@ public class ContactsActivity extends Fragment{
         addContactC();
 
         data = getData();
-        StickyListHeadersListView stickyList = (StickyListHeadersListView)getView().findViewById(R.id.test_list);
+        stickyList = (StickyListHeadersListView)getView().findViewById(R.id.test_list);
         MyTextAdapter adapter = new MyTextAdapter(getActivity());
 
         stickyList.setAdapter(adapter);
-       /* MainActivity.contactDao.deleteAll();
 
-            addContactB();
-            Log.w("note", "---xyzaddContactB");
-           addContactA();
-            Log.w("note", "---addContactA");
-        addContactB();
-        addContactA();
-        mActivity = getActivity();
-        mParent=getView();
-        list = (ListView)mParent.findViewById(R.id.contact_list);
-        data = getData();
-        MyAdapter adapter = new MyAdapter(mActivity);
-        list.setAdapter(adapter);*/
 
-        //mText = (TextView)mParent.findViewById(R.id.fragment_contacts);
     }
     public class MyTextAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
@@ -237,6 +227,19 @@ public class ContactsActivity extends Fragment{
 
             holder.name.setText((String)data.get(position).get("name"));
             holder.title.setText((String)data.get(position).get("title"));
+            stickyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String str = data.get(position).get("name").toString();
+                    Intent intent = new Intent();
+                    intent.setClass(getActivity(),DetailActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("name",str);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+
+                }
+            });
             return convertView;
         }
 
@@ -254,6 +257,7 @@ public class ContactsActivity extends Fragment{
             //set header text as first char in name
             String headerText = "" + data.get(position).get("name").toString().subSequence(0, 1).charAt(0);
             holder.text.setText(headerText);
+
             return convertView;
         }
 

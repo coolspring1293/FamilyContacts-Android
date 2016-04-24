@@ -15,7 +15,7 @@
             android:paddingBottom="6sp"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/tab_contacts"
+            android:text="@string/tab_dialing"
             android:textSize="20sp"
             android:textColor="#ffffff"
             android:textStyle="bold"
