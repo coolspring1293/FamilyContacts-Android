@@ -26,7 +26,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
         public final static Property Name = new Property(1, String.class, "name", false, "NAME");
         public final static Property Relationship = new Property(2, String.class, "relationship", false, "RELATIONSHIP");
-        public final static Property Avatar = new Property(3, String.class, "avatar", false, "AVATAR");
+        public final static Property Avatar = new Property(3, boolean.class, "avatar", false, "AVATAR");
         public final static Property Pinyin = new Property(4, String.class, "pinyin", false, "PINYIN");
     };
 
@@ -49,7 +49,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
                 "\"NAME\" TEXT NOT NULL ," + // 1: name
                 "\"RELATIONSHIP\" TEXT," + // 2: relationship
-                "\"AVATAR\" TEXT," + // 3: avatar
+                "\"AVATAR\" INTEGER NOT NULL ," + // 3: avatar
                 "\"PINYIN\" TEXT);"); // 4: pinyin
     }
 
@@ -74,11 +74,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         if (relationship != null) {
             stmt.bindString(3, relationship);
         }
- 
-        String avatar = entity.getAvatar();
-        if (avatar != null) {
-            stmt.bindString(4, avatar);
-        }
+        stmt.bindLong(4, entity.getAvatar() ? 1L: 0L);
  
         String pinyin = entity.getPinyin();
         if (pinyin != null) {
@@ -105,7 +101,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.getString(offset + 1), // name
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // relationship
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // avatar
+            cursor.getShort(offset + 3) != 0, // avatar
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // pinyin
         );
         return entity;
@@ -117,7 +113,7 @@ public class ContactDao extends AbstractDao<Contact, Long> {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setName(cursor.getString(offset + 1));
         entity.setRelationship(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setAvatar(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setAvatar(cursor.getShort(offset + 3) != 0);
         entity.setPinyin(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     

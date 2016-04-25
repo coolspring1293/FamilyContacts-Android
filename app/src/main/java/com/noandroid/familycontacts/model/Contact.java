@@ -17,7 +17,7 @@ public class Contact {
     /** Not-null value. */
     private String name;
     private String relationship;
-    private String avatar;
+    private boolean avatar;
     private String pinyin;
 
     /** Used to resolve relations */
@@ -38,7 +38,7 @@ public class Contact {
         this.id = id;
     }
 
-    public Contact(Long id, String name, String relationship, String avatar, String pinyin) {
+    public Contact(Long id, String name, String relationship, boolean avatar, String pinyin) {
         this.id = id;
         this.name = name;
         this.relationship = relationship;
@@ -78,11 +78,11 @@ public class Contact {
         this.relationship = relationship;
     }
 
-    public String getAvatar() {
+    public boolean getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(String avatar) {
+    public void setAvatar(boolean avatar) {
         this.avatar = avatar;
     }
 
@@ -142,10 +142,19 @@ public class Contact {
 
     // KEEP METHODS - put your custom methods here
 
-    public Contact(Long id, String name, String relationship, String avatar) {
+    public Contact(Long id, String name, String relationship, boolean avatar) {
         this.id = id;
         this.name = name;
         this.relationship = relationship;
+        this.avatar = avatar;
+        this.pinyin = Pinyin.getPinyinForString(this.name);
+    }
+
+    public Contact(Long id, String name, String relationship) {
+        this.id = id;
+        this.name = name;
+        this.relationship = relationship;
+        this.avatar = false;
         this.pinyin = Pinyin.getPinyinForString(this.name);
     }
 

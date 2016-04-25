@@ -22,7 +22,7 @@ public class ModelGenerator {
         contact.addIdProperty().getProperty();
         contact.addStringProperty("name").notNull();
         contact.addStringProperty("relationship");
-        contact.addStringProperty("avatar");
+        contact.addBooleanProperty("avatar").notNull();
         contact.addStringProperty("pinyin");
         contact.setHasKeepSections(true);
 
