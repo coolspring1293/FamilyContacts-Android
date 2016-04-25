@@ -85,7 +85,7 @@ public class ModelExampleActivity extends AppCompatActivity {
     }
 
     private void addContact() {
-        Contact contact = new Contact(null, "Siyuan Liu", "Dad", "", "Siyuan Liu");
+        Contact contact = new Contact(null, "Siyuan Liu", "Dad");
         contactDao.insert(contact);
         Log.d("Model", "Inserted new Contact, ID: " + contact.getId());
         updateListContent();

@@ -103,7 +103,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void addContact() {
-        Contact contact = new Contact(null, "Wang Liu", "Grandpa", "");
+        Contact contact = new Contact(null, "Wang Liu", "Grandpa");
         contactDao.insert(contact);
         Log.d("Model", "Inserted new Contact, ID: " + contact.getId());
         updateListContent();
