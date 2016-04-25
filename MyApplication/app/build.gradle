@@ -5,7 +5,7 @@ android {
     buildToolsVersion '23.0.1'
     defaultConfig {
         applicationId "com.example.admin.myapplication"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -28,4 +28,5 @@ dependencies {
     compile project(':library')
     compile 'de.greenrobot:greendao:2.1.0'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'de.hdodenhof:circleimageview:2.0.0'
 }

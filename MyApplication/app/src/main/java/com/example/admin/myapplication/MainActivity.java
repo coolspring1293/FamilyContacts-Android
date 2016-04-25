@@ -1,5 +1,6 @@
 package com.example.admin.myapplication;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.HorizontalScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.myapplication.model.ContactDao;
@@ -32,6 +34,8 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
     /*滑动距离*/
     final int DISTANT=50;
     public int mark = 0;
+
+    private final int REQUESTCODE=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,4 +140,18 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        Toast.makeText(this,"onActivityResult " + requestCode ,Toast.LENGTH_SHORT).show();
+
+            String tel = data.getStringExtra("tel");//接收返回数据
+            getSupportFragmentManager().beginTransaction().hide(mFragments[0])
+                        .hide(mFragments[1]).hide(mFragments[2])
+                        .show(mFragments[2]).commit();
+            TextView txt =(TextView)findViewById(R.id.text_show);
+            txt.setText(tel.toString());
+
+    }
 }

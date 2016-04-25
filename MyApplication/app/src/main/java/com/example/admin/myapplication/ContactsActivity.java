@@ -54,7 +54,7 @@ public class ContactsActivity extends Fragment{
 
     private StickyListHeadersListView stickyList;
 
-
+    private final int REQUESTCODE=1;
 
     public static ContactsActivity newInstance(int index) {
         ContactsActivity f = new ContactsActivity();
@@ -91,6 +91,7 @@ public class ContactsActivity extends Fragment{
             Map<String,Object> map = new HashMap<String, Object>();
             map.put("name",cursor.getString(cursor.getColumnIndex("NAME")));
             map.put("title",cursor.getString(cursor.getColumnIndex("RELATIONSHIP")));
+            map.put("id",cursor.getString(cursor.getColumnIndex("_id")));
             list.add(map);
         }
 
@@ -188,7 +189,6 @@ public class ContactsActivity extends Fragment{
     }
     public class MyTextAdapter extends BaseAdapter implements StickyListHeadersAdapter {
 
-        /*private String[] countries = {"ADFAF","DAFD","asdfads","adsfaf","dfff","erer","ewrwr","dfds","hrthth","tretert","jytujy"};*/
         private LayoutInflater inflater;
 
         public MyTextAdapter(Context context) {
@@ -230,13 +230,15 @@ public class ContactsActivity extends Fragment{
             stickyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String str = data.get(position).get("name").toString();
+                    String contactName = data.get(position).get("name").toString();
+                    String contactId = data.get(position).get("id").toString();
                     Intent intent = new Intent();
                     intent.setClass(getActivity(),DetailActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("name",str);
+                    bundle.putString("contactName",contactName);
+                    bundle.putString("contactId",contactId);
                     intent.putExtras(bundle);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUESTCODE);
 
                 }
             });

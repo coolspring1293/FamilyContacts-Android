@@ -3,8 +3,8 @@
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
     <item android:state_pressed="true"
-        android:drawable="@layout/shape_white" /> <!-- pressed -->
+        android:drawable="@drawable/shape" /> <!-- pressed -->
     <item android:state_focused="true"
-        android:drawable="@layout/shape_white" /> <!-- focused -->
-    <item android:drawable="@layout/shape" /> <!-- default -->
+        android:drawable="@drawable/shape" /> <!-- focused -->
+    <item android:drawable="@drawable/shape_white" /> <!-- default -->
 </selector>

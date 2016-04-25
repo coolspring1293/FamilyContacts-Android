@@ -3,15 +3,22 @@ package com.example.admin.myapplication;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,9 +38,11 @@ public class DetailActivity extends Activity {
 
     private static final int PHOTO_REQUEST_GALLERY = 1;
     private static final int PHOTO_REQUEST_CUT = 3;
-    private ImageView image;
+    private ImageView image,bg;
     private Button back, gallery;
     private TextView txt;
+    private static int Width;
+    private static int Height;
     private static final String IMAGE_FILE_LOCATION = "file:///sdcard/temp.jpg";//temp file
     Uri imageUri = Uri.parse(IMAGE_FILE_LOCATION);
 
@@ -55,13 +64,24 @@ public class DetailActivity extends Activity {
             case PHOTO_REQUEST_CUT:// 返回的结果
                 if (data != null) {
                     Bitmap bm = decodeUriAsBitmap(imageUri);
+                    Bitmap bm_bg = decodeUriAsBitmap(imageUri);
                     image.setImageBitmap(bm);
+                    bm_bg = blurBitmap(bm_bg);
+                    bm_bg = big(bm_bg);
+                    bg.setImageBitmap(bm_bg);
+
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private static Bitmap big(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postScale((float)Width/(float)bitmap.getWidth(),(float)Height / (float)bitmap.getHeight() * 0.4f); //长和宽放大缩小的比例
+        Bitmap resizeBmp = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+        return resizeBmp;
+    }
     private Bitmap decodeUriAsBitmap(Uri uri){
 
         Bitmap bitmap = null;
@@ -105,12 +125,13 @@ public class DetailActivity extends Activity {
         setContentView(R.layout.detail);
         txt = (TextView) findViewById(R.id.detail_name);
         image = (ImageView) findViewById(R.id.detail_image);
+        bg = (ImageView) findViewById(R.id.detail_bg);
 
         back = (Button) findViewById(R.id.back);
         gallery = (Button) findViewById(R.id.gallery);
 
         Bundle bundle = this.getIntent().getExtras();
-        String str = bundle.getString("name");
+        String str = bundle.getString("contactName");
         txt.setText(str);
 
         gallery.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +153,9 @@ public class DetailActivity extends Activity {
                 startActivity(intent);
             }
         });
+        WindowManager wm = this.getWindowManager();
+        Width = wm.getDefaultDisplay().getWidth();
+        Height = wm.getDefaultDisplay().getHeight();
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -159,4 +183,41 @@ public class DetailActivity extends Activity {
         }
         return inSampleSize;
     }
+
+    public Bitmap blurBitmap(Bitmap bitmap){
+
+        //Let's create an empty bitmap with the same size of the bitmap we want to blur
+        Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+        //Instantiate a new Renderscript
+        RenderScript rs = RenderScript.create(getApplicationContext());
+
+        //Create an Intrinsic Blur Script using the Renderscript
+        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+
+        //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
+        Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
+        Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
+
+        //Set the radius of the blur
+        float radius = 25.0f;
+        blurScript.setRadius(radius);
+
+        //Perform the Renderscript
+        blurScript.setInput(allIn);
+        blurScript.forEach(allOut);
+
+        //Copy the final bitmap created by the out Allocation to the outBitmap
+        allOut.copyTo(outBitmap);
+
+        //recycle the original bitmap
+        bitmap.recycle();
+
+        //After finishing everything, we destroy the Renderscript.
+        rs.destroy();
+
+        return outBitmap;
+
+    }
+
 }
