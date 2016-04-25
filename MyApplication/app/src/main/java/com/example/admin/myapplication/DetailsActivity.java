@@ -4,7 +4,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -16,6 +25,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.admin.myapplication.model.City;
@@ -25,6 +37,11 @@ import com.example.admin.myapplication.model.DaoMaster;
 import com.example.admin.myapplication.model.DaoSession;
 import com.example.admin.myapplication.model.DatabaseHelper;
 import com.example.admin.myapplication.model.TelInitialDao;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Created by liuw53 on 4/14/16.
@@ -36,8 +53,24 @@ public class DetailsActivity extends AppCompatActivity {
     private DaoSession daoSession;
     private ContactDao contactDao;
     private String number = "18824110669";
+    private static int Width;
+    private static int Height;
+    private GoogleApiClient client;
+    private String path = Environment.getExternalStorageDirectory() + "/familycontact/icon/xiaoxin/";
+    private ImageView tmp_iv;
+    private EditText tmp_et;
+    private de.hdodenhof.circleimageview.CircleImageView img;
+    private android.support.v7.widget.AppCompatImageButton bg;
+    final String icon_name = "xiaoxin_";
+    final String icon_end  = ".jpg";
 
+    private static final int PHOTO_REQUEST_CAREMA = 1;
+    private static final int PHOTO_REQUEST_GALLERY = 2;
+    private static final int PHOTO_REQUEST_CUT = 3;
+    private ImageView iv_image;
 
+    private static final String PHOTO_FILE_NAME = "temp_photo.jpg";
+    private File tempFile;
 
 
     @Override
@@ -52,8 +85,12 @@ public class DetailsActivity extends AppCompatActivity {
         toolbar.setTitle(contactName);
         toolbar.setSubtitle(contactId);
         //toolbar.setLogo(R.drawable.allen_xie_icon);
-
+        img = (de.hdodenhof.circleimageview.CircleImageView)findViewById(R.id.img_add);
+        bg =  (android.support.v7.widget.AppCompatImageButton)findViewById(R.id.button_add);
         setSupportActionBar(toolbar);
+        WindowManager wm = this.getWindowManager();
+        Width = wm.getDefaultDisplay().getWidth();
+        Height = wm.getDefaultDisplay().getHeight();
 
         //TODO find list<tel> according to contacId ,  and display
 
@@ -103,6 +140,7 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                /* GetPicFromGallery();*/
+                gallery();
                 dialog.dismiss();
             }
         });
@@ -110,10 +148,184 @@ public class DetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                /* GetPicFromCamera();*/
+                camera();
                 dialog.dismiss();
             }
         });
         builder.create().show();
+    }
+
+    /*
+	 * 从相册获取
+	 */
+    public void gallery() {
+        // 激活系统图库，选择一张图片
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GALLERY
+        startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
+    }
+
+    /*
+     * 从相机获取
+     */
+    public void camera() {
+        // 激活相机
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        // 判断存储卡是否可以用，可用进行存储
+        if (hasSdcard()) {
+            tempFile = new File(Environment.getExternalStorageDirectory(),
+                    PHOTO_FILE_NAME);
+            // 从文件中创建uri
+            Uri uri = Uri.fromFile(tempFile);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        }
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CAREMA
+        startActivityForResult(intent, PHOTO_REQUEST_CAREMA);
+    }
+    private boolean hasSdcard() {
+        if (Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    /*
+     * 剪切图片
+     */
+    private void crop(Uri uri) {
+        // 裁剪图片意图
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // 裁剪框的比例，1：1
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // 裁剪后输出图片的尺寸大小
+        intent.putExtra("outputX", 250);
+        intent.putExtra("outputY", 250);
+
+        intent.putExtra("outputFormat", "JPEG");// 图片格式
+        intent.putExtra("noFaceDetection", true);// 取消人脸识别
+        intent.putExtra("return-data", true);
+        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_CUT
+        startActivityForResult(intent, PHOTO_REQUEST_CUT);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PHOTO_REQUEST_GALLERY) {
+            // 从相册返回的数据
+            if (data != null) {
+                // 得到图片的全路径
+                Uri uri = data.getData();
+                crop(uri);
+            }
+
+        } else if (requestCode == PHOTO_REQUEST_CAREMA) {
+            // 从相机返回的数据
+            if (hasSdcard()) {
+                crop(Uri.fromFile(tempFile));
+            } else {
+                //Toast.makeText(MainActivity.this, "未找到存储卡，无法存储照片！", 0).show();
+            }
+
+        } else if (requestCode == PHOTO_REQUEST_CUT) {
+            // 从剪切图片返回的数据
+            if (data != null) {
+                Bitmap bitmap = data.getParcelableExtra("data");
+                img.setImageBitmap(bitmap);
+                Bitmap bitmap_bg = data.getParcelableExtra("data");
+                bg.setImageBitmap(big(blurBitmap(bitmap_bg)));
+
+                try {
+                    saveBitmapToFile(bitmap, path + "/familycontact/icon/tmp_file/1.png");
+                }
+                catch (IOException e) {
+                    // Log.e(TAG_ERROR, e.getMessage(), e);
+                }
+            }
+            try {
+                // 将临时文件删除
+
+                tempFile.delete();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public Bitmap blurBitmap(Bitmap bitmap){
+
+        //Let's create an empty bitmap with the same size of the bitmap we want to blur
+        Bitmap outBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+        //Instantiate a new Renderscript
+        RenderScript rs = RenderScript.create(getApplicationContext());
+
+        //Create an Intrinsic Blur Script using the Renderscript
+        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+
+        //Create the Allocations (in/out) with the Renderscript and the in/out bitmaps
+        Allocation allIn = Allocation.createFromBitmap(rs, bitmap);
+        Allocation allOut = Allocation.createFromBitmap(rs, outBitmap);
+
+        //Set the radius of the blur
+        float radius = 25.0f;
+        blurScript.setRadius(radius);
+
+        //Perform the Renderscript
+        blurScript.setInput(allIn);
+        blurScript.forEach(allOut);
+
+        //Copy the final bitmap created by the out Allocation to the outBitmap
+        allOut.copyTo(outBitmap);
+
+        //recycle the original bitmap
+        //bitmap.recycle();
+
+        //After finishing everything, we destroy the Renderscript.
+        rs.destroy();
+
+        return outBitmap;
+
+    }
+
+    private static Bitmap big(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postScale((float)Width/(float)bitmap.getWidth(),(float)Height / (float)bitmap.getHeight() * 0.4f); //长和宽放大缩小的比例
+        Bitmap resizeBmp = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+        return resizeBmp;
+    }
+
+    public static void saveBitmapToFile(Bitmap bitmap, String _file)  throws IOException
+    {//_file = <span style="font-family: Arial, Helvetica, sans-serif;">getSDPath()+"</span><span style="font-family: Arial, Helvetica, sans-serif;">/xx自定义文件夹</span><span style="font-family: Arial, Helvetica, sans-serif;">/hot.png</span><span style="font-family: Arial, Helvetica, sans-serif;">"</span>
+        FileOutputStream os = null;
+        try {
+            File file = new File(_file);
+            // String _filePath_file.replace(File.separatorChar +
+            // file.getName(), "");
+            int end = _file.lastIndexOf(File.separator);
+            String _filePath = _file.substring(0, end);
+            File filePath = new File(_filePath);
+            if (!filePath.exists()) {
+                filePath.mkdirs();
+            }
+            file.createNewFile();
+            os = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
+        } finally {
+            if (os != null) {
+                try {
+                    os.close();
+                } catch (IOException e) {
+                    // Log.e(TAG_ERROR, e.getMessage(), e);
+                }
+            }
+        }
     }
     private void updateListContent() {
         Cursor cursor = db.query(contactDao.getTablename(), contactDao.getAllColumns(), null, null, null, null, null);

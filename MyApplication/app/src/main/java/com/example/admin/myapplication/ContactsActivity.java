@@ -233,7 +233,7 @@ public class ContactsActivity extends Fragment{
                     String contactName = data.get(position).get("name").toString();
                     String contactId = data.get(position).get("id").toString();
                     Intent intent = new Intent();
-                    intent.setClass(getActivity(),DetailActivity.class);
+                    intent.setClass(getActivity(),DetailsActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("contactName",contactName);
                     bundle.putString("contactId",contactId);
