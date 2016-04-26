@@ -6,7 +6,7 @@
     <RelativeLayout
         android:id="@+id/current_task_title"
         android:layout_height="wrap_content"
-        android:background="#093D5A"
+        android:background="@color/title_bg"
         android:layout_width="fill_parent">
         <TextView
             android:id="@+id/fragment_home_text"
@@ -17,12 +17,13 @@
             android:gravity="center_horizontal"
             android:text="@string/tab_dialing"
             android:textSize="20sp"
-            android:textColor="#ffffff"
+            android:textColor="@color/theme"
             android:textStyle="bold"
             android:textScaleX="1.1"/>"
     </RelativeLayout>
 <RelativeLayout
     android:layout_width="wrap_content"
+    android:background="@color/bg"
     android:layout_height="wrap_content">
 
     <LinearLayout

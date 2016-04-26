@@ -296,7 +296,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     private static Bitmap big(Bitmap bitmap) {
         Matrix matrix = new Matrix();
-        matrix.postScale((float)Width/(float)bitmap.getWidth(),(float)Height / (float)bitmap.getHeight() * 0.4f); //长和宽放大缩小的比例
+        matrix.postScale((float)Width/(float)bitmap.getWidth(),(float)Height/ (float)bitmap.getHeight() * 0.5f); //长和宽放大缩小的比例
         Bitmap resizeBmp = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
         return resizeBmp;
     }

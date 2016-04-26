@@ -17,7 +17,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-7sp"
+        android:layout_marginTop="-5sp"
         android:id="@+id/contact_title"
         android:textSize="14sp"/>
     </LinearLayout>

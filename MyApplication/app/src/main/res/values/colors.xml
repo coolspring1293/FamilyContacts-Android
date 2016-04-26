@@ -3,10 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
-        <color name="header_normal">#BEBEBE</color>
-        <color name="header_pressed">#ffc0392b</color>
-        <color name="menu_section_header">#FFDDDDDD</color>
+    <color name="bg">#F4F4F4</color>
+    <color name="title_bg">#FFFFFF</color>
+    <color name="theme">#093D5A</color>
+    <color name="bg2">#FCFAF2</color>
+    <color name="header_normal">#093D5A</color>
+    <color name="header_pressed">#ffc0392b</color>
+    <color name="menu_section_header">#FFDDDDDD</color>
     <color name="colorIconCycle">#99999955</color>
 
     <color name="colorCivBorder">#8FFFFFFF</color>
