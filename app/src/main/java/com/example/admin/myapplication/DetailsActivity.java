@@ -64,6 +64,8 @@ public class DetailsActivity extends AppCompatActivity {
     private DaoMaster daoMaster;
     private DaoSession daoSession;
     private ContactDao contactDao;
+
+
     private String number = "18824110669";
     private static int Width;
     private static int Height;

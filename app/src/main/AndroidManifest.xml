@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".EditContactActivity"></activity>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -28,6 +28,11 @@
             android:name=".DetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".DetailActivity"></activity>
+
+        <activity
+            android:name=".EditContactActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.

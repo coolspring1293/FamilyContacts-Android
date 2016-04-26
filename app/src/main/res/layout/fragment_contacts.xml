@@ -20,6 +20,17 @@
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:textScaleX="1.1"/>"
+
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/contact_add"
+            android:src="@drawable/ic_person_add_24dp"
+
+            android:foregroundGravity="right"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" />
     </RelativeLayout>
     <!--<ListView
         android:layout_width="wrap_content"
@@ -31,4 +42,7 @@
         android:id="@+id/test_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+
+
 </LinearLayout>

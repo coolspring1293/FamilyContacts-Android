@@ -37,4 +37,6 @@
     <color name="colorEidtButton">#5F8FF0</color>
     <color name="colorDeleteButton">#FF4F60</color>
 
+    <color name="colorEditText">#7A7A7A</color>
+
 </resources>

@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +23,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,8 +58,11 @@ public class ContactsActivity extends Fragment{
 
     private final int REQUESTCODE=1;
 
+    private ImageButton button_add_contact;
+
     public static ContactsActivity newInstance(int index) {
         ContactsActivity f = new ContactsActivity();
+
 
         Bundle args = new Bundle();
         args.putInt("index", index);
@@ -68,7 +73,7 @@ public class ContactsActivity extends Fragment{
     }
 
     public int getShownIndex() {
-        return getArguments().getInt("index",0);
+        return getArguments().getInt("index", 0);
     }
 
 
@@ -82,6 +87,9 @@ public class ContactsActivity extends Fragment{
 
         return view;
     }
+    
+
+
 
     private List<Map<String,Object>> getData() {
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
@@ -179,6 +187,26 @@ public class ContactsActivity extends Fragment{
         addContactC();
         addContactC();
 
+        button_add_contact = (ImageButton)getView().findViewById(R.id.contact_add);
+
+        button_add_contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*addContact();
+                Snackbar.make(view, "Added contact", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+
+                Intent intent = new Intent();
+                intent.setClass(getActivity(), EditContactActivity.class);
+                Bundle bundle = new Bundle();
+                intent.putExtras(bundle);
+                //startActivityForResult(intent, REQUESTCODE);
+                startActivity(intent);
+
+            }
+        });
+
+
         data = getData();
         stickyList = (StickyListHeadersListView)getView().findViewById(R.id.test_list);
         MyTextAdapter adapter = new MyTextAdapter(getActivity());
@@ -226,19 +254,20 @@ public class ContactsActivity extends Fragment{
             }
 
             holder.name.setText((String)data.get(position).get("name"));
-            holder.title.setText((String)data.get(position).get("title"));
+            holder.title.setText((String) data.get(position).get("title"));
             stickyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String contactName = data.get(position).get("name").toString();
                     String contactId = data.get(position).get("id").toString();
                     Intent intent = new Intent();
-                    intent.setClass(getActivity(),DetailsActivity.class);
+                    intent.setClass(getActivity(), DetailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("contactName",contactName);
-                    bundle.putString("contactId",contactId);
+                    bundle.putString("contactName", contactName);
+                    bundle.putString("contactId", contactId);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUESTCODE);
+//                    startActivity(intent);
 
                 }
             });
