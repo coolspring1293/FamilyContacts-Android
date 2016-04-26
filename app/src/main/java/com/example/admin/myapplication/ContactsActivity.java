@@ -87,7 +87,7 @@ public class ContactsActivity extends Fragment{
 
         return view;
     }
-    
+
 
 
 

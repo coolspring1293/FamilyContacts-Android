@@ -140,6 +140,7 @@ public class EditContactActivity extends Activity {
     private String mAvatar;
     private String mTel;
 
+    public boolean haveId = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,17 +166,32 @@ public class EditContactActivity extends Activity {
         //updateListContent();
 
         button_ok = (Button) findViewById(R.id.edit_ok);
-        // TODO Leasunhy
+
         // Long id = 0L; // ContactDao.getNextID();
-        button_ok.setOnClickListener(new View.OnClickListener() {		//设置按钮单击事件
+        button_ok.setOnClickListener(new View.OnClickListener() {		//修改
             @Override
             public void onClick(View v) {
-                id = addContact(
-                        atct_name.getText().toString(),
-                        atct_relationship.getText().toString(),
-                        atct_name.getText().toString()
-                );
-                // 回到上一个地方
+                if (haveId == false) {
+                    id = addContact(
+                            atct_name.getText().toString(),
+                            atct_relationship.getText().toString(),
+                            atct_name.getText().toString()
+                    );
+                    // TODO
+                    // addTeltoContact(id, atct_telephone.getText().toString());
+                }
+                else {
+                    Contact contact = new Contact(
+                            id,
+                            atct_name.getText().toString(),
+                            atct_relationship.getText().toString(),
+                            atct_name.getText().toString()
+                    );
+                    updateContact(contact);
+                    // TODO
+                    // addTeltoContact(id, atct_telephone.getText().toString());
+                }
+                //updateContact(contact);
                 finish();
             }
         });
@@ -197,12 +213,9 @@ public class EditContactActivity extends Activity {
 
     //City myCity = daoSession.getTelInitialDao().queryBuilder().where(
     //TelInitialDao.Properties.Initial.eq("1301996")).build().unique().getCity();
-    /***
-     *
-     * @param contact
-     * @return
-     */
-    // return id
+
+
+
     private void insertContect(Contact contact) {
         contactDao.insert(contact);
         Log.d("Model", "Inserted new Contact, ID: " + contact.getId());
@@ -216,10 +229,18 @@ public class EditContactActivity extends Activity {
      * @return
      */
     //add telephone number to this contact
-    private boolean addTeltoContact(String _id, String tel_number) {
+    private boolean addTeltoContact(Long _id, String tel_number) {
+        City city = daoSession.getTelInitialDao().queryBuilder().where(
+                TelInitialDao.Properties.Initial.eq(tel_number.substring(0, 6))).build().unique().getCity();
+        Telephone t = new Telephone(null, tel_number, city.getId(), _id);
 
 
         return true;
+    }
+
+
+    private void updateContact(Contact c) {
+        contactDao.insert(c);
     }
 
 
