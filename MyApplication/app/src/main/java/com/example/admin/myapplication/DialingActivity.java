@@ -22,7 +22,7 @@ public class DialingActivity extends Fragment {
 
     private TextView mText;
     private Button tab_1,tab_2,tab_3,tab_4,tab_5,tab_6,tab_7,tab_8,tab_9,tab_0,tab_star,tab_jing,tab_call,back;
-    private TextView tel;
+    public TextView tel;
     public static DialingActivity newInstance(int index) {
         DialingActivity f = new DialingActivity();
 

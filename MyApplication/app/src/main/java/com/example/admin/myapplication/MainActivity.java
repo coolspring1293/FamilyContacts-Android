@@ -1,195 +1,59 @@
 package com.example.admin.myapplication;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
-import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.view.LayoutInflater;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.WeakHashMap;
+import com.example.admin.myapplication.model.ContactDao;
+import com.example.admin.myapplication.model.DaoMaster;
+import com.example.admin.myapplication.model.DaoSession;
+import com.example.admin.myapplication.model.DatabaseHelper;
 
-import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
-import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class MainActivity extends FragmentActivity {
+
+public class MainActivity extends FragmentActivity implements GestureDetector.OnGestureListener {
     public static Fragment[] mFragments;
     FragmentIndicator mIndicator;
+    public static SQLiteDatabase db;
+    public static DaoMaster daoMaster;
+    public static DaoSession daoSession;
+    public static ContactDao contactDao;
 
-    private ExpandableStickyListHeadersListView mListView;
-    TestBaseAdapter mTestBaseAdapter;
-    WeakHashMap<View,Integer> mOriginalViewHeightPool = new WeakHashMap<View, Integer>();
+    /*手势识别*/
+    public static GestureDetector detector;
+    /*滑动距离*/
+    final int DISTANT=50;
+    public int mark = 0;
 
-    //animation executor
-    class AnimationExecutor implements ExpandableStickyListHeadersListView.IAnimationExecutor {
-
-        @Override
-        public void executeAnim(final View target, final int animType) {
-            if(ExpandableStickyListHeadersListView.ANIMATION_EXPAND==animType&&target.getVisibility()==View.VISIBLE){
-                return;
-            }
-            if(ExpandableStickyListHeadersListView.ANIMATION_COLLAPSE==animType&&target.getVisibility()!=View.VISIBLE){
-                return;
-            }
-            if(mOriginalViewHeightPool.get(target)==null){
-                mOriginalViewHeightPool.put(target,target.getHeight());
-            }
-            final int viewHeight = mOriginalViewHeightPool.get(target);
-            float animStartY = animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND ? 0f : viewHeight;
-            float animEndY = animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND ? viewHeight : 0f;
-            final ViewGroup.LayoutParams lp = target.getLayoutParams();
-            ValueAnimator animator = ValueAnimator.ofFloat(animStartY, animEndY);
-            animator.setDuration(200);
-            target.setVisibility(View.VISIBLE);
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    if (animType == ExpandableStickyListHeadersListView.ANIMATION_EXPAND) {
-                        target.setVisibility(View.VISIBLE);
-                    } else {
-                        target.setVisibility(View.GONE);
-                    }
-                    target.getLayoutParams().height = viewHeight;
-                }
-
-                @Override
-                public void onAnimationCancel(Animator animator) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animator animator) {
-
-                }
-            });
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    lp.height = ((Float) valueAnimator.getAnimatedValue()).intValue();
-                    target.setLayoutParams(lp);
-                    target.requestLayout();
-                }
-            });
-            animator.start();
-
-        }
-    }
+    private final int REQUESTCODE=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        detector=new GestureDetector(this);
 
-       /* StickyListHeadersListView stickyList =(StickyListHeadersListView)findViewById(R.id.contact_list);
-        MyAdapter adapter = new MyAdapter(this);
-        stickyList.setAdapter(adapter);*/
-
-        mListView = (ExpandableStickyListHeadersListView) findViewById(R.id.contact_list);
-        //custom expand/collapse animation
-        mListView.setAnimExecutor(new AnimationExecutor());
-        mTestBaseAdapter = new TestBaseAdapter(this);
-        mListView.setAdapter(mTestBaseAdapter);
-        mListView.setOnHeaderClickListener(new StickyListHeadersListView.OnHeaderClickListener() {
-            @Override
-            public void onHeaderClick(StickyListHeadersListView l, View header, int itemPosition, long headerId, boolean currentlySticky) {
-                if (mListView.isHeaderCollapsed(headerId)) {
-                    mListView.expand(headerId);
-                } else {
-                    mListView.collapse(headerId);
-                }
-            }
-        });
+        DaoMaster.DevOpenHelper helper = DatabaseHelper.getDB(this);
+        db = helper.getWritableDatabase();
+        daoMaster = new DaoMaster(db);
+        daoSession = daoMaster.newSession();
+        contactDao = daoSession.getContactDao();
         setFragmentIndicator(0);
     }
 
-    public class MyAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-
-        private String[] countries = {"America","China","Japan","England"};
-        private LayoutInflater inflater;
-
-        public MyAdapter(Context context) {
-            inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public int getCount() {
-            return countries.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return countries[position];
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-
-            if (convertView == null) {
-                holder = new ViewHolder();
-                convertView = inflater.inflate(R.layout.test_list_item_layout, parent, false);
-                holder.text = (TextView) convertView.findViewById(R.id.text);
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            holder.text.setText(countries[position]);
-
-            return convertView;
-        }
-
-        @Override
-        public View getHeaderView(int position, View convertView, ViewGroup parent) {
-            HeaderViewHolder holder;
-            if (convertView == null) {
-                holder = new HeaderViewHolder();
-                convertView = inflater.inflate(R.layout.header, parent, false);
-                holder.text = (TextView) convertView.findViewById(R.id.text);
-                convertView.setTag(holder);
-            } else {
-                holder = (HeaderViewHolder) convertView.getTag();
-            }
-            //set header text as first char in name
-            String headerText = "" + countries[position].subSequence(0, 1).charAt(0);
-            holder.text.setText(headerText);
-            return convertView;
-        }
-
-        @Override
-        public long getHeaderId(int position) {
-            //return the first character of the country as ID because this is what headers are based upon
-            return countries[position].subSequence(0, 1).charAt(0);
-        }
-
-        class HeaderViewHolder {
-            TextView text;
-        }
-
-        class ViewHolder {
-            TextView text;
-        }
-
-    }
 
     private void setFragmentIndicator(int whichIsDefault) {
-        mFragments = new Fragment[4];
+        mark = whichIsDefault;
+        mFragments = new Fragment[3];
         mFragments[0] = getSupportFragmentManager().findFragmentById(R.id.fragment_contacts);
         mFragments[1] = getSupportFragmentManager().findFragmentById(R.id.fragment_records);
         mFragments[2] = getSupportFragmentManager().findFragmentById(R.id.fragment_dialing);
@@ -207,12 +71,52 @@ public class MainActivity extends FragmentActivity {
                 // TODO Auto-generated method stub
                 getSupportFragmentManager().beginTransaction()
                         .hide(mFragments[0]).hide(mFragments[1]).hide(mFragments[2]).
-                       show(mFragments[which]).commit();
+                        show(mFragments[which]).commit();
+                mark = which;
             }
 
         });
     }
 
+
+    @Override
+    public boolean onFling(MotionEvent arg0, MotionEvent arg1, float arg2, float arg3) {
+        Toast.makeText(getBaseContext(),"----onFling---"+arg1.getX()+">" +arg0.getX() +" + "+DISTANT,Toast.LENGTH_SHORT).show();
+        if(arg1.getX()>arg0.getX()+DISTANT) {
+            FragmentIndicator.setIndicator((mark-1)%3);
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
+                    .hide(mFragments[0]).hide(mFragments[1]).hide(mFragments[2]).show(mFragments[(mark - 1)%3]).commit();
+            mark = (mark-1)%3;
+        }
+        if(arg1.getX()<arg0.getX()+DISTANT) {
+            FragmentIndicator.setIndicator((mark+1)%3);
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
+                    .hide(mFragments[0]).hide(mFragments[1]).hide(mFragments[2]).show(mFragments[(mark + 1)%3]).commit();
+            mark = (mark+1)%3;
+        }
+        return false;
+    }
+    @Override
+    public void onShowPress(MotionEvent arg0) {}
+    @Override
+    public void onLongPress(MotionEvent arg0) {}
+    @Override
+    public boolean onSingleTapUp(MotionEvent arg0) {
+        return false;
+    }
+    @Override
+    public boolean onDown(MotionEvent arg0) {
+        return false;
+    }
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        Toast.makeText(getBaseContext(),"----onFling---",Toast.LENGTH_SHORT);
+        return detector.onTouchEvent(event);
+    }
+    @Override
+    public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,float arg3) {
+        return false;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -236,4 +140,18 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+        Toast.makeText(this,"onActivityResult " + requestCode ,Toast.LENGTH_SHORT).show();
+
+            String tel = data.getStringExtra("tel");//接收返回数据
+            getSupportFragmentManager().beginTransaction().hide(mFragments[0])
+                        .hide(mFragments[1]).hide(mFragments[2])
+                        .show(mFragments[2]).commit();
+            TextView txt =(TextView)findViewById(R.id.text_show);
+            txt.setText(tel.toString());
+
+    }
 }
