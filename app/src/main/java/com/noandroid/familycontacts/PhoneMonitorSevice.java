@@ -1,10 +1,13 @@
 package com.noandroid.familycontacts;
 
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
+import android.provider.CallLog;
 import android.support.annotation.Nullable;
 import android.telecom.Call;
 import android.telephony.PhoneStateListener;
@@ -39,6 +42,14 @@ public class PhoneMonitorSevice extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("PhoneMonitorService", "onCraete");
+        ContentResolver resolver = getContentResolver();
+        Cursor cursor = resolver.query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER + " LIMIT 1000");
+        String call = "CALL_LOG";
+        if (cursor.moveToFirst()) {
+            Log.d(call, cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)));
+
+        }
+
         TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         tm.listen(new CallListener(), PhoneStateListener.LISTEN_CALL_STATE);
     }

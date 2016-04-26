@@ -44,10 +44,10 @@ public class DetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         // test phonemonitor
-        Intent intent = new Intent(this, PhoneMonitorSevice.class);
-        startService(intent);
+//        Intent intent = new Intent(this, PhoneMonitorSevice.class);
+//        startService(intent);
         // test startupreceiver
-        intent = new Intent(getString(R.string.START_SERVICE));
+        Intent intent = new Intent(getString(R.string.START_SERVICE));
         sendBroadcast(intent);
 
         toolbar.setTitle("Allen Xie");
