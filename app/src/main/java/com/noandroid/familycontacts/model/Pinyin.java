@@ -61,7 +61,7 @@ public class Pinyin {
         for (int i = 0; i < str.length(); ++i) {
             char c = str.charAt(i);
             Pinyin py = pinyinDao.queryBuilder().where(PinyinDao.Properties.Zi.eq(c)).unique();
-            res += py == null ? c : py.getPinyin();
+            res += py == null ? Character.toLowerCase(c) : py.getPinyin().toLowerCase();
         }
         return res;
     }
