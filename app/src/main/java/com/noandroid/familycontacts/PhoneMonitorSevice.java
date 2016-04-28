@@ -42,13 +42,7 @@ public class PhoneMonitorSevice extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d("PhoneMonitorService", "onCraete");
-        ContentResolver resolver = getContentResolver();
-        Cursor cursor = resolver.query(CallLog.Calls.CONTENT_URI, null, null, null, CallLog.Calls.DEFAULT_SORT_ORDER + " LIMIT 1000");
-        String call = "CALL_LOG";
-        if (cursor.moveToFirst()) {
-            Log.d(call, cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)));
 
-        }
 
         TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
         tm.listen(new CallListener(), PhoneStateListener.LISTEN_CALL_STATE);
@@ -115,6 +109,12 @@ public class PhoneMonitorSevice extends Service {
                     }
                     break;
                 case TelephonyManager.CALL_STATE_IDLE:
+                    ContentResolver resolver = getContentResolver();
+                    Cursor cursor = resolver.query(CallLog.Calls.CONTENT_URI, null, null, null, "date DESC LIMIT 1");
+                    String call = "CALL_LOG";
+                    if (cursor.moveToFirst()) {
+                        Log.d(call, cursor.getString(cursor.getColumnIndex(CallLog.Calls.NUMBER)));
+                    }
                     Log.d(token, "CALL_STATE_IDLE");
                     break;
                 case TelephonyManager.CALL_STATE_OFFHOOK:
