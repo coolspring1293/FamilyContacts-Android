@@ -22,8 +22,11 @@ import com.noandroid.familycontacts.model.ContactDao;
 import com.noandroid.familycontacts.model.DaoMaster;
 import com.noandroid.familycontacts.model.DaoSession;
 import com.noandroid.familycontacts.model.DatabaseHelper;
+import com.noandroid.familycontacts.model.Record;
 import com.noandroid.familycontacts.model.TelInitialDao;
 import android.support.v7.widget.AppCompatImageButton;
+
+import java.util.Date;
 
 /**
  * Created by liuw53 on 4/14/16.
