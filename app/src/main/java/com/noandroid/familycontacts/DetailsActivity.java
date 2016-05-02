@@ -22,8 +22,11 @@ import com.noandroid.familycontacts.model.ContactDao;
 import com.noandroid.familycontacts.model.DaoMaster;
 import com.noandroid.familycontacts.model.DaoSession;
 import com.noandroid.familycontacts.model.DatabaseHelper;
+import com.noandroid.familycontacts.model.Record;
 import com.noandroid.familycontacts.model.TelInitialDao;
 import android.support.v7.widget.AppCompatImageButton;
+
+import java.util.Date;
 
 /**
  * Created by liuw53 on 4/14/16.
@@ -44,10 +47,10 @@ public class DetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         // test phonemonitor
-        Intent intent = new Intent(this, PhoneMonitorSevice.class);
-        startService(intent);
+//        Intent intent = new Intent(this, PhoneMonitorSevice.class);
+//        startService(intent);
         // test startupreceiver
-        intent = new Intent(getString(R.string.START_SERVICE));
+        Intent intent = new Intent(getString(R.string.START_SERVICE));
         sendBroadcast(intent);
 
         toolbar.setTitle("Allen Xie");
