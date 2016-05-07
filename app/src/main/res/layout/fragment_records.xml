@@ -5,21 +5,27 @@
     android:layout_height="match_parent">
     <RelativeLayout
         android:id="@+id/c"
-        android:layout_height="wrap_content"
-        android:background="#093D5A"
-        android:layout_width="fill_parent">"
+        android:layout_height="@dimen/header_height"
+        android:background="@color/colorPrimary"
+        android:layout_width="fill_parent">
+
+
+
         <TextView
             android:id="@+id/fragment_records_text"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:paddingTop="6sp"
             android:paddingBottom="6sp"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:gravity="center"
             android:text="@string/tab_records"
             android:textSize="20sp"
             android:textColor="#ffffff"
             android:textStyle="bold"
-            android:textScaleX="1.1"/>"
+            android:textScaleX="1.1"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
     </RelativeLayout>
 
 </LinearLayout>

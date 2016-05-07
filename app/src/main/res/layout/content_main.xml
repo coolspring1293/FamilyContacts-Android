@@ -9,30 +9,30 @@
     android:background="#E8F0F3"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main"
-    tools:context="com.example.admin.myapplication.MainActivity">
+    tools:context="com.noandroid.familycontacts.MainActivity">
 
     <fragment
         android:id="@+id/fragment_contacts"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:layout_weight="1"
-        class = "com.example.admin.myapplication.ContactsActivity"/>
+        class = "com.noandroid.familycontacts.ContactsActivity"/>
 
     <fragment
         android:id="@+id/fragment_records"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:layout_weight="1"
-        class = "com.example.admin.myapplication.RecordsActivity"/>
+        class = "com.noandroid.familycontacts.RecordsActivity"/>
 
     <fragment
         android:id="@+id/fragment_dialing"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:layout_weight="1"
-        class = "com.example.admin.myapplication.DialingActivity"/>
+        class = "com.noandroid.familycontacts.DialingActivity"/>
 
-    <com.example.admin.myapplication.FragmentIndicator
+    <com.noandroid.familycontacts.FragmentIndicator
         android:id="@+id/indicator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

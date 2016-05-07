@@ -4,10 +4,10 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-        <color name="header_normal">#BEBEBE</color>
-        <color name="header_pressed">#ffc0392b</color>
+        <color name="header_normal">#303f9f</color>
+        <color name="header_pressed">#283593</color>
         <color name="menu_section_header">#FFDDDDDD</color>
-    <color name="colorIconCycle">#99999955</color>
+    <color name="colorIconCycle">#7986cb</color>
 
     <color name="colorCivBorder">#8FFFFFFF</color>
 
@@ -38,5 +38,10 @@
     <color name="colorDeleteButton">#FF4F60</color>
 
     <color name="colorEditText">#7A7A7A</color>
+
+
+    <color name="primary">#FF03A9F4</color>
+    <color name="primary_dark">#FF0288D1</color>
+    <color name="status_bar_color">@color/primary_dark</color>
 
 </resources>
