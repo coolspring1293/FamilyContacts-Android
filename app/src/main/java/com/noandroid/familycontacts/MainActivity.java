@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,21 +18,21 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.noandroid.familycontacts.model.ContactDao;
-import com.noandroid.familycontacts.model.DaoMaster;
-import com.noandroid.familycontacts.model.DaoSession;
-import com.noandroid.familycontacts.model.DatabaseHelper;
+import com.noandroid.familycontacts.model.*;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 
-public class MainActivity extends FragmentActivity implements GestureDetector.OnGestureListener
-        ,NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends FragmentActivity
+        implements GestureDetector.OnGestureListener, FragmentIndicator.OnIndicateListener,
+        NavigationView.OnNavigationItemSelectedListener {
     public static Fragment[] mFragments;
     FragmentIndicator mIndicator;
     public static SQLiteDatabase db;
     public static DaoMaster daoMaster;
     public static DaoSession daoSession;
     public static ContactDao contactDao;
+    public static RecordDao recordDao;
+    public static TelephoneDao telDao;
 
     /*手势识别*/
     public static GestureDetector detector;
@@ -62,6 +63,8 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
         daoMaster = new DaoMaster(db);
         daoSession = daoMaster.newSession();
         contactDao = daoSession.getContactDao();
+        recordDao = daoSession.getRecordDao();
+        telDao = daoSession.getTelephoneDao();
         setFragmentIndicator(0);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -76,43 +79,44 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
         mFragments[1] = getSupportFragmentManager().findFragmentById(R.id.fragment_records);
         mFragments[2] = getSupportFragmentManager().findFragmentById(R.id.fragment_dialing);
 
-        getSupportFragmentManager().beginTransaction().hide(mFragments[0])
-                .hide(mFragments[1]).hide(mFragments[2])
-                .show(mFragments[whichIsDefault]).commit();
+        switchFragment(whichIsDefault, false);
 
         mIndicator=(FragmentIndicator) findViewById(R.id.indicator);
-        FragmentIndicator.setIndicator(whichIsDefault);
-        mIndicator.setOnIndicateListener(new FragmentIndicator.OnIndicateListener() {
-
-            @Override
-            public void OnIndicate(View v, int which) {
-                // TODO Auto-generated method stub
-                getSupportFragmentManager().beginTransaction()
-                        .hide(mFragments[0]).hide(mFragments[1]).hide(mFragments[2]).
-                        show(mFragments[which]).commit();
-                mark = which;
-            }
-
-        });
+        mIndicator.setOnIndicateListener(this);
     }
 
+    @Override
+    public void OnIndicate(View v, int which) {
+        switchFragment(which, false);
+    }
+
+    private void switchFragment(int which, boolean animate) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (animate) {
+            if (which > mark)
+                ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out);
+            else
+                ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out);
+        }
+        for (int i = 0; i < mFragments.length; ++i)
+            ft.hide(mFragments[i]);
+        ft.show(mFragments[which]);
+        ft.commit();
+        if (mFragments[which] instanceof RecordsActivity)
+            mFragments[which].onResume();
+        FragmentIndicator.setIndicator(which);
+        mark = which;
+    }
 
     @Override
     public boolean onFling(MotionEvent arg0, MotionEvent arg1, float arg2, float arg3) {
 
         Toast.makeText(getBaseContext(),"----onFling---"+arg1.getX()+">" +arg0.getX() +" + "+DISTANT,Toast.LENGTH_SHORT).show();
 
-        if(arg1.getX()>arg0.getX()+DISTANT) {
-            FragmentIndicator.setIndicator((mark-1)%3);
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out)
-                    .hide(mFragments[0]).hide(mFragments[1]).hide(mFragments[2]).show(mFragments[(mark - 1)%3]).commit();
-            mark = (mark-1)%3;
-        }
-        if(arg1.getX()<arg0.getX()+DISTANT) {
-            FragmentIndicator.setIndicator((mark+1)%3);
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out)
-                    .hide(mFragments[0]).hide(mFragments[1]).hide(mFragments[2]).show(mFragments[(mark + 1)%3]).commit();
-            mark = (mark+1)%3;
+        if(arg1.getX() > arg0.getX() + DISTANT) {
+            switchFragment((mark - 1) % mFragments.length, true);
+        } else if(arg1.getX() < arg0.getX() + DISTANT) {
+            switchFragment((mark + 1) % mFragments.length, true);
         }
         return false;
     }

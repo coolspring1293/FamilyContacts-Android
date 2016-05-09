@@ -8,6 +8,9 @@ version = '1.0.0'
 sourceCompatibility = 1.6
 mainClassName = "com.noandroid.familycontacts.model.ModelGenerator"
 
+repositories {
+    jcenter()
+}
 dependencies {
     compile 'de.greenrobot:greendao-generator:2.1.0'
 }
