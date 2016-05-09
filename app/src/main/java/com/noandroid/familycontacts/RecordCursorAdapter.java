@@ -93,6 +93,7 @@ public class RecordCursorAdapter extends CursorAdapter {
         if (contactid >= 0)  // if not stranger
             info += " " + telNum;
         holder.phone_number.setText(info);
+        holder.telephone = telNum;
 
         Date date = new Date(cursor.getLong(cursor.getColumnIndex("time")) * 1000);
         holder.date.setText(formatDate(date));
@@ -106,7 +107,9 @@ public class RecordCursorAdapter extends CursorAdapter {
         public TextView phone_number;
         public TextView date;
         public TextView location;
+
         public Long contactid;
+        public String telephone;
 
         ViewHolder(View view) {
             icon = (ImageView)view.findViewById(R.id.icon);
