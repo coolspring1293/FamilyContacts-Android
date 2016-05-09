@@ -171,6 +171,8 @@ public class Telephone {
             else
                 throw new IllegalArgumentException("Foreign telephone number");
         } else {
+            if (nospace.length() != 11)
+                throw new IllegalArgumentException("Telephone number should have 11 digits.");
             initial = nospace.substring(0, 7);
         }
         return telinitDao.queryBuilder().where(TelInitialDao.Properties.Initial.eq(initial))
