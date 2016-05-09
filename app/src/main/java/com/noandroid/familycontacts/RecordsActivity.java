@@ -81,13 +81,13 @@ public class RecordsActivity extends Fragment implements View.OnClickListener {
     private void updateListContent() {
         String contactQueryStr =
                 "SELECT " +
-                " contact._id as contactid, contact.name as display_name, count(*) as count, record.time, record.status, telephone.number " +
+                " contact._id as contactid, contact.name as display_name, count(*) as count, max(record.time) as time, record.status, telephone.number " +
                 " FROM " + " record left outer join telephone natural join contact " +
                 " WHERE record.telephone_number = telephone.number AND contact._id is not null " +
                 " GROUP BY " + " contact._id";
         String telephoneQueryStr =
                 "SELECT " +
-                " -1 as contactid, telephone_number as display_name, count(*) as count, time, status, telephone_number as number " +
+                " -1 as contactid, telephone_number as display_name, count(*) as count, max(time) as time, status, telephone_number as number " +
                 " FROM " + " record " +
                 " WHERE " + " telephone_number not in (SELECT number FROM telephone) " +
                 " GROUP BY " + " telephone_number";
@@ -113,7 +113,7 @@ public class RecordsActivity extends Fragment implements View.OnClickListener {
             Bundle bundle = new Bundle();
             bundle.putString("contactId", contactid.toString());
             intent.putExtras(bundle);
-            startActivityForResult(intent, 1);
+            startActivity(intent);
         }
     }
 }
