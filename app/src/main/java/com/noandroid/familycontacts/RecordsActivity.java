@@ -9,6 +9,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.noandroid.familycontacts.model.ContactDao;
@@ -23,7 +24,7 @@ import static com.noandroid.familycontacts.MainActivity.*;
  * Created by 关璐 on 2016/3/31.
  * Edited by leasunhy on 2016/5/9
  */
-public class RecordsActivity extends Fragment implements View.OnClickListener {
+public class RecordsActivity extends Fragment implements AdapterView.OnItemClickListener {
     private View mParent;
 
     private FragmentActivity mActivity;
@@ -81,13 +82,15 @@ public class RecordsActivity extends Fragment implements View.OnClickListener {
     private void updateListContent() {
         String contactQueryStr =
                 "SELECT " +
-                " contact._id as contactid, contact.name as display_name, count(*) as count, max(record.time) as time, record.status, telephone.number " +
+                    " contact._id as contactid, contact.name as display_name, count(*) as count," +
+                    " max(record.time) as time, record.status, telephone.number " +
                 " FROM " + " record left outer join telephone natural join contact " +
                 " WHERE record.telephone_number = telephone.number AND contact._id is not null " +
                 " GROUP BY " + " contact._id";
         String telephoneQueryStr =
                 "SELECT " +
-                " -1 as contactid, telephone_number as display_name, count(*) as count, max(time) as time, status, telephone_number as number " +
+                    " -1 as contactid, telephone_number as display_name, count(*) as count," +
+                    " max(time) as time, status, telephone_number as number " +
                 " FROM " + " record " +
                 " WHERE " + " telephone_number not in (SELECT number FROM telephone) " +
                 " GROUP BY " + " telephone_number";
@@ -96,13 +99,15 @@ public class RecordsActivity extends Fragment implements View.OnClickListener {
                 " FROM " + "(" + contactQueryStr + " UNION ALL " + telephoneQueryStr + ")" + " ORDER BY " + "time DESC";
         //String[] from = { "display_name", "count", "record.time", "record.status", "telephone.number" };
         Cursor cursor = db.rawQuery(queryStr, null);
-        RecordCursorAdapter adapter = new RecordCursorAdapter(getContext(), cursor, 0, this);
-        ((ListView)getView().findViewById(android.R.id.list)).setAdapter(adapter);
+        RecordCursorAdapter adapter = new RecordCursorAdapter(getContext(), cursor, 0);
+        ListView lv = (ListView)getView().findViewById(android.R.id.list);
+        lv.setOnItemClickListener(this);
+        lv.setAdapter(adapter);
 
     }
 
     @Override
-    public void onClick(View view) {
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         Long contactid = ((RecordCursorAdapter.ViewHolder)view.getTag()).contactid;
         if (contactid < 0) {  // stranger
             // TODO(leasunhy): call log detail page for strangers

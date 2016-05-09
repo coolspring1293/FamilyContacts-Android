@@ -22,7 +22,6 @@ import java.util.Locale;
 public class RecordCursorAdapter extends CursorAdapter {
     private LayoutInflater inflater;
     private Context context;
-    private View.OnClickListener clickListener;
     private static SimpleDateFormat dateOnlyFormatter = new SimpleDateFormat("yyyy-MM-d", Locale.ENGLISH);
     private static SimpleDateFormat timeOnlyFormatter = new SimpleDateFormat("h:m a", Locale.ENGLISH);
     private static SimpleDateFormat datetimeFormatter = new SimpleDateFormat("MMM d h:m a", Locale.ENGLISH);
@@ -56,18 +55,16 @@ public class RecordCursorAdapter extends CursorAdapter {
         return R.drawable.ic_call_made_24dp;
     }
 
-    RecordCursorAdapter(Context context, Cursor c, int flags, View.OnClickListener listener) {
+    RecordCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.clickListener = listener;
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         View view = inflater.inflate(R.layout.record_list_item, viewGroup, false);
         view.setTag(new ViewHolder(view));
-        view.setOnClickListener(clickListener);
         return view;
     }
 
