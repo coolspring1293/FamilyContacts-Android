@@ -177,10 +177,20 @@ public class Telephone {
                 .build().uniqueOrThrow().getTelinitCityId();
     }
 
+    static public String getLocationForTel(String number) {
+        DaoMaster daoMaster = new DaoMaster(DatabaseHelper.getDB(null).getReadableDatabase());
+        CityDao cityDao = daoMaster.newSession().getCityDao();
+        try {
+            return cityDao.load(getCityIdForTel(number)).toString();
+        } catch (Exception e) {
+            return "Unknown";
+        }
+    }
+
     public String getCityStr() {
         try {
             City city = this.getCity();
-            return city.getProvince() + ", " + city.getCityname();
+            return city.toString();
         } catch (Exception e) {
             return "Unknown";
         }

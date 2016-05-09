@@ -34,6 +34,7 @@ public class ModelGenerator {
         city.addStringProperty("weatherCode");
         city.addStringProperty("weatherInfo");
         city.addStringProperty("temperature");
+        city.setHasKeepSections(true);
 
         // Telephone
         Entity telephone = schema.addEntity("Telephone");
