@@ -27,7 +27,7 @@
 
     </RelativeLayout>
 <RelativeLayout
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content">
 
     <LinearLayout
@@ -44,7 +44,6 @@
         android:layout_height="40dp"
         android:layout_weight="6"
         android:id="@+id/text_show"
-        android:background="#ffffff"
         android:textAlignment="center"
         android:textSize="25dp" />
     <Button
@@ -61,29 +60,44 @@
        android:layout_width="match_parent"
        android:id="@+id/number_row1"
        android:orientation="horizontal"
-       android:gravity="center"
+       android:layout_marginLeft="20sp"
+       android:layout_marginRight="20sp"
+       android:layout_marginBottom="10sp"
        android:layout_above="@+id/number_row2"
        android:layout_alignParentStart="true">
 
-       <android.support.design.widget.FloatingActionButton
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_margin="16dp"
-           android:id="@+id/tab_1"
-           />
-       <android.support.design.widget.FloatingActionButton
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_margin="16dp"
-           android:id="@+id/tab_2"
+       <Button
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:background="@drawable/ripple_bg"
+           android:text = "@string/tab_1"
+           android:id= "@+id/tab_1"
+           android:textColor="#FFFFFF"
+           android:layout_marginLeft="20dp"
+           android:layout_marginBottom="5dp"/>
+       <Button
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:background="@drawable/ripple_bg"
+           android:text = "@string/tab_2"
+           android:id= "@+id/tab_2"
+           android:textColor="#FFFFFF"
+           android:layout_marginLeft="20dp"
+           android:layout_marginBottom="5dp"/>
 
-           />
-       <android.support.design.widget.FloatingActionButton
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_margin="16dp"
-           android:id="@+id/tab_3"
-           />
+       <Button
+           android:layout_width="0dp"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:background="@drawable/ripple_bg"
+           android:text = "@string/tab_3"
+           android:id= "@+id/tab_3"
+           android:textColor="#FFFFFF"
+           android:layout_marginLeft="20dp"
+           android:layout_marginRight="20dp"
+           android:layout_marginBottom="5dp"/>
 
 
    </LinearLayout>
@@ -93,58 +107,86 @@
         android:layout_width="match_parent"
         android:id="@+id/number_row2"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:layout_marginBottom="10sp"
         android:layout_above="@+id/number_row3"
         android:layout_alignParentStart="true">
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_4"
-            />
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_5"
-
-            />
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_6"
-            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_4"
+            android:id= "@+id/tab_4"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_5"
+            android:id= "@+id/tab_5"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_6"
+            android:id= "@+id/tab_6"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/number_row3"
         android:orientation="horizontal"
-        android:gravity="center"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:layout_marginBottom="10sp"
         android:layout_above="@+id/number_row4"
         android:layout_alignParentStart="true">
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_7"
-            />
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_8"
-
-            />
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_9"
-            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_7"
+            android:id= "@+id/tab_7"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_8"
+            android:id= "@+id/tab_8"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_9"
+            android:id= "@+id/tab_9"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -152,44 +194,65 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:id="@+id/number_row4"
-        android:gravity="center"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:layout_marginBottom="10sp"
         android:layout_above="@+id/linearLayout"
         android:layout_alignParentStart="true">
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_star"
-            />
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_0"
-
-            />
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_jing"
-            />
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_star"
+            android:id= "@+id/tab_star"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_0"
+            android:id= "@+id/tab_0"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="5dp"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ripple_bg"
+            android:text = "@string/tab_jing"
+            android:id= "@+id/tab_jing"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="20sp"
+        android:layout_marginRight="20sp"
+        android:layout_marginBottom="10sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:id="@+id/linearLayout">
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:id="@+id/tab_call"
-            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_bg_green"
+            android:text = "@string/tab_call"
+            android:id= "@+id/tab_call"
+            android:textColor="#FFFFFF"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 </RelativeLayout>

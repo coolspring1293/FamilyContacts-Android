@@ -3,6 +3,8 @@ package com.noandroid.familycontacts;
 import android.app.IntentService;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.fasterxml.jackson.annotation.*;
@@ -25,6 +27,7 @@ import java.util.Set;
 
 import com.noandroid.familycontacts.model.City;
 import com.noandroid.familycontacts.model.CityDao;
+import com.noandroid.familycontacts.model.Contact;
 import com.noandroid.familycontacts.model.DaoMaster;
 import com.noandroid.familycontacts.model.DaoSession;
 import com.noandroid.familycontacts.model.DatabaseHelper;
@@ -40,8 +43,12 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class WeatherService extends IntentService {
     public static final String ACTION = "ACTION";
     public static final String CITYCODE = "CITYCODE";
+    public static final String EXTRA_WEATHER_CITYCODE = "com.noandroid.familycontacts.WeatherService.EXTRA_CITYCODE";
+    public static final String EXTRA_WEATHER_TEMPERATURE = "com.noandroid.familycontacts.WeatherService.EXTRA_TEMPERATURE";
+    public static final String EXTRA_WEATHER_INFO = "com.noandroid.familycontacts.WeatherService.EXTRA_INFO";
     public static final int REFRESH_STATION_LIST = 0;
     public static final int REFRESH_REAL_WEATHER = 1;
+
     public static final int REFRESH_REAL_WEATHER_LIST = 2;
     private static String stationUrl;
     private static String realtimeWeatherUrl;
@@ -101,10 +108,36 @@ public class WeatherService extends IntentService {
 //                Log.d(appname, strBuilder.toString());
                 break;
             case REFRESH_REAL_WEATHER:
+            {
+
                 Log.d(appname, "REFRESH_REAL_WEATHER");
+                String citycode = workIntent.getStringExtra(CITYCODE);
+                if (citycode == null) {
+                    return;
+                }
+                RealTimeWeather rtw = getRealTimeWeather(citycode);
+                if (rtw == null) {
+                    return;
+                }
+                String temperature = String.valueOf(rtw.getTemperature());
+                String info = rtw.getWeatherInfo();
+                CityDao cityDao = daoSession.getCityDao();
+                List<City> citys = cityDao.queryBuilder().where(
+                        CityDao.Properties.WeatherCode.eq(citycode)).build().list();
+                City oldCity = citys.get(0);
+                oldCity.setTemperature(temperature);
+                oldCity.setWeatherInfo(info);
+                cityDao.update(oldCity);
+                Intent intent = new Intent(ContactDetailsActivity.WeatherStatusReceiver.NEW_WEATHER);
+//                intent.putExtra(EXTRA_WEATHER_CITYCODE, citycode);
+//                intent.putExtra(EXTRA_WEATHER_TEMPERATURE, temperature);
+//                intent.putExtra(EXTRA_WEATHER_INFO, info);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
                 break;
-            case REFRESH_REAL_WEATHER_LIST:
+            }
+            case REFRESH_REAL_WEATHER_LIST: {
+
                 telDao = daoSession.getTelephoneDao();
                 // test
                 // telDao.insert(new Telephone(null, "15626470723", 50L, null));
@@ -128,6 +161,7 @@ public class WeatherService extends IntentService {
                 Log.d(appname, "REFRESH_REAL_WEATHER_LIST");
 
                 break;
+            }
 
         }
     }
@@ -313,6 +347,13 @@ class CityJsonHelper {
 
     }
 
+    public static CityJsonHelper fromJsonNode(JsonNode jsonNode) {
+        return new CityJsonHelper(jsonNode.get(CityJsonHelper.NAMEIdx).asText(),
+                jsonNode.get(CityJsonHelper.SHORTCODEIdx).asText(),
+                jsonNode.get(CityJsonHelper.LONGCODEIdx).asText(),
+                jsonNode.get(CityJsonHelper.PINYINIdx).asText());
+    }
+
     @Override
     public String toString() {
         return "WeatherFactory.CityJsonHelper{" +
@@ -321,13 +362,6 @@ class CityJsonHelper {
                 ", longCode=" + longCode +
                 ", pinyin='" + pinyin + '\'' +
                 '}';
-    }
-
-    public static CityJsonHelper fromJsonNode(JsonNode jsonNode) {
-        return new CityJsonHelper(jsonNode.get(CityJsonHelper.NAMEIdx).asText(),
-                jsonNode.get(CityJsonHelper.SHORTCODEIdx).asText(),
-                jsonNode.get(CityJsonHelper.LONGCODEIdx).asText(),
-                jsonNode.get(CityJsonHelper.PINYINIdx).asText());
     }
 }
 

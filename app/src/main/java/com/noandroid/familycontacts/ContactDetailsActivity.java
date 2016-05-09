@@ -1,7 +1,9 @@
 package com.noandroid.familycontacts;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,10 +24,15 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -40,6 +47,7 @@ import com.noandroid.familycontacts.model.Telephone;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -83,8 +91,22 @@ public class ContactDetailsActivity extends AppCompatActivity
     public BitmapProcessor bitmapProcessor = new BitmapProcessor();
 
 
+    // fragment
+    private TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private LayoutInflater mInflater;
+    private List<String> mTitleList = new ArrayList<>();
+    private View view1, view2;
+    private List<View> mViewList = new ArrayList<>();
+
     private static int Width;
     private static int Height;
+
+
+    //TEST FOR MORE TELS
+    protected TextView tm;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,8 +114,6 @@ public class ContactDetailsActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_cda);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.materialup_tabs);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.materialup_viewpager);
         AppBarLayout appbarLayout = (AppBarLayout) findViewById(R.id.materialup_appbar);
         mProfileImage = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.details_img_avatar);
         mCollapsingToolbarLayout = (android.support.design.widget.CollapsingToolbarLayout) findViewById(R.id.collapsing);
@@ -154,11 +174,36 @@ public class ContactDetailsActivity extends AppCompatActivity
         appbarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appbarLayout.getTotalScrollRange();
 
-        viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
-        tabLayout.setupWithViewPager(viewPager);
 
 
         context = getApplicationContext();
+
+        //Tab
+        mViewPager = (ViewPager)findViewById(R.id.viewpager);
+        mTabLayout = (TabLayout)findViewById(R.id.tabs);
+
+        mInflater = LayoutInflater.from(this);
+        view1 = mInflater.inflate(R.layout.tab1,null);
+        view2 = mInflater.inflate(R.layout.tab2,null);
+
+        mViewList.add(view1);
+        mViewList.add(view2);
+
+        mTitleList.add("tab1");
+        mTitleList.add("tab2");
+
+        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
+        mTabLayout.addTab(mTabLayout.newTab().setText(mTitleList.get(0)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(mTitleList.get(1)));
+
+        MyPagerAdapter mAdapter = new MyPagerAdapter(mViewList);
+        mViewPager.setAdapter(mAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setTabsFromPagerAdapter(mAdapter);
+
+
+        tm = (TextView) findViewById(R.id.test_more);
+
 
     }
 
@@ -199,16 +244,42 @@ public class ContactDetailsActivity extends AppCompatActivity
                     TelInitialDao.Properties.Initial.eq(cTel.substring(0, 7))
             ).build().unique().getCity();
         }
-        if (null != mCity) {
-            mWeather = mCity.getCityname() + " " + mCity.getWeatherInfo() + " " + mCity.getTemperature();
-        } else {
-            mWeather = "No location and weather data";
-        }
+
         // Todo:
         textView_desc.setText(cRelationship + " " + cTel + " " + mWeather + " " + cAvatar.toString());
+        String tmp_s = "";
+        for (Telephone t : mTel) {
+            tmp_s += (t.getNumber() + " " + getWeatherDesc(t.getCity()) + "\n");
+        }
+        textView_desc.setText(tmp_s);
     }
 
-    private Bitmap getDiskBitmap(String pathString) {
+
+    private String getWeatherDesc(City c) {
+        String m = "";
+        if (null != c) {
+            if (c.getWeatherInfo() == null) {
+                String cCityCode = c.getWeatherCode();
+                final WeatherStatusReceiver mWthReceiver = new WeatherStatusReceiver();
+                IntentFilter filter = new IntentFilter(WeatherStatusReceiver.NEW_WEATHER);
+                LocalBroadcastManager.getInstance(this).registerReceiver(mWthReceiver, filter);
+                Intent weaIntent = new Intent(this, WeatherService.class);
+                weaIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_REAL_WEATHER);
+                weaIntent.putExtra(WeatherService.CITYCODE, cCityCode);
+                startService(weaIntent);
+            } else {
+                m = String.format("%s %s %s℃", c.getCityname(),
+                        c.getWeatherInfo(), c.getTemperature());
+
+            }
+        } else {
+            m = "No location and weather data";
+        }
+        return m;
+    }
+
+
+    public static Bitmap getDiskBitmap(String pathString) {
         Bitmap bitmap = null;
         try {
             File file = new File(pathString);
@@ -246,38 +317,56 @@ public class ContactDetailsActivity extends AppCompatActivity
         }
     }
 
-    class TabsAdapter extends FragmentPagerAdapter {
-        public TabsAdapter(FragmentManager fm) {
-            super(fm);
+
+    class MyPagerAdapter extends PagerAdapter {
+        private List<View> mViewList;
+
+        public MyPagerAdapter(List<View> mViewList) {
+            this.mViewList = mViewList;
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return mViewList.size();
         }
 
         @Override
-        public Fragment getItem(int i) {
-            switch (i) {
-                case 0:
-                    return MaterialUpConceptFakePage.newInstance();
-                case 1:
-                    return MaterialUpConceptFakePage.newInstance();
-            }
-            return null;
+        public boolean isViewFromObject(View view, Object object)  {
+            return view == object;
         }
-
         @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "Details of Contact";
-                case 1:
-                    return "Recent Record";
-            }
-            return "";
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.addView(mViewList.get(position));
+            return mViewList.get(position);
+        }
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView(mViewList.get(position));
+        }
+        @Override
+        public CharSequence getPageTitle(int postion) {
+            return mTitleList.get(postion);
         }
     }
 
+    public class WeatherStatusReceiver extends BroadcastReceiver {
+        public WeatherStatusReceiver() {}
+        public static final String NEW_WEATHER = "com.noandroid.familycontacts.NEW_WEATHER";
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("WeatherStatusReceiver", "Received");
+            if (NEW_WEATHER.equals(intent.getAction())) {
+//                String weaCode = intent.getStringExtra(WeatherService.EXTRA_WEATHER_CITYCODE);
+//                String temp = intent.getStringExtra(WeatherService.EXTRA_WEATHER_TEMPERATURE);
+//                String info = intent.getStringExtra(WeatherService.EXTRA_WEATHER_INFO);
+//                if (weaCode != null && weaCode.equals(mCity.getWeatherCode())
+//                        && temp != null && info != null) {
+                MainActivity.daoSession.getCityDao().refresh(mCity);
+                updateContactDetails();
+                LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
+//                }
+            }
+        }
+    }
 
 }

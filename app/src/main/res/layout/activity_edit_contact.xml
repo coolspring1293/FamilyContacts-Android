@@ -1,3 +1,14 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
+    tools:context="com.noandroid.familycontacts.ContactDetailsActivity"
+    >
+
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:tools="http://schemas.android.com/tools"
@@ -7,12 +18,11 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:gravity="center_horizontal"
 android:orientation="vertical"
-android:background="@color/colorFavorite"
 tools:context="com.noandroid.familycontacts.EditContactAcitivity">
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="232dp">
+        android:layout_height="200dp">
 
 
         <android.support.v7.widget.AppCompatImageButton
@@ -34,11 +44,10 @@ tools:context="com.noandroid.familycontacts.EditContactAcitivity">
             android:src="@drawable/allen_xie_icon"
 
             android:id="@+id/img_avatar"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true" />
-
-
-
+            android:layout_marginStart="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="30dp" />
 
 
     </RelativeLayout>
@@ -55,7 +64,6 @@ tools:context="com.noandroid.familycontacts.EditContactAcitivity">
         android:gravity="center_horizontal"
         android:orientation="vertical"
 
-        android:background="#6699FF"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -68,13 +76,30 @@ tools:context="com.noandroid.familycontacts.EditContactAcitivity">
         <ScrollView
             android:id="@+id/src_form"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
 
             <LinearLayout
                 android:id="@+id/edit_form"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <View
+                    android:id="@+id/view_div_0"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:background="@color/Grey"
+                    />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Basic Info"
+                    android:layout_margin="4dp"
+                    android:textSize="24dp"
+                    />
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
@@ -108,39 +133,82 @@ tools:context="com.noandroid.familycontacts.EditContactAcitivity">
 
 
 
-
-                <android.support.design.widget.TextInputLayout
+                <View
+                    android:id="@+id/view_div"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="3dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@color/Grey"
+                    />
 
-                    <AutoCompleteTextView
-                        android:id="@+id/edit_telephone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/string_edit_phone"
-                        android:inputType="number"
-                        android:maxLines="1"
-                        android:singleLine="true" />
-
-                </android.support.design.widget.TextInputLayout>
-
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Telephone number"
+                    android:layout_margin="4dp"
+                    android:textSize="24dp"
+                    />
 
 
 
 
+                <LinearLayout
+                    android:id="@+id/list_Lin"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
 
-                <Button
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent"
-                   android:text="@string/string_edit_ok"
+                    <!-- 动态生成部分开始 -->
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" >
 
-                   android:id="@+id/edit_ok" />
+
+
+                    </RelativeLayout>
+                    <!-- 动态生成部分结束 -->
+
+                </LinearLayout>
+
+
+                <ImageButton
+                    android:id="@+id/edit_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFFFF"
+                    android:src="@drawable/ic_add_circle_32dp"
+                    android:layout_margin="4dp"/>
+
+                <View
+                    android:id="@+id/view_div_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/Grey"
+                    />
+
 
             </LinearLayout>
 
 
+
+
         </ScrollView>
+
+
     </LinearLayout>
 
+
 </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/edit_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="170dp"
+        android:src="@drawable/ic_done_24dp"
+
+        android:orientation="vertical" />
+
+    </android.support.design.widget.CoordinatorLayout>

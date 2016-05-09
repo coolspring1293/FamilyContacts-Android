@@ -27,7 +27,6 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
-
     <style name="Theme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:textViewStyle">@style/theme_textview_style</item>
     </style>

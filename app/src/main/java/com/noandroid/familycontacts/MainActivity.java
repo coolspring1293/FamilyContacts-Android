@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +24,8 @@ import com.noandroid.familycontacts.model.DatabaseHelper;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 
-public class MainActivity extends FragmentActivity implements GestureDetector.OnGestureListener {
+public class MainActivity extends FragmentActivity implements GestureDetector.OnGestureListener
+        ,NavigationView.OnNavigationItemSelectedListener{
     public static Fragment[] mFragments;
     FragmentIndicator mIndicator;
     public static SQLiteDatabase db;
@@ -42,7 +46,6 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
         setContentView(R.layout.activity_main);
 
 
-///////////////////////////////////////////////////////
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         // enable status bar tint
         tintManager.setStatusBarTintEnabled(true);
@@ -50,7 +53,7 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
 
         tintManager.setTintColor(Color.parseColor("#9900FF"));
         tintManager.setNavigationBarTintEnabled(true);
-///////////////////////////////////////////////////////
+
 
         detector=new GestureDetector(this);
 
@@ -60,6 +63,9 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
         daoSession = daoMaster.newSession();
         contactDao = daoSession.getContactDao();
         setFragmentIndicator(0);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
 
@@ -136,6 +142,31 @@ public class MainActivity extends FragmentActivity implements GestureDetector.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera
+            Toast.makeText(this,"nav_camera",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_gallery) {
+
+            Toast.makeText(this,"nav_camera",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_slideshow) {
+            Toast.makeText(this,"nav_slideshow",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_manage) {
+            Toast.makeText(this,"nav_manage",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_share) {
+            Toast.makeText(this,"nav_share",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_send) {
+            Toast.makeText(this,"nav_send",Toast.LENGTH_SHORT).show();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
