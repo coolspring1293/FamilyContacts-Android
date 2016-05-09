@@ -34,7 +34,7 @@ public class ContactsActivity extends Fragment{
     private FragmentActivity mActivity;
     private List<Map<String,Object>> data;
     private StickyListHeadersListView stickyList;
-    private final int REQUESTCODE=1;
+    private final int REQUESTCODE = 1;
     private ImageButton button_add_contact;
 
     public static ContactsActivity newInstance(int index) {
@@ -135,22 +135,6 @@ public class ContactsActivity extends Fragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //MainActivity.contactDao.deleteAll();
-//        addContactA();
-//        addContactA();
-//        addContactA();
-//        addContactA();
-//        addContactB();
-//        addContactB();
-//        addContactB();
-//        addContactB();
-//        addContactB();
-//        addContactC();
-//        addContactC();
-//        addContactC();
-//        addContactC();
-//        addContactC();
-//        addContactC();
-//        addContactC();
 
         button_add_contact = (ImageButton)getView().findViewById(R.id.contact_add);
 
@@ -164,14 +148,13 @@ public class ContactsActivity extends Fragment{
                 Intent intent = new Intent();
                 intent.setClass(getActivity(), EditContactActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putString("contactId", null);
                 intent.putExtras(bundle);
                 //startActivityForResult(intent, REQUESTCODE);
                 startActivity(intent);
 
             }
         });
-
-        updateData();
     }
 
     /**
@@ -246,8 +229,7 @@ public class ContactsActivity extends Fragment{
                     bundle.putString("contactId", contactId);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUESTCODE);
-//                    startActivity(intent);
-
+                    //startActivity(intent);
                 }
             });
             return convertView;

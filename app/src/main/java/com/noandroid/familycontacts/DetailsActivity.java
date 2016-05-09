@@ -51,6 +51,8 @@ import java.util.List;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import javax.crypto.spec.DESKeySpec;
+
 /**
  * Created by liuw53 on 4/14/16.
  */
@@ -108,12 +110,19 @@ public class DetailsActivity extends AppCompatActivity {
         TextView textview_weather = (TextView) findViewById(R.id.weather_info);
         TextView textview_relationship = (TextView) findViewById(R.id.relations);
         TextView textview_tel = (TextView) findViewById(R.id.tel_loc_info);
+        TextView textView_desc = (TextView) findViewById(R.id.text_for_desc);
 
         ImageView imageView_avatar = (ImageView) findViewById(R.id.img_avatar);
 
         Bundle bundle = this.getIntent().getExtras();
         String contactName = bundle.getString("contactName");
         String contactId = bundle.getString("contactId");
+
+
+
+
+
+
         toolbar.setTitle(contactName);
         toolbar.setSubtitle(contactId);
         //toolbar.setLogo(R.drawable.allen_xie_icon);
@@ -280,7 +289,7 @@ public class DetailsActivity extends AppCompatActivity {
         // 激活系统图库，选择一张图片
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        // 开启一个带有返回值的Activity，请求码为PHOTO_REQUEST_GALLERY
+        // 开启一个带有返回值的Activity，请求码为
         startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
     }
 

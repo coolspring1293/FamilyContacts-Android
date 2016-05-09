@@ -161,7 +161,7 @@ public class WeatherService extends IntentService {
         return cityList;
     }
 
-    private static RealTimeWeather getRealTimeWeather(String citycode) {
+    public static RealTimeWeather getRealTimeWeather(String citycode) {
         String weatherStr = getUrlContent(String.format(realtimeWeatherUrl, citycode), 3);
         if (weatherStr != null) {
 //            Log.d("CITY_WEATHER", weatherStr);
