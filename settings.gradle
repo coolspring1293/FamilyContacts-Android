@@ -1,1 +1,1 @@
-include ':app', ':library', ':sample'
+include ':app', ':library', ':sample', ':modelgenerator'

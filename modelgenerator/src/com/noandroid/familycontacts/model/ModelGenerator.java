@@ -39,6 +39,7 @@ public class ModelGenerator {
         Entity telephone = schema.addEntity("Telephone");
         Property telephoneOriId = telephone.addIdProperty().getProperty();
         telephone.addStringProperty("number").index();
+        telephone.setHasKeepSections(true);
 
         // Relationship: Telephone-City
         telephone.addToOne(city, telephone.addLongProperty("telCityId").getProperty());
