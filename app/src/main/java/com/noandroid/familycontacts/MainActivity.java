@@ -1,6 +1,8 @@
 package com.noandroid.familycontacts;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -40,7 +42,11 @@ public class MainActivity extends FragmentActivity
     final int DISTANT=50;
     public int mark = 0;
 
-    private final int REQUESTCODE=1;
+    private final int REQUESTCODE = 1;
+    //login
+    SharedPreferences sharedPreferences;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +75,9 @@ public class MainActivity extends FragmentActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //login
+        sharedPreferencesInit();
     }
 
 
@@ -153,19 +162,17 @@ public class MainActivity extends FragmentActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera
-            Toast.makeText(this,"nav_camera",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_login) {
 
-            Toast.makeText(this,"nav_camera",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_slideshow) {
-            Toast.makeText(this,"nav_slideshow",Toast.LENGTH_SHORT).show();
-        } else if (id == R.id.nav_manage) {
-            Toast.makeText(this,"nav_manage",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"nav_login",Toast.LENGTH_SHORT).show();
+
+            showLoginDialog(this);
         } else if (id == R.id.nav_share) {
+
             Toast.makeText(this,"nav_share",Toast.LENGTH_SHORT).show();
+
         } else if (id == R.id.nav_send) {
+
             Toast.makeText(this,"nav_send",Toast.LENGTH_SHORT).show();
         }
 
@@ -173,6 +180,69 @@ public class MainActivity extends FragmentActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+    public void sharedPreferencesInit () {
+        sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("username", "guanlu");
+        editor.putString("password", "guanlu");
+        editor.commit();
+    }
+    public void showLoginDialog(Context context) {
+
+        final LoginDialog loginDialog = new LoginDialog(context,"login");
+        loginDialog.init(1);
+        loginDialog.show();
+        loginDialog.setClickListener(new LoginDialog.ClickListenerInterface(){
+
+            @Override
+            public void doLogin() {
+                loginDialog.dismiss();
+                sharedPreferences = getSharedPreferences("login",Context.MODE_PRIVATE);
+                String username = sharedPreferences.getString("username", "NULL");
+                String password = sharedPreferences.getString("password","NULL");
+
+                if(username.equals(loginDialog.getUserName()) && password.equals(loginDialog.getPassword())) {
+                    Toast.makeText(getBaseContext(),"success",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getBaseContext(),"Wrong userName or Password",Toast.LENGTH_SHORT).show();
+                    loginDialog.init(1);
+                }
+            }
+            @Override
+            public void doCancel() {
+                loginDialog.dismiss();
+            }
+
+            @Override
+            public void doRegister() {
+                String name = loginDialog.getRigisterUserName();
+                String password = loginDialog.getRegisterPassword();
+                sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                if(name==null || password==null) {
+                    Toast.makeText(getBaseContext(),"Error! UserName or Password is valid!",Toast.LENGTH_SHORT).show();
+                } else {
+
+                    editor.putString("username", name);
+                    editor.putString("password", password);
+                    editor.commit();
+                    Toast.makeText(getBaseContext(), "Rigister Success!\n "+name.toString()+sharedPreferences.getString("name","").toString()
+                            +password.toString()+sharedPreferences.getString("password","").toString(), Toast.LENGTH_SHORT).show();
+                    loginDialog.init(1);
+                }
+            }
+            @Override
+            public void doTurn() {
+                loginDialog.init(2);
+            }
+
+        });
+
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

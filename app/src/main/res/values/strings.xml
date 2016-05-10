@@ -227,4 +227,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
 
+    <string name="cancel">cancel</string>
+    <string name="login_name">name</string>
+    <string name="login">login</string>
+    <string name="login_password">password</string>
+    <string name="register">register</string>
+
+
 </resources>
