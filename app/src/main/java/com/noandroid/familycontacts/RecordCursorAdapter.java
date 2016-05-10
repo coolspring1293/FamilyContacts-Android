@@ -31,7 +31,7 @@ public class RecordCursorAdapter extends CursorAdapter {
         return cal;
     }
 
-    private static String formatDate(Date date) {
+    public static String formatDate(Date date) {
         Calendar yesterday = Calendar.getInstance();
         yesterday.add(Calendar.DATE, -1);
         dateOnlyCalendar(yesterday);
@@ -42,7 +42,7 @@ public class RecordCursorAdapter extends CursorAdapter {
         return "Yesterday " + timeOnlyFormatter.format(date);
     }
 
-    private static int getIconIdForCallType(int type) {
+    public static int getIconIdForCallType(int type) {
         switch (type) {
             case CallLog.Calls.MISSED_TYPE:
                 return R.drawable.ic_call_missed_24dp;
