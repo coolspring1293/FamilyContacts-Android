@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5sp"
+    android:paddingBottom="5sp">
+
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10sp"
+            android:paddingEnd="10sp"
+    >
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content">
+            <ImageView
+                    android:id="@id/icon"
+                    android:layout_width="12sp"
+                    android:layout_height="12sp"
+                    android:src="@drawable/ic_call_made_24dp" android:layout_marginTop="3sp"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/phone_number"
+                    android:textSize="14sp"
+                    android:textColor="@color/half_black"
+                    android:text="18819461605" android:layout_marginLeft="7sp"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/date"
+                    android:textSize="14sp"
+                    android:textColor="@color/half_black"
+                    android:text="10:08" android:layout_marginLeft="10sp"/>
+        </LinearLayout>
+        <LinearLayout android:layout_width="wrap_content"
+                      android:layout_height="wrap_content" android:orientation="horizontal">
+            <ImageView
+                    android:layout_width="12sp"
+                    android:layout_height="12sp"
+                    android:src="@drawable/ic_time_24dp" android:layout_marginTop="3sp"/>
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/duration"
+                    android:textSize="14sp"
+                    android:textColor="@color/half_black"
+                    android:text="5:32" android:layout_marginLeft="7sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

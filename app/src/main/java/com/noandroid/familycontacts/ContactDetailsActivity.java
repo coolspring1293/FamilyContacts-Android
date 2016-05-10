@@ -39,21 +39,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
-import com.noandroid.familycontacts.model.City;
-import com.noandroid.familycontacts.model.Contact;
-import com.noandroid.familycontacts.model.ContactDao;
-import com.noandroid.familycontacts.model.TelInitialDao;
-import com.noandroid.familycontacts.model.Telephone;
+import com.noandroid.familycontacts.model.*;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import de.greenrobot.dao.query.QueryBuilder;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.zip.Inflater;
 
 
 /**
@@ -179,7 +177,6 @@ public class ContactDetailsActivity extends AppCompatActivity
             }
         }
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.materialup_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,21 +187,99 @@ public class ContactDetailsActivity extends AppCompatActivity
 
 
 
+        viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
+
         appbarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appbarLayout.getTotalScrollRange();
 
         context = getApplicationContext();
 
 
-        viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
-
-        tabLayout.setupWithViewPager(viewPager);
-
         // Weather
         final WeatherStatusReceiver mWthReceiver = new WeatherStatusReceiver();
         IntentFilter filter = new IntentFilter(WeatherStatusReceiver.NEW_WEATHER);
         LocalBroadcastManager.getInstance(this).registerReceiver(mWthReceiver, filter);
+        loadRecords();
+    }
 
+    public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecyclerViewAdapter.ViewHolder> {
+        private LayoutInflater inflater;
+        private List<Record> mRecords;
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/M/d EEE H:m", Locale.ENGLISH);
+
+        public String formatDate(Date date) {
+            return dateFormatter.format(date);
+        }
+
+        public String formatDuration(int duration) {
+            if (duration >= 60)
+                return String.format("%dm%ds", duration / 60, duration % 60);
+            else
+                return String.format("%ds", duration);
+        }
+
+        public RecordRecyclerViewAdapter(Context context, List<Record> list) {
+            super();
+            if (list == null)
+                throw new IllegalArgumentException("List must not be null");
+            this.mRecords = list;
+            this.inflater = LayoutInflater.from(context);
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = inflater.inflate(R.layout.contact_detail_record_list_item, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public int getItemCount() {
+            return mRecords.size();
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            Record record = mRecords.get(position);
+            holder.icon.setImageResource(RecordCursorAdapter.getIconIdForCallType(record.getStatus()));
+            holder.phone_number.setText(record.getTelephoneNumber());
+            holder.date.setText(formatDate(record.getTime()));
+            holder.duration.setText(formatDuration(record.getDuration()));
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            public ImageView icon;
+            public TextView phone_number;
+            public TextView date;
+            public TextView duration;
+
+            public Long contactid;
+            public String telephone;
+
+            public ViewHolder(View view) {
+                super(view);
+                icon = (ImageView)view.findViewById(R.id.icon);
+                phone_number = (TextView)view.findViewById(R.id.phone_number);
+                date = (TextView)view.findViewById(R.id.date);
+                duration = (TextView)view.findViewById(R.id.duration);
+            }
+        }
+    }
+
+    private void loadRecords() {
+        RecyclerView rv = (RecyclerView) view2.findViewById(android.R.id.list);
+        rv.setHasFixedSize(true);
+        Long contactId = Long.parseLong(this.contactId);
+        // TODO(leasunhy): implement records for strangers
+        if (contactId == null) return;
+        Log.e("DEBUG", this.contactId);
+        Log.e("DEBUG", contactId.toString());
+        QueryBuilder<Record> query = MainActivity.recordDao.queryBuilder();
+        query.join(RecordDao.Properties.TelephoneNumber, Telephone.class, TelephoneDao.Properties.Number)
+             .where(TelephoneDao.Properties.ContactId.eq(contactId));
+        List<Record> records = query.build().list();
+        rv.setAdapter(new RecordRecyclerViewAdapter(getApplicationContext(), records));
+>>>>>>> finish record displaying in detail page
     }
 
 
