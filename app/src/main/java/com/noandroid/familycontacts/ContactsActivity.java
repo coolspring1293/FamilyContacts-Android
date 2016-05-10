@@ -60,12 +60,13 @@ public class ContactsActivity extends Fragment{
 
     private List<Map<String,Object>> getData() {
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
-        Cursor cursor = MainActivity.db.query(MainActivity.contactDao.getTablename(), MainActivity.contactDao.getAllColumns(), null, null, null, null, null);
+        Cursor cursor = MainActivity.db.query(MainActivity.contactDao.getTablename(), MainActivity.contactDao.getAllColumns(), null, null, null, null,"pinyin ASC");
         while(cursor.moveToNext()) {
             Map<String,Object> map = new HashMap<String, Object>();
             map.put("name",cursor.getString(cursor.getColumnIndex("NAME")));
             map.put("title",cursor.getString(cursor.getColumnIndex("RELATIONSHIP")));
             map.put("id",cursor.getString(cursor.getColumnIndex("_id")));
+            map.put("pinyin",cursor.getString(cursor.getColumnIndex("PINYIN")));
             list.add(map);
         }
         return list;
@@ -247,8 +248,10 @@ public class ContactsActivity extends Fragment{
                 holder = (HeaderViewHolder) convertView.getTag();
             }
             //set header text as first char in name
-            String headerText = "" + data.get(position).get("name").toString().subSequence(0, 1).charAt(0);
-            holder.text.setText(headerText);
+            if(data.get(position).get("pinyin")!=null) {
+                String headerText = "" +  Character.toUpperCase(data.get(position).get("pinyin").toString().subSequence(0,1).charAt(0));
+                holder.text.setText(headerText);
+            }
 
             return convertView;
         }
@@ -256,7 +259,7 @@ public class ContactsActivity extends Fragment{
         @Override
         public long getHeaderId(int position) {
             //return the first character of the country as ID because this is what headers are based upon
-            return data.get(position).get("name").toString().subSequence(0, 1).charAt(0);
+            return data.get(position).get("pinyin").toString().subSequence(0, 1).charAt(0);
         }
 
         class HeaderViewHolder {

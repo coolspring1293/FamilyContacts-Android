@@ -215,7 +215,6 @@ public class ContactDetailsActivity extends AppCompatActivity
     }
 
     private void updateContactDetails() {
-        Bitmap bitmap;
         String _id = contactId;
         mContact = MainActivity.daoSession.getContactDao().queryBuilder().where(
                 ContactDao.Properties.Id.eq(_id)).build().unique();
@@ -227,14 +226,15 @@ public class ContactDetailsActivity extends AppCompatActivity
         }
         // set avatar
         if (!cAvatar) {
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.allen_xie_icon_darker);
+            mProfileImage.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar));
+            mCollapsingToolbarLayout.setBackgroundResource(R.drawable.default_bg);
         } else {
             //From SD Card Get the icon photo
-            bitmap = getDiskBitmap(PATH + _id + ".png");
+            Bitmap tBitmap = getDiskBitmap(PATH + _id + ".png");
+            mProfileImage.setImageBitmap(tBitmap);
+            Drawable drawable = new BitmapDrawable(bitmapProcessor.AfterBlurring(context, tBitmap, Width, Height));
+            mCollapsingToolbarLayout.setBackground(drawable);
         }
-        mProfileImage.setImageBitmap(bitmap);
-        Drawable drawable = new BitmapDrawable(bitmapProcessor.AfterBlurring(context, bitmap, Width, Height));
-        mCollapsingToolbarLayout.setBackground(drawable);
 
 
         // get telephone

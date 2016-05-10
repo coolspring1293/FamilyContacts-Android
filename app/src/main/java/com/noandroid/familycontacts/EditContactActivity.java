@@ -231,6 +231,7 @@ public class EditContactActivity extends Activity {
 
 
         } else {
+            icon_image.setImageResource(R.drawable.default_avatar);
             atct_name.setText("");
             atct_relationship.setText("");
             CreateUI();
