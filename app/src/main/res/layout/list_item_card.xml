@@ -41,31 +41,55 @@
 			style="?android:attr/buttonBarStyle"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" >
-
-			<Button
-				android:id="@+id/card_button_1"
-				style="?android:attr/buttonBarButtonStyle"
+			<LinearLayout
 				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_margin="5dip"
-				android:focusable="false"
-				android:focusableInTouchMode="false"
-				android:text="Guangzhou"
-				android:textSize="16sp"
-				android:textStyle="normal" />
+				android:layout_height="wrap_content">
+				<ImageView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_location_on_24dp"
+					android:layout_centerInParent="true"
+					android:layout_gravity="center"
+					android:layout_margin="5dip"/>
+				<Button
+					android:id="@+id/card_button_1"
+					style="?android:attr/buttonBarButtonStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_margin="5dip"
+					android:focusable="false"
+					android:focusableInTouchMode="false"
+					android:text="Guangzhou"
+					android:gravity="left|center"
+					android:textSize="16sp"
+					android:textStyle="normal" />
 
-			<Button
-				android:id="@+id/card_button_2"
-				style="?android:attr/buttonBarButtonStyle"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_margin="5dip"
-				android:layout_weight="1"
-				android:focusable="false"
-				android:focusableInTouchMode="false"
-				android:text="雷阵雨  28.9°C"
-				android:textSize="16sp"
-				android:textStyle="normal" />
+			</LinearLayout>
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content">
+				<ImageView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_wb_cloudy_24dp"
+					android:layout_margin="5dip"/>
+
+				<Button
+					android:id="@+id/card_button_2"
+					style="?android:attr/buttonBarButtonStyle"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_margin="5dip"
+					android:focusable="false"
+					android:focusableInTouchMode="false"
+					android:text="雷阵雨  28.9°C"
+					android:gravity="left|center"
+					android:textSize="16sp"
+					android:textStyle="normal" />
+
+			</LinearLayout>
+
 		</LinearLayout>
 
 	</LinearLayout>
