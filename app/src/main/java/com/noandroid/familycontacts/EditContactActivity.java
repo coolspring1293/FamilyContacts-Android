@@ -203,10 +203,7 @@ public class EditContactActivity extends Activity {
         if (null != contactId) {
             _id = contactId;
             haveId = true;
-            // set Avatar
-            bitmap = ContactDetailsActivity.getDiskBitmap(PATH + _id + ".png");
-            icon_image.setImageBitmap(bitmap);
-            icon_background.setImageBitmap(bitmapProcessor.AfterBlurring(context, bitmap, Width, Height));
+
             Contact mContact = MainActivity.daoSession.getContactDao().queryBuilder().where(
                     ContactDao.Properties.Id.eq(_id)).build().unique();
             if (null != mContact) {
@@ -214,7 +211,14 @@ public class EditContactActivity extends Activity {
                 mAvatar = mContact.getAvatar();
                 mRelationship = mContact.getRelationship();
                 mTel = mContact.getTelephones();
+                // set Avatar
+                if (mAvatar) {
+                    bitmap = ContactDetailsActivity.getDiskBitmap(PATH + _id + ".png");
+                    icon_image.setImageBitmap(bitmap);
+                }
+                icon_background.setImageBitmap(bitmapProcessor.AfterBlurring(context, bitmap, Width, Height));
             }
+
 
             if (!mTel.isEmpty()) {
                 for (Telephone telephone : mTel) {
@@ -231,9 +235,10 @@ public class EditContactActivity extends Activity {
 
 
         } else {
-            icon_image.setImageResource(R.drawable.default_avatar);
+            // icon_image.setImageResource(R.drawable.default_avatar);
             atct_name.setText("");
             atct_relationship.setText("");
+
             CreateUI();
         }
 
@@ -584,7 +589,7 @@ public class EditContactActivity extends Activity {
         } else if (requestCode == PHOTO_REQUEST_CUT) {
             if (data != null) {
                 mBitmap = data.getParcelableExtra("data");
-                icon_image.setImageBitmap(mBitmap);
+                if (null != mBitmap) icon_image.setImageBitmap(mBitmap);
                 bitmap_bg = data.getParcelableExtra("data");
                 icon_background.setImageBitmap(bitmapProcessor.AfterBlurring(context, bitmap_bg, Width, Height));
             }

@@ -28,6 +28,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -102,9 +104,6 @@ public class ContactDetailsActivity extends AppCompatActivity
     private static int Width;
     private static int Height;
 
-
-    //TEST FOR MORE TELS
-    protected TextView tm;
 
 
 
@@ -189,8 +188,8 @@ public class ContactDetailsActivity extends AppCompatActivity
         mViewList.add(view1);
         mViewList.add(view2);
 
-        mTitleList.add("tab1");
-        mTitleList.add("tab2");
+        mTitleList.add("Telephone Details");
+        mTitleList.add("Recent Records");
 
         mTabLayout.setTabMode(TabLayout.MODE_FIXED);
         mTabLayout.addTab(mTabLayout.newTab().setText(mTitleList.get(0)));
@@ -200,9 +199,6 @@ public class ContactDetailsActivity extends AppCompatActivity
         mViewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabsFromPagerAdapter(mAdapter);
-
-
-        tm = (TextView) findViewById(R.id.test_more);
 
 
     }
@@ -366,6 +362,36 @@ public class ContactDetailsActivity extends AppCompatActivity
                 LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
 //                }
             }
+        }
+    }
+
+
+    class TabsAdapter extends FragmentPagerAdapter {
+        public TabsAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            switch(i) {
+                case 0: return TelephoneTabFragment.newInstance();
+                case 1: return TelephoneTabFragment.newInstance();
+            }
+            return null;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch(position) {
+                case 0: return "Tab 1";
+                case 1: return "Tab 2";
+            }
+            return "";
         }
     }
 

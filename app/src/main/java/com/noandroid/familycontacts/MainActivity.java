@@ -168,11 +168,11 @@ public class MainActivity extends FragmentActivity
 
             showLoginDialog(this);
         } else if (id == R.id.nav_share) {
-
+            // TODO import
             Toast.makeText(this,"nav_share",Toast.LENGTH_SHORT).show();
 
         } else if (id == R.id.nav_send) {
-
+            // TODO export
             Toast.makeText(this,"nav_send",Toast.LENGTH_SHORT).show();
         }
 

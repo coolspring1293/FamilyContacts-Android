@@ -10,8 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.noandroid.familycontacts.model.Contact;
@@ -36,6 +39,10 @@ public class ContactsActivity extends Fragment{
     private StickyListHeadersListView stickyList;
     private final int REQUESTCODE = 1;
     private ImageButton button_add_contact;
+    //search
+    private ImageButton button_search_contact;
+    private EditText search_text;
+
 
     public static ContactsActivity newInstance(int index) {
         ContactsActivity f = new ContactsActivity();
@@ -154,6 +161,32 @@ public class ContactsActivity extends Fragment{
                 //startActivityForResult(intent, REQUESTCODE);
                 startActivity(intent);
 
+            }
+        });
+
+        button_search_contact = (ImageButton)getView().findViewById(R.id.contact_search);
+        search_text=(EditText)getView().findViewById(R.id.search_contact);
+
+        final Animation mDisappearAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
+        mDisappearAction.setDuration(500);
+
+        final Animation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
+                -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
+        mShowAction.setDuration(500);
+
+        button_search_contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(search_text.getVisibility()==View.GONE) {
+                    search_text.setVisibility(View.VISIBLE);
+                    //search_text.startAnimation(mShowAction);
+                }else {
+                    search_text.setVisibility(View.GONE);
+                    //search_text.startAnimation(mDisappearAction);
+                }
             }
         });
     }

@@ -32,9 +32,10 @@ public class FragmentIndicator extends LinearLayout implements OnClickListener{
     private static final String TAG_ICON_1 = "icon_tag_1";
     private static final String TAG_ICON_2 = "icon_tag_2";
 
-    private static final int COLOR_WHITE = Color.WHITE;
+    private static final int COLOR_WHITE = 0xFFFFFFFF;
+    private static final int COLOR_GRAY = 0xFF888888;
 //    private static final int COLOR_DARK =  0xFF093D5A;
-    private static final int COLOR_DARK =  0xFF1A237A;
+    private static final int COLOR_DARK = 0xFF28463E;
 
     private static final int HIGH = 120;
 
@@ -73,7 +74,7 @@ public class FragmentIndicator extends LinearLayout implements OnClickListener{
         textView.setTag(textTag);
         textView.setLayoutParams(new LinearLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-        textView.setTextColor(COLOR_DARK);
+        textView.setTextColor(COLOR_GRAY);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         textView.setText(stringResID);
         textView.setPadding(0,0,0,0);
@@ -122,19 +123,19 @@ public class FragmentIndicator extends LinearLayout implements OnClickListener{
             case 0:
                 prevText=(TextView)mIndicators[mCurIndicator].findViewWithTag(TAG_TEXT_0);
                 prevIcon=(ImageView)mIndicators[mCurIndicator].findViewWithTag(TAG_ICON_0);
-                prevText.setTextColor(COLOR_DARK);
+                prevText.setTextColor(COLOR_GRAY);
                 prevIcon.setImageResource(R.drawable.ic_contacts_24dp);
                 break;
             case 1:
                 prevText=(TextView)mIndicators[mCurIndicator].findViewWithTag(TAG_TEXT_1);
                 prevIcon=(ImageView)mIndicators[mCurIndicator].findViewWithTag(TAG_ICON_1);
-                prevText.setTextColor(COLOR_DARK);
+                prevText.setTextColor(COLOR_GRAY);
                 prevIcon.setImageResource(R.drawable.ic_recent_24dp);
                 break;
             case 2:
                 prevText=(TextView)mIndicators[mCurIndicator].findViewWithTag(TAG_TEXT_2);
                 prevIcon=(ImageView)mIndicators[mCurIndicator].findViewWithTag(TAG_ICON_2);
-                prevText.setTextColor(COLOR_DARK);
+                prevText.setTextColor(COLOR_GRAY);
                 prevIcon.setImageResource(R.drawable.ic_phone_24dp);
                 break;
         }

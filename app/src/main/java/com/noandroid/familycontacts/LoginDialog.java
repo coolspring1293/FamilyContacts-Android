@@ -57,6 +57,7 @@ public class LoginDialog extends Dialog {
 
         View view1 = inflater.inflate(R.layout.login_dialog, null);
         View view2 = inflater.inflate(R.layout.register_dialog,null);
+
         Animation mDisappearAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
                 0.0f, Animation.RELATIVE_TO_SELF, -1.0f);

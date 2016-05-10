@@ -20,17 +20,18 @@ android:gravity="center_horizontal"
 android:orientation="vertical"
 tools:context="com.noandroid.familycontacts.EditContactAcitivity">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="200dp"
         android:background="#808080">
+
 
 
         <android.support.v7.widget.AppCompatImageButton
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
 
-            android:background="#808080"
+            android:background="#00FFFFFF"
 
             android:id="@+id/button_bg_change_avatar_edit" />
 
@@ -45,13 +46,18 @@ tools:context="com.noandroid.familycontacts.EditContactAcitivity">
 
             android:id="@+id/img_avatar"
             android:layout_marginStart="35dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="30dp" />
+            android:layout_marginBottom="30dp"
+            android:layout_gravity="left|bottom" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_border_color_48dp"
+            android:layout_gravity="right|top"
+            android:layout_margin="@dimen/activity_horizontal_margin"/>
 
 
-    </RelativeLayout>
-
+    </FrameLayout>
 
 
 

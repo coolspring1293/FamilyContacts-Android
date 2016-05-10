@@ -7,32 +7,60 @@
         android:layout_height="match_parent"
         android:layout_marginLeft="20dp"
         android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
         android:layout_marginRight="20dp">
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/login_name"
-        android:hint="@string/login_name"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/login_password"
-        android:hint="@string/login_password"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/login"
-        android:textColor="#FFFFFF"
-        android:background="@drawable/ripple_login"
-        android:layout_marginBottom="10dp"
-        android:text="@string/login" />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/register"
-        android:background="@drawable/ripple_login"
-        android:text="@string/register"
-        android:textColor="#FFFFFF"/>}
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TableRow>
+                <ImageView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_account_circle_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"/>
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:id="@+id/login_name"
+                    android:hint="@string/login_name"/>
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_keyboard_black_24dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"/>
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_weight="1.0"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/login_password"
+                    android:hint="@string/login_password"/>
+            </TableRow>
+
+        </TableLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/login"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/ripple_login"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/login" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/register"
+            android:background="@drawable/ripple_login"
+            android:text="@string/register"
+            android:textColor="#FFFFFF"/>
+
     </LinearLayout>
 </LinearLayout>

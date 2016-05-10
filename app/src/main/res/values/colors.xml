@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+<!--    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>-->
     <color name="colorAccent">#FF4081</color>
 
-        <color name="header_normal">#303f9f</color>
-        <color name="header_pressed">#283593</color>
+        <!--<color name="header_normal">#303f9f</color>-->
+        <!--<color name="header_pressed">#283593</color>-->
         <color name="menu_section_header">#FFDDDDDD</color>
     <color name="colorIconCycle">#7986cb</color>
 
     <color name="colorCivBorder">#8FFFFFFF</color>
-
-
+    <!-- new -->
+    <color name="colorPrimary">#66A395</color>
+    <color name="colorPrimaryDark">#28463E</color>
+    <color name="header_pressed">#28463E</color>
+    <color name="header_normal">#C8D6B7</color>
 
     <color name="colorCall">#40B920</color>
     <color name="colorMessage">#F08020</color>
@@ -32,9 +35,6 @@
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
 
 
-    <color name="Grey">#D1D1D1</color>
-
-
 
 
     <color name="colorEidtButton">#5F8FF0</color>
@@ -45,6 +45,10 @@
 
     <color name="primary">#FF03A9F4</color>
     <color name="primary_dark">#FF0288D1</color>
+
+
     <color name="status_bar_color">@color/primary_dark</color>
 
+
+    <color name="Grey">#666</color>
 </resources>
