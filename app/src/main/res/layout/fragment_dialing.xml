@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ripple="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
@@ -102,10 +103,12 @@
 
    </LinearLayout>
 
+
+
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:id="@+id/number_row2"
+        android:id="@+id/number_row"
         android:orientation="horizontal"
         android:layout_marginLeft="20sp"
         android:layout_marginRight="20sp"
@@ -118,8 +121,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/ripple_bg"
-            android:text = "@string/tab_4"
-            android:id= "@+id/tab_4"
+            android:text = "@string/tab_1"
+            android:id= "@+id/tab_1"
             android:textColor="#FFFFFF"
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="5dp"/>
@@ -128,8 +131,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/ripple_bg"
-            android:text = "@string/tab_5"
-            android:id= "@+id/tab_5"
+            android:text = "@string/tab_2"
+            android:id= "@+id/tab_2"
             android:textColor="#FFFFFF"
             android:layout_marginLeft="20dp"
             android:layout_marginBottom="5dp"/>
@@ -138,13 +141,59 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/ripple_bg"
-            android:text = "@string/tab_6"
-            android:id= "@+id/tab_6"
+            android:text = "@string/tab_3"
+            android:id= "@+id/tab_3"
             android:textColor="#FFFFFF"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="5dp"/>
     </LinearLayout>
+
+
+
+<LinearLayout
+android:layout_height="wrap_content"
+android:layout_width="match_parent"
+android:id="@+id/number_row2"
+android:orientation="horizontal"
+android:layout_marginLeft="20sp"
+android:layout_marginRight="20sp"
+android:layout_marginBottom="10sp"
+android:layout_above="@+id/number_row3"
+android:layout_alignParentStart="true">
+
+<Button
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@drawable/ripple_bg"
+    android:text = "@string/tab_4"
+    android:id= "@+id/tab_4"
+    android:textColor="#FFFFFF"
+    android:layout_marginLeft="20dp"
+    android:layout_marginBottom="5dp"/>
+<Button
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@drawable/ripple_bg"
+    android:text = "@string/tab_5"
+    android:id= "@+id/tab_5"
+    android:textColor="#FFFFFF"
+    android:layout_marginLeft="20dp"
+    android:layout_marginBottom="5dp"/>
+<Button
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:background="@drawable/ripple_bg"
+    android:text = "@string/tab_6"
+    android:id= "@+id/tab_6"
+    android:textColor="#FFFFFF"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_marginBottom="5dp"/>
+</LinearLayout>
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

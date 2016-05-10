@@ -5,10 +5,11 @@
 	android:layout_gravity="center"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_marginTop="@dimen/activity_horizontal_margin"
-	android:layout_marginLeft="16dp"
-	android:layout_marginRight="16dp"
-
+	android:layout_marginRight="8dp"
+	android:layout_marginLeft="8dp"
+	android:layout_marginBottom="4dp"
+	android:layout_marginTop="4dp"
+	app:cardCornerRadius="4dp"
 	>
 
 
@@ -20,11 +21,11 @@
 		>
 
 		<TextView
-			android:id="@+id/list_item_card_text"
+			android:id="@+id/card_phone"
 			android:layout_margin="@dimen/activity_horizontal_margin"
 			android:text="18814091386"
 			android:textStyle="bold"
-			android:textSize="28sp"
+			android:textSize="20sp"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content" />
 
@@ -42,7 +43,7 @@
 			android:layout_height="wrap_content" >
 
 			<Button
-				android:id="@+id/list_item_card_button_1"
+				android:id="@+id/card_button_1"
 				style="?android:attr/buttonBarButtonStyle"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -50,11 +51,11 @@
 				android:focusable="false"
 				android:focusableInTouchMode="false"
 				android:text="Guangzhou"
-				android:textSize="18sp"
+				android:textSize="16sp"
 				android:textStyle="normal" />
 
 			<Button
-				android:id="@+id/list_item_card_button_2"
+				android:id="@+id/card_button_2"
 				style="?android:attr/buttonBarButtonStyle"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -63,7 +64,7 @@
 				android:focusable="false"
 				android:focusableInTouchMode="false"
 				android:text="雷阵雨  28.9°C"
-				android:textSize="18sp"
+				android:textSize="16sp"
 				android:textStyle="normal" />
 		</LinearLayout>
 

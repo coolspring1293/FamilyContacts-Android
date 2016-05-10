@@ -12,27 +12,30 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/contact_add"
-            android:src="@drawable/ic_person_add_24dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:colorControlHighlight="#FFFFF9"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-            android:layout_alignParentEnd="true" />
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/contact_search"
             android:src="@drawable/ic_search_black_24dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:colorControlHighlight="#FFFFF9"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_horizontal_margin"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
-             />
+
+            android:layout_marginStart="12dp"
+            android:layout_alignTop="@+id/contact_add"
+            android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/contact_add"
+            android:src="@drawable/ic_person_add_24dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:colorControlHighlight="#FFFFF9"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="12dp" />
+
         <TextView
             android:id="@+id/fragment_home_text"
             android:layout_width="wrap_content"

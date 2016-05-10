@@ -1,7 +1,9 @@
 package com.noandroid.familycontacts;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
@@ -13,6 +15,7 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.renderscript.Allocation;
@@ -67,15 +70,16 @@ public class ContactDetailsActivity extends AppCompatActivity
     private de.hdodenhof.circleimageview.CircleImageView mProfileImage;
     private android.support.design.widget.CollapsingToolbarLayout mCollapsingToolbarLayout;
     private int mMaxScrollSize;
+    private boolean haveID = true;
 
     final String PATH = Environment.getExternalStorageDirectory() + "/com.noandroid.familycontacts/icon/";
 
     /* Contact Basic Info Start */
-    String contactName = "No Name";
-    String contactId = null;
-    TextView textView_desc;
-    TextView textView_name;
-    Contact mContact;
+    public String contactName = "No Name";
+    public String contactId = null;
+    public TextView textView_desc;
+    public TextView textView_name;
+    public Contact mContact;
 
     private String cName = null;
     private String cRelationship = null;
@@ -88,7 +92,7 @@ public class ContactDetailsActivity extends AppCompatActivity
     /* Contact Basic Info End */
 
 
-    private static Context context;
+    public static Context context;
 
     public BitmapProcessor bitmapProcessor = new BitmapProcessor();
 
@@ -107,12 +111,16 @@ public class ContactDetailsActivity extends AppCompatActivity
 
 
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_cda);
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        ViewPager viewPager  = (ViewPager) findViewById(R.id.viewpager);
         AppBarLayout appbarLayout = (AppBarLayout) findViewById(R.id.materialup_appbar);
         mProfileImage = (de.hdodenhof.circleimageview.CircleImageView) findViewById(R.id.details_img_avatar);
         mCollapsingToolbarLayout = (android.support.design.widget.CollapsingToolbarLayout) findViewById(R.id.collapsing);
@@ -126,6 +134,9 @@ public class ContactDetailsActivity extends AppCompatActivity
         Height = wm.getDefaultDisplay().getHeight();
 
 
+        ImageButton button_add_contact = (ImageButton) findViewById(R.id.contact_edit);
+
+
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         // enable status bar tint
         tintManager.setStatusBarTintEnabled(true);
@@ -133,16 +144,49 @@ public class ContactDetailsActivity extends AppCompatActivity
         // enable navigation bar tint
         tintManager.setNavigationBarTintEnabled(true);
 
+
+
         /* Get ID from Contact Fragment */
         Bundle bundle = this.getIntent().getExtras();
         if (!bundle.isEmpty()) {
             contactName = bundle.getString("contactName");
-            contactId = bundle.getString("contactId");
-        }
+            // From record and no id but Single telephone Exit
+            if (null == bundle.getString("contactId")) {
 
-        /* TEST */
-        textView_name.setText(contactName);
-        textView_desc.setText(contactId);
+                button_add_contact.setImageResource(R.drawable.ic_add_circle_24dp);
+
+                button_add_contact.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setClass(ContactDetailsActivity.this, EditContactActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("contactId", contactId);
+                        bundle.putString("tmp_tel", contactName);
+                        intent.putExtras(bundle);
+                        //startActivityForResult(intent, REQUESTCODE);
+                        startActivity(intent);
+                    }
+                });
+
+            }
+            else {
+                contactId = bundle.getString("contactId");
+
+                button_add_contact.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setClass(ContactDetailsActivity.this, EditContactActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putString("contactId", contactId);
+                        intent.putExtras(bundle);
+                        //startActivityForResult(intent, REQUESTCODE);
+                        startActivity(intent);
+                    }
+                });
+            }
+        }
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.materialup_toolbar);
@@ -154,20 +198,9 @@ public class ContactDetailsActivity extends AppCompatActivity
         });
 
 
-        ImageButton button_add_contact = (ImageButton) findViewById(R.id.contact_edit);
 
-        button_add_contact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(ContactDetailsActivity.this, EditContactActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("contactId", contactId);
-                intent.putExtras(bundle);
-                //startActivityForResult(intent, REQUESTCODE);
-                startActivity(intent);
-            }
-        });
+
+
 
 
         appbarLayout.addOnOffsetChangedListener(this);
@@ -177,30 +210,10 @@ public class ContactDetailsActivity extends AppCompatActivity
 
         context = getApplicationContext();
 
-        //Tab
-        mViewPager = (ViewPager)findViewById(R.id.viewpager);
-        mTabLayout = (TabLayout)findViewById(R.id.tabs);
-
-        mInflater = LayoutInflater.from(this);
-        view1 = mInflater.inflate(R.layout.tab1,null);
-        view2 = mInflater.inflate(R.layout.tab2,null);
-
-        mViewList.add(view1);
-        mViewList.add(view2);
-
-        mTitleList.add("Telephone Details");
-        mTitleList.add("Recent Records");
-
-        mTabLayout.setTabMode(TabLayout.MODE_FIXED);
-        mTabLayout.addTab(mTabLayout.newTab().setText(mTitleList.get(0)));
-        mTabLayout.addTab(mTabLayout.newTab().setText(mTitleList.get(1)));
-
-        MyPagerAdapter mAdapter = new MyPagerAdapter(mViewList);
-        mViewPager.setAdapter(mAdapter);
-        mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setTabsFromPagerAdapter(mAdapter);
 
 
+        viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
+        tabLayout.setupWithViewPager(viewPager);
     }
 
 
@@ -211,43 +224,50 @@ public class ContactDetailsActivity extends AppCompatActivity
     }
 
     private void updateContactDetails() {
-        String _id = contactId;
-        mContact = MainActivity.daoSession.getContactDao().queryBuilder().where(
-                ContactDao.Properties.Id.eq(_id)).build().unique();
-        if (null != mContact) {
-            cName = mContact.getName();
-            cAvatar = mContact.getAvatar();
-            cRelationship = mContact.getRelationship();
-            mTel = mContact.getTelephones();
-        }
-        // set avatar
-        if (!cAvatar) {
-            mProfileImage.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar));
-            mCollapsingToolbarLayout.setBackgroundResource(R.drawable.default_bg);
-        } else {
-            //From SD Card Get the icon photo
-            Bitmap tBitmap = getDiskBitmap(PATH + _id + ".png");
-            mProfileImage.setImageBitmap(tBitmap);
-            Drawable drawable = new BitmapDrawable(bitmapProcessor.AfterBlurring(context, tBitmap, Width, Height));
-            mCollapsingToolbarLayout.setBackground(drawable);
-        }
+
+        if (haveID) {
+            String _id = contactId;
+            mContact = MainActivity.daoSession.getContactDao().queryBuilder().where(
+                    ContactDao.Properties.Id.eq(_id)).build().unique();
+            if (null != mContact) {
+                cName = mContact.getName();
+                cAvatar = mContact.getAvatar();
+                cRelationship = mContact.getRelationship();
+                mTel = mContact.getTelephones();
+            }
+            // set avatar
+            if (!cAvatar) {
+                mProfileImage.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.default_avatar));
+                mCollapsingToolbarLayout.setBackgroundResource(R.drawable.default_bg);
+            } else {
+                //From SD Card Get the icon photo
+                Bitmap tBitmap = getDiskBitmap(PATH + _id + ".png");
+                mProfileImage.setImageBitmap(tBitmap);
+                Drawable drawable = new BitmapDrawable(bitmapProcessor.AfterBlurring(context, tBitmap, Width, Height));
+                mCollapsingToolbarLayout.setBackground(drawable);
+            }
 
 
-        // get telephone
-        if (!mTel.isEmpty()) {
-            cTel = (mTel.get(0)).getNumber();
-            mCity = MainActivity.daoSession.getTelInitialDao().queryBuilder().where(
-                    TelInitialDao.Properties.Initial.eq(cTel.substring(0, 7))
-            ).build().unique().getCity();
+            // get telephone
+            if (!mTel.isEmpty()) {
+                cTel = (mTel.get(0)).getNumber();
+                mCity = MainActivity.daoSession.getTelInitialDao().queryBuilder().where(
+                        TelInitialDao.Properties.Initial.eq(cTel.substring(0, 7))
+                ).build().unique().getCity();
+            }
+            textView_desc.setText(cRelationship);
+        }
+        else {
+            // No id, get tel number by contactName
+            String singleTelephoneNumber = contactName;
+
+            // I am not sure if the following is right.
+            Telephone tel = new Telephone(null, singleTelephoneNumber,
+                     MainActivity.telDao.queryBuilder().where(TelInitialDao.Properties.Initial.eq(
+                            singleTelephoneNumber.substring(0, 7))).build().unique().getTelCityId(),
+                    null);
         }
 
-        // Todo:
-        textView_desc.setText(cRelationship + " " + cTel + " " + mWeather + " " + cAvatar.toString());
-        String tmp_s = "";
-        for (Telephone t : mTel) {
-            tmp_s += (t.getNumber() + " " + getWeatherDesc(t.getCity()) + "\n");
-        }
-        textView_desc.setText(tmp_s);
     }
 
 
@@ -313,38 +333,6 @@ public class ContactDetailsActivity extends AppCompatActivity
         }
     }
 
-
-    class MyPagerAdapter extends PagerAdapter {
-        private List<View> mViewList;
-
-        public MyPagerAdapter(List<View> mViewList) {
-            this.mViewList = mViewList;
-        }
-
-        @Override
-        public int getCount() {
-            return mViewList.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object)  {
-            return view == object;
-        }
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            container.addView(mViewList.get(position));
-            return mViewList.get(position);
-        }
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            container.removeView(mViewList.get(position));
-        }
-        @Override
-        public CharSequence getPageTitle(int postion) {
-            return mTitleList.get(postion);
-        }
-    }
-
     public class WeatherStatusReceiver extends BroadcastReceiver {
         public WeatherStatusReceiver() {}
         public static final String NEW_WEATHER = "com.noandroid.familycontacts.NEW_WEATHER";
@@ -379,8 +367,10 @@ public class ContactDetailsActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int i) {
             switch(i) {
-                case 0: return TelephoneTabFragment.newInstance();
-                case 1: return TelephoneTabFragment.newInstance();
+                case 0: return TelephoneTabFragment.newInstance(mTel);
+
+                //TODO: Leasunhy
+                case 1: return TelephoneTabFragment.newInstance(null);
             }
             return null;
         }
@@ -388,11 +378,13 @@ public class ContactDetailsActivity extends AppCompatActivity
         @Override
         public CharSequence getPageTitle(int position) {
             switch(position) {
-                case 0: return "Tab 1";
-                case 1: return "Tab 2";
+                case 0: return "Telephone Details";
+                case 1: return "Recent Records";
             }
             return "";
         }
     }
+
+
 
 }

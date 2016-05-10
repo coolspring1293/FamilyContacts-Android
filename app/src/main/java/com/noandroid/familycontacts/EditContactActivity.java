@@ -145,6 +145,9 @@ public class EditContactActivity extends Activity {
      */
     private GoogleApiClient client;
 
+    //Only for No id telephone number
+    public String TempSingleTelephpneNumber = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +198,10 @@ public class EditContactActivity extends Activity {
         Bundle bundle = this.getIntent().getExtras();
         if (!bundle.isEmpty()) {
             contactId = bundle.getString("contactId");
+            // For No id tel
+            if (bundle.getString("tmp_tel") != null) {
+                TempSingleTelephpneNumber = bundle.getString("tmp_tel");
+            }
         }
 
         atct_name = (AutoCompleteTextView) findViewById(R.id.edit_name);
@@ -239,6 +246,10 @@ public class EditContactActivity extends Activity {
             atct_name.setText("");
             atct_relationship.setText("");
 
+            // For No id tel
+            if (TempSingleTelephpneNumber != null) {
+                fill_tel = TempSingleTelephpneNumber;
+            }
             CreateUI();
         }
 
