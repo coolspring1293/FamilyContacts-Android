@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,8 +80,8 @@ public class CallLogFragment extends Fragment implements AdapterView.OnItemClick
                 "SELECT " +
                     " contact._id as contactid, contact.name as display_name, count(*) as count," +
                     " max(record.time) as time, record.status, telephone.number " +
-                " FROM " + " record left outer join telephone natural join contact " +
-                " WHERE record.telephone_number = telephone.number AND contact._id is not null " +
+                " FROM " + " record join telephone join contact " +
+                " WHERE record.telephone_number = telephone.number AND telephone.contact_id = contact._id " +
                 " GROUP BY " + " contact._id";
         String telephoneQueryStr =
                 "SELECT " +
@@ -93,6 +94,9 @@ public class CallLogFragment extends Fragment implements AdapterView.OnItemClick
                 "SELECT _ROWID_ as _id, * " +
                 " FROM " + "(" + contactQueryStr + " UNION ALL " + telephoneQueryStr + ")" + " ORDER BY " + "time DESC";
         //String[] from = { "display_name", "count", "record.time", "record.status", "telephone.number" };
+        Log.d("SQL", contactQueryStr);
+        Log.d("SQL", telephoneQueryStr);
+        Log.d("SQL", queryStr);
         Cursor cursor = db.rawQuery(queryStr, null);
         CallLogCursorAdapter adapter = new CallLogCursorAdapter(getContext(), cursor, 0);
         ListView lv = (ListView)getView().findViewById(android.R.id.list);

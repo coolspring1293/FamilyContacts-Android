@@ -75,6 +75,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditContactActivity extends Activity {
 
+    static public final int EDIT_CONTACT = 1;
+    static public final int ADD_CONTACT = 2;
 
     final String PATH = Environment.getExternalStorageDirectory() + "/com.noandroid.familycontacts/icon/";
 
@@ -211,8 +213,8 @@ public class EditContactActivity extends Activity {
             _id = contactId;
             haveId = true;
 
-            Contact mContact = MainActivity.daoSession.getContactDao().queryBuilder().where(
-                    ContactDao.Properties.Id.eq(_id)).build().unique();
+            Contact mContact = DatabaseHelper.getDaoMaster(getApplicationContext()).newSession().getContactDao()
+                    .load(Long.parseLong(_id));
             if (null != mContact) {
                 mName = mContact.getName();
                 mAvatar = mContact.getAvatar();
@@ -285,18 +287,16 @@ public class EditContactActivity extends Activity {
                     // Delete old all and add add
                     telDao.deleteInTx(contact.getTelephones());
                     for (String tmp : l) {
-                        if (tmp.length() > 6) {
-                            Telephone tel = new Telephone(null, tmp,
-                                    telInitialDao.queryBuilder().where(TelInitialDao.Properties.Initial.eq(
-                                            tmp.substring(0, 7))).build().unique().getTelinitCityId(),
-                                    contact.getId());
-                            telDao.insert(tel);
-                        } else {
-                            // 避免添加空值
-                            if (tmp != "") {
-                                Telephone tel = new Telephone(null, tmp, null, contact.getId());
-                                telDao.insert(tel);
+                        // 避免添加空值
+                        if (tmp != "") {
+                            Long cityId;
+                            try {
+                                cityId = Telephone.getCityIdForTel(tmp);
+                            } catch (Exception e) {
+                                cityId = null;
                             }
+                            Telephone tel = new Telephone(null, tmp, cityId, contact.getId());
+                            telDao.insert(tel);
                         }
                     }
                     Toast.makeText(getApplicationContext(), "Added",
@@ -317,16 +317,12 @@ public class EditContactActivity extends Activity {
                     // Delete old all and add add
                     telDao.deleteInTx(contact.getTelephones());
                     for (String tmp : l) {
-                        if (tmp.length() > 6) {
-                            Telephone tel = new Telephone(null, tmp,
-                                    telInitialDao.queryBuilder().where(TelInitialDao.Properties.Initial.eq(
-                                            tmp.substring(0, 7))).build().unique().getTelinitCityId(),
-                                    contact.getId());
-                            telDao.insert(tel);
-                        } else {
-                            Telephone tel = new Telephone(null, tmp, null, contact.getId());
-                            telDao.insert(tel);
-                        }
+                        Long cityId = null;
+                        try {
+                            cityId = Telephone.getCityIdForTel(tmp);
+                        } catch (Exception e) {}
+                        Telephone tel = new Telephone(null, tmp, cityId, contact.getId());
+                        telDao.insert(tel);
                     }
 
                     Toast.makeText(getApplicationContext(), "Edited",

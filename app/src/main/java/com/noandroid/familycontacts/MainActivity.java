@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity
     public static ContactDao contactDao;
     public static RecordDao recordDao;
     public static TelephoneDao telDao;
+    public static CityDao cityDao;
 
     /*手势识别*/
     public static GestureDetector detector;
@@ -80,6 +81,7 @@ public class MainActivity extends FragmentActivity
         contactDao = daoSession.getContactDao();
         recordDao = daoSession.getRecordDao();
         telDao = daoSession.getTelephoneDao();
+        cityDao = daoSession.getCityDao();
         setFragmentIndicator(0);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);

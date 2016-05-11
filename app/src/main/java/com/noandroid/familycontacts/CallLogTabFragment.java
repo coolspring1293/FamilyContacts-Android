@@ -9,10 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.noandroid.familycontacts.model.Record;
-import com.noandroid.familycontacts.model.RecordDao;
-import com.noandroid.familycontacts.model.Telephone;
-import com.noandroid.familycontacts.model.TelephoneDao;
+import com.noandroid.familycontacts.model.*;
 import de.greenrobot.dao.query.QueryBuilder;
 
 import java.text.SimpleDateFormat;
@@ -47,17 +44,18 @@ public class CallLogTabFragment extends Fragment {
         rv.setHasFixedSize(true);
         Bundle args = getArguments();
         String contactIdStr = args.getString("contactId");
+        RecordDao recordDao = DatabaseHelper.getDaoMaster(getContext()).newSession().getRecordDao();
         if (contactIdStr != null) {  // known contacts
             Long contactId = Long.parseLong(contactIdStr);
             if (contactId == null) return;
-            QueryBuilder<Record> query = MainActivity.recordDao.queryBuilder();
+            QueryBuilder<Record> query = recordDao.queryBuilder();
             query.join(RecordDao.Properties.TelephoneNumber, Telephone.class, TelephoneDao.Properties.Number)
                     .where(TelephoneDao.Properties.ContactId.eq(contactId));
             List<Record> records = query.build().list();
             rv.setAdapter(new RecordRecyclerViewAdapter(getContext(), records));
         } else {  // strangers
             String telNum = args.getString("telNum");
-            List<Record> records = MainActivity.recordDao.queryBuilder()
+            List<Record> records = recordDao.queryBuilder()
                     .where(RecordDao.Properties.TelephoneNumber.eq(telNum)).build().list();
             rv.setAdapter(new RecordRecyclerViewAdapter(getContext(), records));
         }

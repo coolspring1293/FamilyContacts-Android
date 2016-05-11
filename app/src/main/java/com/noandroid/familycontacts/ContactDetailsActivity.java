@@ -11,6 +11,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -115,10 +116,11 @@ public class ContactDetailsActivity extends AppCompatActivity
         /* Get ID from Contact Fragment */
         Bundle bundle = this.getIntent().getExtras();
         if (!bundle.isEmpty()) {
-            telephoneNum = bundle.getString("telephoneNum");
-            textView_name.setText(telephoneNum);
             // From record and no id but Single telephone Exit
             if (null == bundle.getString("contactId")) {
+                telephoneNum = bundle.getString("telephoneNum");
+                textView_name.setText(telephoneNum);
+                textView_desc.setText("Unknown");
 
                 button_add_contact.setImageResource(R.drawable.ic_add_circle_24dp);
 
@@ -132,7 +134,7 @@ public class ContactDetailsActivity extends AppCompatActivity
                         bundle.putString("tmp_tel", telephoneNum);
                         intent.putExtras(bundle);
                         //startActivityForResult(intent, REQUESTCODE);
-                        startActivity(intent);
+                        startActivityForResult(intent, EditContactActivity.ADD_CONTACT);
                     }
                 });
 
@@ -149,7 +151,7 @@ public class ContactDetailsActivity extends AppCompatActivity
                         bundle.putString("contactId", contactId);
                         intent.putExtras(bundle);
                         //startActivityForResult(intent, REQUESTCODE);
-                        startActivity(intent);
+                        startActivityForResult(intent, EditContactActivity.EDIT_CONTACT);
                     }
                 });
             }
@@ -192,8 +194,8 @@ public class ContactDetailsActivity extends AppCompatActivity
 
         if (contactId != null) {
             String _id = contactId;
-            mContact = MainActivity.daoSession.getContactDao().queryBuilder().where(
-                    ContactDao.Properties.Id.eq(_id)).build().unique();
+            mContact = DatabaseHelper.getDaoMaster(getApplicationContext()).newSession().getContactDao()
+                    .load(Long.parseLong(_id));
             if (null != mContact) {
                 cName = mContact.getName();
                 cAvatar = mContact.getAvatar();
@@ -212,7 +214,7 @@ public class ContactDetailsActivity extends AppCompatActivity
                 Drawable drawable = new BitmapDrawable(bitmapProcessor.AfterBlurring(context, tBitmap, Width, Height));
                 mCollapsingToolbarLayout.setBackground(drawable);
             }
-
+            textView_name.setText(cName);
             textView_desc.setText(cRelationship);
         }
         else {
@@ -232,8 +234,8 @@ public class ContactDetailsActivity extends AppCompatActivity
 
     private void updateAllWeather() {
         for (Telephone t : mTel) {
-            if (t.getCity() != null) {
-                String cCityCode = t.getCity().getWeatherCode();
+            if (t.getTelCityId() != null) {
+                String cCityCode = MainActivity.cityDao.load(t.getTelCityId()).getWeatherCode();
 
                 Intent weaIntent = new Intent(this, WeatherService.class);
                 weaIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_REAL_WEATHER);
@@ -246,8 +248,6 @@ public class ContactDetailsActivity extends AppCompatActivity
             }
         }
     }
-
-
 
 
     public static Bitmap getDiskBitmap(String pathString) {
@@ -324,7 +324,11 @@ public class ContactDetailsActivity extends AppCompatActivity
                 case 0: return TelephoneTabFragment.newInstance(mTel);
 
                 //TODO: Leasunhy
-                case 1: return CallLogTabFragment.newInstance(null, "18819461605");
+                case 1:
+                    if (contactId == null)
+                        return CallLogTabFragment.newInstance(null, telephoneNum);
+                    else
+                        return CallLogTabFragment.newInstance(contactId, null);
             }
             return null;
         }
@@ -339,6 +343,10 @@ public class ContactDetailsActivity extends AppCompatActivity
         }
     }
 
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EditContactActivity.ADD_CONTACT || requestCode == EditContactActivity.EDIT_CONTACT)
+            finish();
+    }
 }
