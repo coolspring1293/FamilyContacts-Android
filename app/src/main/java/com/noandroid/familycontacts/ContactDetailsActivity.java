@@ -1,57 +1,37 @@
 package com.noandroid.familycontacts;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.*;
 
 import com.noandroid.familycontacts.model.*;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
-import de.greenrobot.dao.query.QueryBuilder;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.zip.Inflater;
 
 
 /**
@@ -68,12 +48,11 @@ public class ContactDetailsActivity extends AppCompatActivity
     private de.hdodenhof.circleimageview.CircleImageView mProfileImage;
     private android.support.design.widget.CollapsingToolbarLayout mCollapsingToolbarLayout;
     private int mMaxScrollSize;
-    private boolean haveID = true;
 
     final String PATH = Environment.getExternalStorageDirectory() + "/com.noandroid.familycontacts/icon/";
 
     /* Contact Basic Info Start */
-    public String contactName = "No Name";
+    public String telephoneNum = "18814091386";
     public String contactId = null;
     public TextView textView_desc;
     public TextView textView_name;
@@ -136,9 +115,8 @@ public class ContactDetailsActivity extends AppCompatActivity
         /* Get ID from Contact Fragment */
         Bundle bundle = this.getIntent().getExtras();
         if (!bundle.isEmpty()) {
-            contactName = bundle.getString("contactName");
-            textView_name.setText(contactName);
-
+            telephoneNum = bundle.getString("telephoneNum");
+            textView_name.setText(telephoneNum);
             // From record and no id but Single telephone Exit
             if (null == bundle.getString("contactId")) {
 
@@ -151,7 +129,7 @@ public class ContactDetailsActivity extends AppCompatActivity
                         intent.setClass(ContactDetailsActivity.this, EditContactActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putString("contactId", contactId);
-                        bundle.putString("tmp_tel", contactName);
+                        bundle.putString("tmp_tel", telephoneNum);
                         intent.putExtras(bundle);
                         //startActivityForResult(intent, REQUESTCODE);
                         startActivity(intent);
@@ -200,90 +178,7 @@ public class ContactDetailsActivity extends AppCompatActivity
         final WeatherStatusReceiver mWthReceiver = new WeatherStatusReceiver();
         IntentFilter filter = new IntentFilter(WeatherStatusReceiver.NEW_WEATHER);
         LocalBroadcastManager.getInstance(this).registerReceiver(mWthReceiver, filter);
-        loadRecords();
     }
-
-    public class RecordRecyclerViewAdapter extends RecyclerView.Adapter<RecordRecyclerViewAdapter.ViewHolder> {
-        private LayoutInflater inflater;
-        private List<Record> mRecords;
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy/M/d EEE H:m", Locale.ENGLISH);
-
-        public String formatDate(Date date) {
-            return dateFormatter.format(date);
-        }
-
-        public String formatDuration(int duration) {
-            if (duration >= 60)
-                return String.format("%dm%ds", duration / 60, duration % 60);
-            else
-                return String.format("%ds", duration);
-        }
-
-        public RecordRecyclerViewAdapter(Context context, List<Record> list) {
-            super();
-            if (list == null)
-                throw new IllegalArgumentException("List must not be null");
-            this.mRecords = list;
-            this.inflater = LayoutInflater.from(context);
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = inflater.inflate(R.layout.contact_detail_record_list_item, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mRecords.size();
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            Record record = mRecords.get(position);
-            holder.icon.setImageResource(RecordCursorAdapter.getIconIdForCallType(record.getStatus()));
-            holder.phone_number.setText(record.getTelephoneNumber());
-            holder.date.setText(formatDate(record.getTime()));
-            holder.duration.setText(formatDuration(record.getDuration()));
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            public ImageView icon;
-            public TextView phone_number;
-            public TextView date;
-            public TextView duration;
-
-            public Long contactid;
-            public String telephone;
-
-            public ViewHolder(View view) {
-                super(view);
-                icon = (ImageView)view.findViewById(R.id.icon);
-                phone_number = (TextView)view.findViewById(R.id.phone_number);
-                date = (TextView)view.findViewById(R.id.date);
-                duration = (TextView)view.findViewById(R.id.duration);
-            }
-        }
-    }
-
-    private void loadRecords() {
-        RecyclerView rv = (RecyclerView) view2.findViewById(android.R.id.list);
-        rv.setHasFixedSize(true);
-        Long contactId = Long.parseLong(this.contactId);
-        // TODO(leasunhy): implement records for strangers
-        if (contactId == null) return;
-        Log.e("DEBUG", this.contactId);
-        Log.e("DEBUG", contactId.toString());
-        QueryBuilder<Record> query = MainActivity.recordDao.queryBuilder();
-        query.join(RecordDao.Properties.TelephoneNumber, Telephone.class, TelephoneDao.Properties.Number)
-             .where(TelephoneDao.Properties.ContactId.eq(contactId));
-        List<Record> records = query.build().list();
-        rv.setAdapter(new RecordRecyclerViewAdapter(getApplicationContext(), records));
->>>>>>> finish record displaying in detail page
-    }
-
-
-
 
     @Override
     public void onResume() {
@@ -295,7 +190,7 @@ public class ContactDetailsActivity extends AppCompatActivity
 
     private void updateContactDetails() {
 
-        if (haveID) {
+        if (contactId != null) {
             String _id = contactId;
             mContact = MainActivity.daoSession.getContactDao().queryBuilder().where(
                     ContactDao.Properties.Id.eq(_id)).build().unique();
@@ -321,16 +216,10 @@ public class ContactDetailsActivity extends AppCompatActivity
             textView_desc.setText(cRelationship);
         }
         else {
-            // No id, get tel number by contactName
-            String singleTelephoneNumber = contactName;
-
             // I am not sure if the following is right.
-            Telephone tempTel = new Telephone(null, singleTelephoneNumber,
-                     MainActivity.telDao.queryBuilder().where(TelInitialDao.Properties.Initial.eq(
-                            singleTelephoneNumber.substring(0, 7))).build().unique().getTelCityId(),
-                    null);
-
-            mTel.add(tempTel);
+            Telephone tel = new Telephone(null, telephoneNum, Telephone.getCityIdForTel(telephoneNum), null);
+            mTel = new ArrayList<Telephone>();
+            mTel.add(tel);
         }
 
 
@@ -431,7 +320,7 @@ public class ContactDetailsActivity extends AppCompatActivity
                 case 0: return TelephoneTabFragment.newInstance(mTel);
 
                 //TODO: Leasunhy
-                case 1: return TelephoneTabFragment.newInstance(null);
+                case 1: return CallLogTabFragment.newInstance(null, "18819461605");
             }
             return null;
         }
