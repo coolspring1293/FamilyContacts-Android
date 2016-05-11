@@ -28,7 +28,7 @@ public class TelephoneDetailsViewHolder extends RecyclerView.ViewHolder {
     public Button b1, b2;
 
     private Context context;
-    public TelephoneDetailsViewHolder(View itemView, Telephone telephone) {
+    public TelephoneDetailsViewHolder(View itemView) {
         super(itemView);
         tv = (TextView) itemView.findViewById(R.id.card_phone);
         b1 = (Button)   itemView.findViewById(R.id.card_button_1);

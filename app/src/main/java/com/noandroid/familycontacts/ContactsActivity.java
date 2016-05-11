@@ -79,21 +79,6 @@ public class ContactsActivity extends Fragment{
         return list;
     }
 
-    private void addContactA() {
-        Contact contactA = new Contact(null, "Guan Lu ", "Me", false);
-        MainActivity.contactDao.insert(contactA);
-        Log.d("Model", "Inserted new Contact, ID: " + contactA.getId());
-    }
-    private void addContactB() {
-        Contact contactB = new Contact(null, "Liu Wang ", "Group Leader", false);
-        MainActivity.contactDao.insert(contactB);
-        Log.d("Model", "Inserted new Contact, ID: " + contactB.getId());
-    }
-    private void addContactC() {
-        Contact contactB = new Contact(null, "Liu Siyuan ", "Friend", false);
-        MainActivity.contactDao.insert(contactB);
-        Log.d("Model", "Inserted new Contact, ID: " + contactB.getId());
-    }
 
 
     static class ViewHoder {

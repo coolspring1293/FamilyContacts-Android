@@ -150,6 +150,8 @@ public class ContactDetailsActivity extends AppCompatActivity
         Bundle bundle = this.getIntent().getExtras();
         if (!bundle.isEmpty()) {
             contactName = bundle.getString("contactName");
+            textView_name.setText(contactName);
+
             // From record and no id but Single telephone Exit
             if (null == bundle.getString("contactId")) {
 
@@ -213,14 +215,25 @@ public class ContactDetailsActivity extends AppCompatActivity
 
 
         viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
+
         tabLayout.setupWithViewPager(viewPager);
+
+        // Weather
+        final WeatherStatusReceiver mWthReceiver = new WeatherStatusReceiver();
+        IntentFilter filter = new IntentFilter(WeatherStatusReceiver.NEW_WEATHER);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mWthReceiver, filter);
+
     }
+
+
 
 
     @Override
     public void onResume() {
         super.onResume();
         updateContactDetails();
+        // Update Weather info no matter any case
+        updateAllWeather();
     }
 
     private void updateContactDetails() {
@@ -262,37 +275,36 @@ public class ContactDetailsActivity extends AppCompatActivity
             String singleTelephoneNumber = contactName;
 
             // I am not sure if the following is right.
-            Telephone tel = new Telephone(null, singleTelephoneNumber,
+            Telephone tempTel = new Telephone(null, singleTelephoneNumber,
                      MainActivity.telDao.queryBuilder().where(TelInitialDao.Properties.Initial.eq(
                             singleTelephoneNumber.substring(0, 7))).build().unique().getTelCityId(),
                     null);
+
+            mTel.add(tempTel);
         }
+
 
     }
 
 
-    private String getWeatherDesc(City c) {
-        String m = "";
-        if (null != c) {
-            if (c.getWeatherInfo() == null) {
-                String cCityCode = c.getWeatherCode();
-                final WeatherStatusReceiver mWthReceiver = new WeatherStatusReceiver();
-                IntentFilter filter = new IntentFilter(WeatherStatusReceiver.NEW_WEATHER);
-                LocalBroadcastManager.getInstance(this).registerReceiver(mWthReceiver, filter);
+    private void updateAllWeather() {
+        for (Telephone t : mTel) {
+            if (t.getCity() != null) {
+                String cCityCode = t.getCity().getWeatherCode();
+
                 Intent weaIntent = new Intent(this, WeatherService.class);
                 weaIntent.putExtra(WeatherService.ACTION, WeatherService.REFRESH_REAL_WEATHER);
                 weaIntent.putExtra(WeatherService.CITYCODE, cCityCode);
-                startService(weaIntent);
-            } else {
-                m = String.format("%s %s %s℃", c.getCityname(),
-                        c.getWeatherInfo(), c.getTemperature());
 
+                startService(weaIntent);
             }
-        } else {
-            m = "No location and weather data";
+            else {
+                return;
+            }
         }
-        return m;
     }
+
+
 
 
     public static Bitmap getDiskBitmap(String pathString) {

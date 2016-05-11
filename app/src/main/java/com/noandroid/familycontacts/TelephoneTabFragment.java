@@ -26,8 +26,6 @@ public class TelephoneTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mRootView = (RecyclerView) inflater.inflate(R.layout.fragment_tel_details, container, false);
-
-
         return mRootView;
     }
 

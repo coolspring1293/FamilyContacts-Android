@@ -33,16 +33,17 @@ public class TelephoneTabAdapter extends RecyclerView.Adapter<TelephoneDetailsVi
         View itemView = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.list_item_card, viewGroup, false);
 
-        return new TelephoneDetailsViewHolder(itemView, mTel.get(i));
+        return new TelephoneDetailsViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(TelephoneDetailsViewHolder telephoneDetailsViewHolder,int i) {
         telephoneDetailsViewHolder.tv.setText(mTel.get(i).getNumber());
-
-
         telephoneDetailsViewHolder.b1.setText(mTel.get(i).getCityStr());
-        telephoneDetailsViewHolder.b2.setText(mTel.get(i).getWeatherInfo() + "  " + mTel.get(i).getCity().getTemperature() + "°C");
+        telephoneDetailsViewHolder.b2.setText(mTel.get(i).getWeatherInfo()
+                + "  " + mTel.get(i).getCity().getTemperature() + "°C");
+
+
     }
 
     @Override public int getItemCount() {
