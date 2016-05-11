@@ -5,17 +5,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.noandroid.familycontacts.model.ContactDao;
-import com.noandroid.familycontacts.model.RecordDao;
-import com.noandroid.familycontacts.model.Telephone;
-import com.noandroid.familycontacts.model.TelephoneDao;
 
 import static com.noandroid.familycontacts.MainActivity.*;
 
@@ -108,18 +103,18 @@ public class RecordsActivity extends Fragment implements AdapterView.OnItemClick
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        Long contactid = ((RecordCursorAdapter.ViewHolder)view.getTag()).contactid;
+        Intent intent = new Intent();
+        intent.setClass(getContext(), ContactDetailsActivity.class);
+        Bundle bundle = new Bundle();
+        RecordCursorAdapter.ViewHolder holder = (RecordCursorAdapter.ViewHolder)view.getTag();
+        Long contactid = holder.contactid;
         if (contactid < 0) {  // stranger
-            // TODO(leasunhy): call log detail page for strangers
-            return;
+            bundle.putString("telephoneNum", holder.telephone);
         } else {
-            Intent intent = new Intent();
-            intent.setClass(getContext(), ContactDetailsActivity.class);
-            Bundle bundle = new Bundle();
             bundle.putString("contactId", contactid.toString());
-            intent.putExtras(bundle);
-            startActivity(intent);
         }
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }
 

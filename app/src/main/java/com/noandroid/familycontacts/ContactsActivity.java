@@ -244,7 +244,7 @@ public class ContactsActivity extends Fragment{
                     // intent.setClass(getActivity(), DetailsActivity.class);
                     intent.setClass(getActivity(), ContactDetailsActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("contactName", contactName);
+                    bundle.putString("telephoneNum", contactName);
                     bundle.putString("contactId", contactId);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, REQUESTCODE);
