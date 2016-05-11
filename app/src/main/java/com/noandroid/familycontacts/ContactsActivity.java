@@ -13,10 +13,15 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.noandroid.familycontacts.model.Contact;
 
 import java.util.ArrayList;
@@ -41,7 +46,9 @@ public class ContactsActivity extends Fragment{
     private ImageButton button_add_contact;
     //search
     private ImageButton button_search_contact;
-    private EditText search_text;
+    private AutoCompleteTextView search_text;
+    private List<String> index = new ArrayList<>();
+    private List<String> nameList = new ArrayList<>();
 
 
     public static ContactsActivity newInstance(int index) {
@@ -75,6 +82,7 @@ public class ContactsActivity extends Fragment{
             map.put("id",cursor.getString(cursor.getColumnIndex("_id")));
             map.put("pinyin",cursor.getString(cursor.getColumnIndex("PINYIN")));
             list.add(map);
+            nameList.add(cursor.getString(cursor.getColumnIndex("NAME")));
         }
         return list;
     }
@@ -150,30 +158,49 @@ public class ContactsActivity extends Fragment{
         });
 
         button_search_contact = (ImageButton)getView().findViewById(R.id.contact_search);
-        search_text=(EditText)getView().findViewById(R.id.search_contact);
+        search_text=(AutoCompleteTextView)getView().findViewById(R.id.search_text);
 
-        final Animation mDisappearAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                0.0f, Animation.RELATIVE_TO_SELF, -1.0f);
-        mDisappearAction.setDuration(500);
 
-        final Animation mShowAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
-                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,
-                -1.0f, Animation.RELATIVE_TO_SELF, 0.0f);
-        mShowAction.setDuration(500);
 
         button_search_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(search_text.getVisibility()==View.GONE) {
                     search_text.setVisibility(View.VISIBLE);
-                    //search_text.startAnimation(mShowAction);
+
                 }else {
                     search_text.setVisibility(View.GONE);
-                    //search_text.startAnimation(mDisappearAction);
+
                 }
             }
         });
+
+        button_search_contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(search_text.getVisibility()==View.GONE) {
+                    search_text.setVisibility(View.VISIBLE);
+
+                }else {
+                    search_text.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        search_text.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                //Toast.makeText(getActivity(),"click",Toast.LENGTH_SHORT).show();
+                ListView listview = (ListView) parent;
+                ArrayAdapter<String> adapter  =  (ArrayAdapter<String>) parent.getAdapter();
+                TextView textview = (TextView) view;
+
+                //Toast.makeText(getContext(),parent.getItemAtPosition(position).toString(),Toast.LENGTH_SHORT).show();
+                int a  = index.indexOf(parent.getItemAtPosition(position).toString());
+                stickyList.setSelection(a);
+            }});
     }
 
     /**
@@ -184,12 +211,18 @@ public class ContactsActivity extends Fragment{
         stickyList = (StickyListHeadersListView)getView().findViewById(R.id.test_list);
         MyTextAdapter adapter = new MyTextAdapter(getActivity());
         stickyList.setAdapter(adapter);
+
+        ArrayAdapter names = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,nameList);
+
+        search_text.setAdapter(names);
+        search_text.setThreshold(1);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         updateData();
+        search_text.setText("");
     }
 
 
@@ -232,7 +265,7 @@ public class ContactsActivity extends Fragment{
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
+            index.add(position,data.get(position).get("name").toString());
             holder.name.setText((String)data.get(position).get("name"));
             holder.title.setText((String) data.get(position).get("title"));
             stickyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

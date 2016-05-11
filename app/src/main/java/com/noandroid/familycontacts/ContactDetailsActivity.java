@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -26,8 +28,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.*;
-
 import com.noandroid.familycontacts.model.*;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.noandroid.familycontacts.model.Blacklist;
+import com.noandroid.familycontacts.model.BlacklistDao;
+import com.noandroid.familycontacts.model.City;
+import com.noandroid.familycontacts.model.Contact;
+import com.noandroid.familycontacts.model.ContactDao;
+import com.noandroid.familycontacts.model.TelInitialDao;
+import com.noandroid.familycontacts.model.Telephone;
+>>>>>>> implement lots of features
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.File;
@@ -66,6 +80,13 @@ public class ContactDetailsActivity extends AppCompatActivity
     private List<Telephone> mTel;
 
     /* Contact Basic Info End */
+
+    private com.getbase.floatingactionbutton.FloatingActionButton call_button;
+    private com.getbase.floatingactionbutton.FloatingActionButton sms_button;
+    private com.getbase.floatingactionbutton.FloatingActionButton block_button;
+
+    private SMSProcessor smsProcessor  = new SMSProcessor();
+
 
 
     public static Context context;
@@ -180,6 +201,102 @@ public class ContactDetailsActivity extends AppCompatActivity
         final WeatherStatusReceiver mWthReceiver = new WeatherStatusReceiver();
         IntentFilter filter = new IntentFilter(WeatherStatusReceiver.NEW_WEATHER);
         LocalBroadcastManager.getInstance(this).registerReceiver(mWthReceiver, filter);
+        call_button =(com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.menu_call);
+        sms_button =(com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.menu_sms);
+        block_button =(com.getbase.floatingactionbutton.FloatingActionButton)findViewById(R.id.menu_block);
+
+        block_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (Telephone tel : mContact.getTelephones()) {
+                    MainActivity.daoMaster.newSession().getBlacklistDao()
+                            .insert(new Blacklist(null, tel.getNumber()));
+                }
+            }
+        });
+
+        call_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ShowTelDialog();
+
+            }
+        });
+
+
+
+        sms_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                ShowSMSDialog();
+
+            }
+        });
+
+    }
+    public void ShowTelDialog() {
+        int id = 0;
+        List<String> tels = new ArrayList<>();
+        for(Telephone tel : mTel) {
+            tels.add(tel.getNumber());
+        }
+        final SMSDialog smsDialog = new SMSDialog(this,tels,id);
+        smsDialog.show();
+
+        smsDialog.setClickListener(new SMSDialog.ClickListenerInterface() {
+
+            @Override
+            public void doCancel() {
+                smsDialog.dismiss();
+            }
+            @Override
+            public void doSend() {
+                String call = smsDialog.getTargetTel();
+
+                Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+call));
+                //enforceCallingPermission("android.permission.CALL_PHONE","");
+                startActivity(intent);
+            }
+        });
+    }
+
+    public void ShowSMSDialog() {
+        int id = 1;
+        List<String> tels = new ArrayList<>();
+        for(Telephone tel : mTel) {
+            tels.add(tel.getNumber());
+        }
+        final SMSDialog smsDialog = new SMSDialog(this,tels,id);
+        smsDialog.show();
+
+        smsDialog.setClickListener(new SMSDialog.ClickListenerInterface() {
+
+            @Override
+            public void doCancel() {
+                smsDialog.dismiss();
+            }
+            @Override
+            public void doSend() {
+                String weather = "";
+                String temperature = "";
+                if(!smsDialog.getTargetTel().equals("")) {
+                    for(Telephone tel :mTel) {
+                        if(smsDialog.getTargetTel().equals(tel.getNumber())) {
+                            weather = tel.getCity().getWeatherInfo();
+                            temperature=tel.getCity().getTemperature();
+                            break;
+                        }
+                    }
+                    smsProcessor.sendSMS(getBaseContext(),smsDialog.getTargetTel(),"",weather,temperature);
+
+                } else {
+                    Toast.makeText(getBaseContext(),"Please Choose a telephone ",Toast.LENGTH_SHORT).show();
+                }
+                //smsProcessor.sendSMS(getBaseContext(),"18824110669","me",mTel.get(0).getCity().getWeatherInfo(),mTel.get(0).getCity().getTemperature());
+            }
+        });
     }
 
     @Override

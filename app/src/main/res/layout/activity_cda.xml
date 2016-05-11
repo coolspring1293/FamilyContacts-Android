@@ -137,6 +137,7 @@
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/menu_call"
             fab:fab_colorNormal="@color/colorCall"
             fab:fab_colorPressed="@color/white_pressed"
             android:src="@drawable/ic_call_24dp" />
@@ -144,9 +145,18 @@
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/menu_sms"
             fab:fab_colorNormal="@color/colorMessage"
             fab:fab_colorPressed="@color/white_pressed"
             android:src="@drawable/ic_email_24dp" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/menu_block"
+            fab:fab_colorNormal="@color/colorFavorite"
+            fab:fab_colorPressed="@color/white_pressed"
+            android:src="@drawable/ic_cancel_black_24dp" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

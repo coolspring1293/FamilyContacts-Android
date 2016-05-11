@@ -36,18 +36,25 @@ public class SMSProcessor {
         result += weather;
         result +=",";
         result += temprature;
+        result +="度";
+        String[] ts = temprature.split("\\.");
+        String t = ts[0];
+        int tem = Integer.valueOf(t);
 
         if (weatherRain.contains(weather)) {
             result += ",出门别忘了带伞.";
         }
 
-        if (weather.equals("晴") && Integer.getInteger(temprature.substring(0,1)) > 25) {
-            result += ",温度有点高， 注意避暑和防晒.";
+        if (weather.equals("晴") && tem > 25) {
+            result += "小心别被晒黑了。";
         }
-
-        if (Integer.getInteger(temprature.substring(0,2)) < 15) {
+        if(tem >25) {
+            result += ",温度有点高， 注意避暑。";
+        }
+        if (tem < 15) {
             result +=",气温有些低，注意身体，小心感冒。";
         }
+        result += "有空多联系。";
 
         return result;
 
@@ -57,6 +64,7 @@ public class SMSProcessor {
 
         if(phoneNumber!=null) {
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + phoneNumber));
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("sms_body", message);
             context.startActivity(intent);
         }else {

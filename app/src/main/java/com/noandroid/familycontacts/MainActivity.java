@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity
     public static RecordDao recordDao;
     public static TelephoneDao telDao;
     public static CityDao cityDao;
+    public static BlacklistDao blacklistDao;
 
     /*手势识别*/
     public static GestureDetector detector;
@@ -345,14 +346,15 @@ public class MainActivity extends FragmentActivity
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO Auto-generated method stub
         super.onActivityResult(requestCode, resultCode, data);
-        Toast.makeText(this,"onActivityResult " + requestCode ,Toast.LENGTH_SHORT).show();
-//
-//            String tel = data.getStringExtra("tel");//接收返回数据
-//            getSupportFragmentManager().beginTransaction().hide(mFragments[0])
-//                        .hide(mFragments[1]).hide(mFragments[2])
-//                        .show(mFragments[2]).commit();
-//            TextView txt =(TextView)findViewById(R.id.text_show);
-//            txt.setText(tel.toString());
+        /*oast.makeText(this,"onActivityResult " + requestCode ,Toast.LENGTH_SHORT).show();
+
+           String tel = data.getStringExtra("tel");//接收返回数据
+            getSupportFragmentManager().beginTransaction().hide(mFragments[0])
+                        .hide(mFragments[1]).hide(mFragments[2])
+                        .show(mFragments[2]).commit();
+
+          TextView txt =(TextView)findViewById(R.id.text_show);
+            txt.setText(tel.toString());*/
 
     }
 }
