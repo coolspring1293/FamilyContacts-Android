@@ -195,7 +195,11 @@ public class MainActivity extends FragmentActivity
                         List list_tel = telDao.queryBuilder().where(TelephoneDao.Properties.Number.eq(phoneInfo.number)).list();
                         if (list_tel.isEmpty()) {
                             String number = phoneInfo.number.replaceAll("[ -]", "");
-                            Telephone telephone = new Telephone(null, number, Telephone.getCityIdForTel(number), null);
+                            Long cityId = null;
+                            try {
+                                cityId = Telephone.getCityIdForTel(number);
+                            } catch (Exception e) {}
+                            Telephone telephone = new Telephone(null, number, cityId, null);
                             telephone.setContact(contact);
                             telDao.insert(telephone);
                         }
