@@ -52,9 +52,9 @@ public class DialingActivity extends Fragment {
         mParent=getView();
         mActivity = getActivity();
 
-        tab_1 = (Button)mParent.findViewById(R.id.tab_4);
-        tab_2 = (Button)mParent.findViewById(R.id.tab_5);
-        tab_3 = (Button)mParent.findViewById(R.id.tab_6);
+        tab_1 = (Button)mParent.findViewById(R.id.tab_1);
+        tab_2 = (Button)mParent.findViewById(R.id.tab_2);
+        tab_3 = (Button)mParent.findViewById(R.id.tab_3);
         tab_4 = (Button)mParent.findViewById(R.id.tab_4);
         tab_5 = (Button)mParent.findViewById(R.id.tab_5);
         tab_6 = (Button)mParent.findViewById(R.id.tab_6);
@@ -87,13 +87,13 @@ public class DialingActivity extends Fragment {
         @Override
         public void onClick(View v) {
             String temp = "";
-            if(v.getId() ==R.id.tab_4) {
+            if(v.getId() ==R.id.tab_1) {
                 temp = tel.getText().toString() + "1";
             }
-            if(v.getId() ==R.id.tab_5) {
+            if(v.getId() ==R.id.tab_2) {
                 temp = tel.getText().toString() + "2";
             }
-            if(v.getId() ==R.id.tab_6) {
+            if(v.getId() ==R.id.tab_3) {
                 temp = tel.getText().toString() + "3";
             }
             if(v.getId() ==R.id.tab_4) {

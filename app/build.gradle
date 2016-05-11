@@ -45,7 +45,7 @@ dependencies {
 
     compile 'com.android.support:recyclerview-v7:+'
 
-
+    compile files('src/libs/android-vcard.jar')
 
 }
 

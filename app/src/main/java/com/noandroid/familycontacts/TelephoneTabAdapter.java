@@ -47,8 +47,11 @@ public class TelephoneTabAdapter extends RecyclerView.Adapter<TelephoneDetailsVi
         }
         else {
             telephoneDetailsViewHolder.img2.setImageResource(R.drawable.ic_wb_cloudy_24dp);
-            telephoneDetailsViewHolder.b2.setText(mTel.get(i).getWeatherInfo()
-                    + "  " + mTel.get(i).getCity().getTemperature() + "°C");
+            String tmpW = mTel.get(i).getWeatherInfo().toString();
+            if (mTel.get(i).getCity() != null) {
+                tmpW += ("  " + mTel.get(i).getCity().getTemperature().toString() + "°C");
+            }
+            telephoneDetailsViewHolder.b2.setText(tmpW);
         }
 
     }

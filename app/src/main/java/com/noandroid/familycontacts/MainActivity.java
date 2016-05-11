@@ -1,6 +1,7 @@
 package com.noandroid.familycontacts;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,6 +23,15 @@ import android.widget.Toast;
 
 import com.noandroid.familycontacts.model.*;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import android.support.v7.app.AlertDialog;
+
+
+import a_vcard.android.provider.Contacts;
+
 
 
 public class MainActivity extends FragmentActivity
@@ -168,18 +178,85 @@ public class MainActivity extends FragmentActivity
 
             showLoginDialog(this);
         } else if (id == R.id.nav_share) {
-            // TODO import
-            Toast.makeText(this,"nav_share",Toast.LENGTH_SHORT).show();
 
+            try {
+                VCardInfo.ContactHandler handler= VCardInfo.ContactHandler.getInstance();
+                // 获取要恢复的联系人信息
+                List<VCardInfo> infoList = handler.restoreContacts();
+                for (VCardInfo vcardInfo : infoList) {
+                    // 恢复联系人,并查重
+                    List list_contact = contactDao.queryBuilder().where(ContactDao.Properties.Name.eq(vcardInfo.getName())).list();
+                    if (list_contact.isEmpty()) {
+                        Contact contact = new Contact(null, vcardInfo.getName(), null, false);
+                        contactDao.insert(contact);
+                    }
+                    Contact contact = contactDao.queryBuilder().where(ContactDao.Properties.Name.eq(vcardInfo.getName())).list().get(0);
+                    for (VCardInfo.PhoneInfo phoneInfo : vcardInfo.getPhoneList()) {
+                        List list_tel = telDao.queryBuilder().where(TelephoneDao.Properties.Number.eq(phoneInfo.number)).list();
+                        if (list_tel.isEmpty()) {
+                            String number = phoneInfo.number.replaceAll("[ -]", "");
+                            Telephone telephone = new Telephone(null, number, Telephone.getCityIdForTel(number), null);
+                            telephone.setContact(contact);
+                            telDao.insert(telephone);
+                        }
+                    }
+                }
+
+                Toast.makeText(this, "Import contacts.vcf Successfully!", Toast.LENGTH_LONG).show();
+
+            } catch (Exception e) {
+                Toast.makeText(this, "Import contacts.vcf Failed!\n" +
+                        "Please put the contacts.vcf in /com.noandroid.familycontacts/",
+                        Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+//            Toast.makeText(this,"nav_send",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_send) {
-            // TODO export
-            Toast.makeText(this,"nav_send",Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(this)
+                    .setTitle("OK")
+                    .setMessage("The backup file will be covered. Continue?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            VCardInfo.ContactHandler handler = VCardInfo.ContactHandler.getInstance();
+                            List<Contact> _dbList = contactDao.loadAll();
+                            List<VCardInfo> _infoList = new ArrayList<>();
+                            for (Contact c : _dbList) {
+                                String displayName = c.getName();
+                                VCardInfo info = new VCardInfo(displayName);// 初始化联系人信息
+                                List<Telephone> _telList = c.getTelephones();
+                                if (!_telList.isEmpty()) {
+                                    List<VCardInfo.PhoneInfo> phoneNumberList = new ArrayList<>();
+                                    for (Telephone tel : _telList) {
+                                        // 电话号码
+                                        String phoneNumber = tel.getNumber();
+                                        // 对应的联系人类型
+                                        int type = Contacts.Phones.TYPE_MOBILE;
+
+                                        // 初始化联系人电话信息
+                                        VCardInfo.PhoneInfo phoneInfo = new VCardInfo.PhoneInfo();
+                                        phoneInfo.type = type;
+                                        phoneInfo.number = phoneNumber;
+
+                                        phoneNumberList.add(phoneInfo);
+                                    }
+                                    // 设置联系人电话信息
+                                    info.setPhoneList(phoneNumberList);
+                                }
+                                _infoList.add(info);
+                            }
+                            handler.backupContacts(MainActivity.this, _infoList);    // 备份联系人信息
+                        }
+                    }).setNegativeButton("Cancel", null).create().show();
+
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
     public void sharedPreferencesInit () {
