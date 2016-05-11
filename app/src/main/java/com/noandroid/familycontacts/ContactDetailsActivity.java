@@ -217,7 +217,11 @@ public class ContactDetailsActivity extends AppCompatActivity
         }
         else {
             // I am not sure if the following is right.
-            Telephone tel = new Telephone(null, telephoneNum, Telephone.getCityIdForTel(telephoneNum), null);
+            Long cityId = null;
+            try {
+                cityId = Telephone.getCityIdForTel(telephoneNum);
+            } catch (Exception e) {}
+            Telephone tel = new Telephone(null, telephoneNum, cityId, null);
             mTel = new ArrayList<Telephone>();
             mTel.add(tel);
         }

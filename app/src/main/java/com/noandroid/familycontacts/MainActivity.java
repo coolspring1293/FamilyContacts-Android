@@ -18,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.noandroid.familycontacts.model.*;
@@ -121,7 +120,7 @@ public class MainActivity extends FragmentActivity
             ft.hide(mFragments[i]);
         ft.show(mFragments[which]);
         ft.commit();
-        if (mFragments[which] instanceof RecordsActivity)
+        if (mFragments[which] instanceof CallLogFragment)
             mFragments[which].onResume();
         FragmentIndicator.setIndicator(which);
         mark = which;

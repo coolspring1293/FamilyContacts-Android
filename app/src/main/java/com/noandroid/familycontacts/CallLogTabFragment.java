@@ -2,12 +2,8 @@ package com.noandroid.familycontacts;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.CallLog;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.telecom.Call;
-import android.text.Layout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,7 +101,7 @@ public class CallLogTabFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             Record record = mRecords.get(position);
-            holder.icon.setImageResource(RecordCursorAdapter.getIconIdForCallType(record.getStatus()));
+            holder.icon.setImageResource(CallLogCursorAdapter.getIconIdForCallType(record.getStatus()));
             holder.phone_number.setText(record.getTelephoneNumber());
             holder.date.setText(formatDate(record.getTime()));
             holder.duration.setText(formatDuration(record.getDuration()));

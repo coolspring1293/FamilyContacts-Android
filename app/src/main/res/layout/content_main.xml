@@ -23,7 +23,7 @@
         android:layout_height="fill_parent"
         android:layout_width="fill_parent"
         android:layout_weight="1"
-        class = "com.noandroid.familycontacts.RecordsActivity"/>
+        class = "com.noandroid.familycontacts.CallLogFragment"/>
 
     <fragment
         android:id="@+id/fragment_dialing"

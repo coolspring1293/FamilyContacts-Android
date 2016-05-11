@@ -19,15 +19,15 @@ import static com.noandroid.familycontacts.MainActivity.*;
  * Created by 关璐 on 2016/3/31.
  * Edited by leasunhy on 2016/5/9
  */
-public class RecordsActivity extends Fragment implements AdapterView.OnItemClickListener {
+public class CallLogFragment extends Fragment implements AdapterView.OnItemClickListener {
     private View mParent;
 
     private FragmentActivity mActivity;
 
     private TextView mText;
 
-    public static RecordsActivity newInstance(int index) {
-        RecordsActivity f = new RecordsActivity();
+    public static CallLogFragment newInstance(int index) {
+        CallLogFragment f = new CallLogFragment();
 
         Bundle args = new Bundle();
         args.putInt("index", index);
@@ -94,7 +94,7 @@ public class RecordsActivity extends Fragment implements AdapterView.OnItemClick
                 " FROM " + "(" + contactQueryStr + " UNION ALL " + telephoneQueryStr + ")" + " ORDER BY " + "time DESC";
         //String[] from = { "display_name", "count", "record.time", "record.status", "telephone.number" };
         Cursor cursor = db.rawQuery(queryStr, null);
-        RecordCursorAdapter adapter = new RecordCursorAdapter(getContext(), cursor, 0);
+        CallLogCursorAdapter adapter = new CallLogCursorAdapter(getContext(), cursor, 0);
         ListView lv = (ListView)getView().findViewById(android.R.id.list);
         lv.setOnItemClickListener(this);
         lv.setAdapter(adapter);
@@ -106,7 +106,7 @@ public class RecordsActivity extends Fragment implements AdapterView.OnItemClick
         Intent intent = new Intent();
         intent.setClass(getContext(), ContactDetailsActivity.class);
         Bundle bundle = new Bundle();
-        RecordCursorAdapter.ViewHolder holder = (RecordCursorAdapter.ViewHolder)view.getTag();
+        CallLogCursorAdapter.ViewHolder holder = (CallLogCursorAdapter.ViewHolder)view.getTag();
         Long contactid = holder.contactid;
         if (contactid < 0) {  // stranger
             bundle.putString("telephoneNum", holder.telephone);

@@ -19,7 +19,7 @@ import java.util.Locale;
 /**
  * Created by leasunhy on 5/9/16.
  */
-public class RecordCursorAdapter extends CursorAdapter {
+public class CallLogCursorAdapter extends CursorAdapter {
     private LayoutInflater inflater;
     private Context context;
     private static SimpleDateFormat dateOnlyFormatter = new SimpleDateFormat("yyyy-MM-d", Locale.ENGLISH);
@@ -55,7 +55,7 @@ public class RecordCursorAdapter extends CursorAdapter {
         return R.drawable.ic_call_made_24dp;
     }
 
-    RecordCursorAdapter(Context context, Cursor c, int flags) {
+    CallLogCursorAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
         this.context = context;
         this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
