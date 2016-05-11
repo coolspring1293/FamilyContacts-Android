@@ -40,9 +40,16 @@ public class TelephoneTabAdapter extends RecyclerView.Adapter<TelephoneDetailsVi
     public void onBindViewHolder(TelephoneDetailsViewHolder telephoneDetailsViewHolder,int i) {
         telephoneDetailsViewHolder.tv.setText(mTel.get(i).getNumber());
         telephoneDetailsViewHolder.b1.setText(mTel.get(i).getCityStr());
-        telephoneDetailsViewHolder.b2.setText(mTel.get(i).getWeatherInfo()
-                + "  " + mTel.get(i).getCity().getTemperature() + "°C");
 
+
+        if (mTel.get(i).getWeatherInfo() == null) {
+
+        }
+        else {
+            telephoneDetailsViewHolder.img2.setImageResource(R.drawable.ic_wb_cloudy_24dp);
+            telephoneDetailsViewHolder.b2.setText(mTel.get(i).getWeatherInfo()
+                    + "  " + mTel.get(i).getCity().getTemperature() + "°C");
+        }
 
     }
 

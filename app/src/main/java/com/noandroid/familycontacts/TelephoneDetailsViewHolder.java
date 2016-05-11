@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import org.w3c.dom.Text;
 public class TelephoneDetailsViewHolder extends RecyclerView.ViewHolder {
     public TextView tv;
     public Button b1, b2;
+    public ImageView img1, img2;
 
     private Context context;
     public TelephoneDetailsViewHolder(View itemView) {
@@ -33,6 +35,8 @@ public class TelephoneDetailsViewHolder extends RecyclerView.ViewHolder {
         tv = (TextView) itemView.findViewById(R.id.card_phone);
         b1 = (Button)   itemView.findViewById(R.id.card_button_1);
         b2 = (Button)   itemView.findViewById(R.id.card_button_2);
+        img1 = (ImageView) itemView.findViewById(R.id.card_img_1);
+        img2 = (ImageView) itemView.findViewById(R.id.card_img_2);
 
 
         b1.setOnClickListener(new View.OnClickListener() {

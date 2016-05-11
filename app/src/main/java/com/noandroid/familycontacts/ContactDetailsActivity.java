@@ -79,14 +79,12 @@ public class ContactDetailsActivity extends AppCompatActivity
     public String contactId = null;
     public TextView textView_desc;
     public TextView textView_name;
-    public Contact mContact;
 
+
+    public Contact mContact;
     private String cName = null;
     private String cRelationship = null;
     private Boolean cAvatar = false;
-    private String cTel = null;
-    private City mCity = null;
-    private String mWeather = null;
     private List<Telephone> mTel;
 
     /* Contact Basic Info End */
@@ -97,18 +95,9 @@ public class ContactDetailsActivity extends AppCompatActivity
     public BitmapProcessor bitmapProcessor = new BitmapProcessor();
 
 
-    // fragment
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
-    private LayoutInflater mInflater;
-    private List<String> mTitleList = new ArrayList<>();
-    private View view1, view2;
-    private List<View> mViewList = new ArrayList<>();
 
     private static int Width;
     private static int Height;
-
-
 
 
 
@@ -201,17 +190,10 @@ public class ContactDetailsActivity extends AppCompatActivity
 
 
 
-
-
-
-
         appbarLayout.addOnOffsetChangedListener(this);
         mMaxScrollSize = appbarLayout.getTotalScrollRange();
 
-
-
         context = getApplicationContext();
-
 
 
         viewPager.setAdapter(new TabsAdapter(getSupportFragmentManager()));
@@ -247,6 +229,7 @@ public class ContactDetailsActivity extends AppCompatActivity
                 cAvatar = mContact.getAvatar();
                 cRelationship = mContact.getRelationship();
                 mTel = mContact.getTelephones();
+
             }
             // set avatar
             if (!cAvatar) {
@@ -260,14 +243,6 @@ public class ContactDetailsActivity extends AppCompatActivity
                 mCollapsingToolbarLayout.setBackground(drawable);
             }
 
-
-            // get telephone
-            if (!mTel.isEmpty()) {
-                cTel = (mTel.get(0)).getNumber();
-                mCity = MainActivity.daoSession.getTelInitialDao().queryBuilder().where(
-                        TelInitialDao.Properties.Initial.eq(cTel.substring(0, 7))
-                ).build().unique().getCity();
-            }
             textView_desc.setText(cRelationship);
         }
         else {
@@ -357,7 +332,6 @@ public class ContactDetailsActivity extends AppCompatActivity
 //                String info = intent.getStringExtra(WeatherService.EXTRA_WEATHER_INFO);
 //                if (weaCode != null && weaCode.equals(mCity.getWeatherCode())
 //                        && temp != null && info != null) {
-                MainActivity.daoSession.getCityDao().refresh(mCity);
                 updateContactDetails();
                 LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
 //                }
