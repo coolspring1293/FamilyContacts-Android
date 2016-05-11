@@ -179,6 +179,10 @@ public class Telephone {
                 .build().uniqueOrThrow().getTelinitCityId();
     }
 
+    static public Long getCityIdForTel(Telephone tel) {
+        return tel.telCityId == null ? getCityIdForTel(tel.getNumber()) : tel.telCityId;
+    }
+
     static public String getLocationForTel(String number) {
         DaoMaster daoMaster = new DaoMaster(DatabaseHelper.getDB(null).getReadableDatabase());
         CityDao cityDao = daoMaster.newSession().getCityDao();
@@ -189,6 +193,37 @@ public class Telephone {
         }
     }
 
+    static public String getWeatherInfoForTel(String number) {
+        DaoMaster daoMaster = new DaoMaster(DatabaseHelper.getDB(null).getReadableDatabase());
+        CityDao cityDao = daoMaster.newSession().getCityDao();
+        try {
+            City city = cityDao.load(getCityIdForTel(number));
+            if (city.getWeatherInfo() == null)
+                return null;
+            return String.format("%s %s°C", city.getWeatherInfo(), city.getTemperature());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    static public String getLocationForTel(Telephone tel) {
+        try {
+            return tel.getCity().toString();
+        } catch (Exception e) {
+            return getLocationForTel(tel.getNumber());
+        }
+    }
+
+    static public String getWeatherInfoForTel(Telephone tel) {
+        try {
+            City city = tel.getCity();
+            if (city.getWeatherInfo() == null)
+                return null;
+            return String.format("%s %s°C", city.getWeatherInfo(), city.getTemperature());
+        } catch (Exception e) {
+            return getWeatherInfoForTel(tel.getNumber());
+        }
+    }
     public String getCityStr() {
         try {
             City city = this.getCity();
