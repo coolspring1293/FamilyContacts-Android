@@ -11,10 +11,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,7 +43,6 @@ import com.noandroid.familycontacts.model.Contact;
 import com.noandroid.familycontacts.model.ContactDao;
 import com.noandroid.familycontacts.model.TelInitialDao;
 import com.noandroid.familycontacts.model.Telephone;
->>>>>>> implement lots of features
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.File;
@@ -208,10 +209,17 @@ public class ContactDetailsActivity extends AppCompatActivity
         block_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (Telephone tel : mContact.getTelephones()) {
-                    MainActivity.daoMaster.newSession().getBlacklistDao()
-                            .insert(new Blacklist(null, tel.getNumber()));
+                if (mContact != null) {
+                    for (Telephone tel : mContact.getTelephones()) {
+                        DatabaseHelper.getDaoMaster(getApplicationContext()).newSession().getBlacklistDao()
+                                .insert(new Blacklist(null, tel.getNumber()));
+                    }
+                } else {
+                    DatabaseHelper.getDaoMaster(getApplicationContext()).newSession().getBlacklistDao()
+                            .insert(new Blacklist(null, telephoneNum));
                 }
+                Snackbar.make(v, "Added to blacklist.", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
 
@@ -255,7 +263,7 @@ public class ContactDetailsActivity extends AppCompatActivity
             public void doSend() {
                 String call = smsDialog.getTargetTel();
 
-                Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:"+call));
+                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+call));
                 //enforceCallingPermission("android.permission.CALL_PHONE","");
                 startActivity(intent);
             }
@@ -282,10 +290,12 @@ public class ContactDetailsActivity extends AppCompatActivity
                 String weather = "";
                 String temperature = "";
                 if(!smsDialog.getTargetTel().equals("")) {
-                    for(Telephone tel :mTel) {
+                    for(Telephone tel : mTel) {
                         if(smsDialog.getTargetTel().equals(tel.getNumber())) {
-                            weather = tel.getCity().getWeatherInfo();
-                            temperature=tel.getCity().getTemperature();
+                            City city = DatabaseHelper.getDaoMaster(getApplicationContext())
+                                    .newSession().getCityDao().load(tel.getTelCityId());
+                            weather = city.getWeatherInfo();
+                            temperature=city.getTemperature();
                             break;
                         }
                     }
