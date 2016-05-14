@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        android:background="#009900"
+        android:background="@color/header_pressed"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         ​<android.support.design.widget.CollapsingToolbarLayout
@@ -106,7 +106,7 @@
             app:tabSelectedTextColor="?android:attr/textColorPrimaryInverse"
             app:tabIndicatorColor="?android:attr/textColorPrimaryInverse"
             app:tabIndicatorHeight="4dp"
-            />
+            android:fillViewport="false" />
     </android.support.design.widget.AppBarLayout>
     ​
     <!-- The top margin value equals half height of the blue box -->

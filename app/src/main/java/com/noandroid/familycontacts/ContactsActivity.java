@@ -74,6 +74,7 @@ public class ContactsActivity extends Fragment{
 
     private List<Map<String,Object>> getData() {
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+        nameList.clear();
         Cursor cursor = MainActivity.db.query(MainActivity.contactDao.getTablename(), MainActivity.contactDao.getAllColumns(), null, null, null, null,"pinyin ASC");
         while(cursor.moveToNext()) {
             Map<String,Object> map = new HashMap<String, Object>();
@@ -82,6 +83,7 @@ public class ContactsActivity extends Fragment{
             map.put("id",cursor.getString(cursor.getColumnIndex("_id")));
             map.put("pinyin",cursor.getString(cursor.getColumnIndex("PINYIN")));
             list.add(map);
+            //nameList.clear();
             nameList.add(cursor.getString(cursor.getColumnIndex("NAME")));
         }
         return list;
