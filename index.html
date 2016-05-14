@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Familycontacts-android by coolspring1293</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Familycontacts-android</h1>
+        <p>Products we create make us happier.</p>
+
+        <p class="view"><a href="https://github.com/coolspring1293/FamilyContacts-Android">View the Project on GitHub <small>coolspring1293/FamilyContacts-Android</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/coolspring1293/FamilyContacts-Android/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/coolspring1293/FamilyContacts-Android/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/coolspring1293/FamilyContacts-Android">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="android-project-in-2016" class="anchor" href="#android-project-in-2016" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Android Project in 2016</h1>
+
+<h1>
+<a id="family-contacts" class="anchor" href="#family-contacts" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Family Contacts</h1>
+
+<h2>
+<a id="by-北方有android绝世而独立" class="anchor" href="#by-%E5%8C%97%E6%96%B9%E6%9C%89android%E7%BB%9D%E4%B8%96%E8%80%8C%E7%8B%AC%E7%AB%8B" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>by <a href="https://github.com/coolspring1293/FamilyContacts-Android">北方有Android，绝世而独立</a>
+</h2>
+
+<hr>
+
+<h2>
+<a id="comprehension" class="anchor" href="#comprehension" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Comprehension</h2>
+
+<ol>
+<li>Concern messaging system address book compared to a focus on "family" this feature; weather, in the final
+For more data processing policy,for instance "Care" function is reflected in where? This is the core idea of the application.</li>
+<li>APP system and must have contacts to distinguish between (we built the exclusive property of the database application, rather than from the acquisition system contacts, etc.), but to achieve mutual contacts and import and export system.</li>
+<li>To consider the user experience, UI on reasonable and convenient. Consider optimizing software.</li>
+</ol>
+
+<h2>
+<a id="model-analysis" class="anchor" href="#model-analysis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Model: Analysis</h2>
+
+<ul>
+<li><p><strong>Requirement</strong>: 用户需要一个专门管理家庭 联系人的应用,而不是Yet Another Contacts App。有额外信息需要存储。
+<strong>Desicion</strong>: 应用使用独立的联系人和通话记录数据库,而不是系统自带的。</p></li>
+<li><p><strong>Requirement</strong>: 一个联系人可能会有多个手机号码。
+<strong>Desicion</strong>: 联系人应和手机号码分表存储,建立一对多关系。</p></li>
+<li><p><strong>Requirement</strong>: 需要根据联系人生成关怀短信:需要知道联系人所在地。如果让用户输入,显得太不方便。
+<strong>Desicion</strong>: 使用手机号码所在地推测联系人所在地。所以需要(1)联网查询手机号码所在地;或者(2)本地存储手机号段和地点的对应关系。考虑到(1)的用户体验不好,我们采用(2)。</p></li>
+<li><p><strong>Requirement</strong>: 需要根据联系人所在地天气 生成关怀短信:联网查询天气。查询天气需要知道联系人所在地的城市代码。
+<strong>Desicion</strong>: 存!</p></li>
+<li><p><strong>Requirement</strong>: 需要根据联系人所在地天气 生成关怀短信:联网查询天气。由于联系人空间局部性原理,查询到的天气一般可以复用,但须考虑有效性问题。
+<strong>Desicion</strong>: 天气情况和温度存到数据库里。 (1)额外加一个时间戳,表示天气的查询时间。(2)或者加一个“待查询”字段? </p></li>
+</ul>
+
+<h2>
+<a id="modelimplementation" class="anchor" href="#modelimplementation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Model:Implementation</h2>
+
+<h3>
+<a id="orm-greendao" class="anchor" href="#orm-greendao" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>ORM: greenDAO</h3>
+
+<blockquote>
+<p>ORM:ORM stands for "Object Relation Mapper". Significantly simplifies database programming.
+greenDAO:greenDAO is an open-source ORM specifically designed for Android apps.</p>
+</blockquote>
+
+<h3>
+<a id="greendao-workflow" class="anchor" href="#greendao-workflow" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>greenDAO Workflow</h3>
+
+<blockquote>
+<p>First: Write a model generator. 
+Second: Run the model generator. 
+Third: Use the model generator. </p>
+</blockquote>
+
+<p>Easy :-)</p>
+
+<h2>
+<a id="division-of-work" class="anchor" href="#division-of-work" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Division of work</h2>
+
+<table>
+<thead>
+<tr>
+<th>组员</th>
+<th align="left">任务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>刘旺、关璐</td>
+<td align="left">根据原型实现UI。重点实现的功能 实现Tab之间的切换,联系人列表和通话记录列表的设计和优化(比如让查询更加漂亮,字母列表等), 提高拨号键盘的交互效果。联系人详情页要实现图片模糊效果。</td>
+</tr>
+<tr>
+<td>刘思远</td>
+<td align="left">MVC中的M(Model):分析需求,和各成员交流功能实现的数据库需求,设计数据库、实现,并提供简单易用的接口。</td>
+</tr>
+<tr>
+<td>肖泽锋</td>
+<td align="left">接口主要分为两个方面——内部接口和外部接口,内部接口处理UI和数据库之间的通信操作,外部接口实现获取天气、归属地等等。另外负责“黑名单”的设计。</td>
+</tr>
+<tr>
+<td>程健</td>
+<td align="left">实现特殊功能,比如联系人导入导出。</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="presentation" class="anchor" href="#presentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Presentation</h2>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/coolspring1293">coolspring1293</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
