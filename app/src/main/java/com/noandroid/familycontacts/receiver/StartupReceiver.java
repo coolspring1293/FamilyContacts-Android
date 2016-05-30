@@ -1,14 +1,16 @@
-package com.noandroid.familycontacts;
+package com.noandroid.familycontacts.receiver;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.noandroid.familycontacts.service.PhoneMonitorSevice;
+import com.noandroid.familycontacts.R;
+import com.noandroid.familycontacts.service.WeatherService;
 
 /**
  * Created by Hsiaotsefeng on 2016/4/7.

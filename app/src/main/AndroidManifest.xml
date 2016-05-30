@@ -45,13 +45,13 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".WeatherService"
+            android:name=".service.WeatherService"
             android:enabled="true" />
         <service
-            android:name=".PhoneMonitorSevice"
+            android:name=".service.PhoneMonitorSevice"
             android:enabled="true" />
 
-        <receiver android:name=".StartupReceiver">
+        <receiver android:name=".receiver.StartupReceiver">
             <intent-filter>
                 <action android:name="com.noandroid.familycontacts.START_SERVICE" />
             </intent-filter>

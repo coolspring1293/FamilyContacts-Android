@@ -45,7 +45,6 @@ public class MainActivity extends FragmentActivity
     public static RecordDao recordDao;
     public static TelephoneDao telDao;
     public static CityDao cityDao;
-    public static BlacklistDao blacklistDao;
 
     /*手势识别*/
     public static GestureDetector detector;
@@ -68,7 +67,6 @@ public class MainActivity extends FragmentActivity
         // enable status bar tint
         tintManager.setStatusBarTintEnabled(true);
         // enable navigation bar tint
-
         tintManager.setTintColor(Color.parseColor("#9900FF"));
         tintManager.setNavigationBarTintEnabled(true);
 
@@ -106,6 +104,7 @@ public class MainActivity extends FragmentActivity
         mIndicator.setOnIndicateListener(this);
     }
 
+    // FragmentIndicator.OnIndicateListener
     @Override
     public void OnIndicate(View v, int which) {
         switchFragment(which, false);
@@ -119,8 +118,7 @@ public class MainActivity extends FragmentActivity
             else
                 ft.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_right_out);
         }
-        for (int i = 0; i < mFragments.length; ++i)
-            ft.hide(mFragments[i]);
+        for (Fragment mFragment : mFragments) ft.hide(mFragment);
         ft.show(mFragments[which]);
         ft.commit();
         if (mFragments[which] instanceof CallLogFragment)
@@ -129,6 +127,25 @@ public class MainActivity extends FragmentActivity
         mark = which;
     }
 
+
+
+    // GestureDetector.OnGestureListener
+    @Override
+    public boolean onDown(MotionEvent arg0) {
+        return false;
+    }
+    @Override
+    public void onShowPress(MotionEvent arg0) {}
+    @Override
+    public boolean onSingleTapUp(MotionEvent arg0) {
+        return false;
+    }
+    @Override
+    public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,float arg3) {
+        return false;
+    }
+    @Override
+    public void onLongPress(MotionEvent arg0) {}
     @Override
     public boolean onFling(MotionEvent arg0, MotionEvent arg1, float arg2, float arg3) {
 
@@ -141,26 +158,12 @@ public class MainActivity extends FragmentActivity
         }
         return false;
     }
-    @Override
-    public void onShowPress(MotionEvent arg0) {}
-    @Override
-    public void onLongPress(MotionEvent arg0) {}
-    @Override
-    public boolean onSingleTapUp(MotionEvent arg0) {
-        return false;
-    }
-    @Override
-    public boolean onDown(MotionEvent arg0) {
-        return false;
-    }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Toast.makeText(getBaseContext(),"----onFling---",Toast.LENGTH_SHORT);
+        Toast.makeText(getBaseContext(),"----onFling---",Toast.LENGTH_SHORT).show();
         return detector.onTouchEvent(event);
-    }
-    @Override
-    public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,float arg3) {
-        return false;
     }
 
     @Override
@@ -169,6 +172,8 @@ public class MainActivity extends FragmentActivity
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+    // NavigationView.OnNavigationItemSelectedListener
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

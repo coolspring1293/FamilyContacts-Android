@@ -1,4 +1,4 @@
-package com.noandroid.familycontacts;
+package com.noandroid.familycontacts.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.telecom.Call;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -22,8 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import de.greenrobot.dao.query.Query;
-import de.greenrobot.dao.query.QueryBuilder;
-import de.greenrobot.dao.query.WhereCondition;
 
 /**
  * Created by Hsiao on 2016/4/15.

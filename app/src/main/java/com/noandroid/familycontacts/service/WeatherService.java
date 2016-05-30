@@ -1,9 +1,8 @@
-package com.noandroid.familycontacts;
+package com.noandroid.familycontacts.service;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -25,17 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.noandroid.familycontacts.ContactDetailsActivity;
+import com.noandroid.familycontacts.R;
 import com.noandroid.familycontacts.model.City;
 import com.noandroid.familycontacts.model.CityDao;
-import com.noandroid.familycontacts.model.Contact;
 import com.noandroid.familycontacts.model.DaoMaster;
 import com.noandroid.familycontacts.model.DaoSession;
-import com.noandroid.familycontacts.model.DatabaseHelper;
-import com.noandroid.familycontacts.model.TelInitialDao;
 import com.noandroid.familycontacts.model.Telephone;
 import com.noandroid.familycontacts.model.TelephoneDao;
-
-import de.greenrobot.dao.query.QueryBuilder;
 
 /**
  * Created by Hsiaotsefeng on 2016/4/7.
@@ -43,9 +39,9 @@ import de.greenrobot.dao.query.QueryBuilder;
 public class WeatherService extends IntentService {
     public static final String ACTION = "ACTION";
     public static final String CITYCODE = "CITYCODE";
-    public static final String EXTRA_WEATHER_CITYCODE = "com.noandroid.familycontacts.WeatherService.EXTRA_CITYCODE";
-    public static final String EXTRA_WEATHER_TEMPERATURE = "com.noandroid.familycontacts.WeatherService.EXTRA_TEMPERATURE";
-    public static final String EXTRA_WEATHER_INFO = "com.noandroid.familycontacts.WeatherService.EXTRA_INFO";
+    public static final String EXTRA_WEATHER_CITYCODE = "com.noandroid.familycontacts.service.WeatherService.EXTRA_CITYCODE";
+    public static final String EXTRA_WEATHER_TEMPERATURE = "com.noandroid.familycontacts.service.WeatherService.EXTRA_TEMPERATURE";
+    public static final String EXTRA_WEATHER_INFO = "com.noandroid.familycontacts.service.WeatherService.EXTRA_INFO";
     public static final int REFRESH_STATION_LIST = 0;
     public static final int REFRESH_REAL_WEATHER = 1;
 
