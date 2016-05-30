@@ -6,28 +6,23 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.noandroid.familycontacts.model.Contact;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.util.Log;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -36,11 +31,11 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
  * Created by 关璐 on 2016/3/31.
  * Modified by liuw53 on 2016/5/1.
  */
-public class ContactsActivity extends Fragment{
+public class ContactsFragment extends Fragment {
 
     private View mParent;
     private FragmentActivity mActivity;
-    private List<Map<String,Object>> data;
+    private List<Map<String, Object>> data;
     private StickyListHeadersListView stickyList;
     private final int REQUESTCODE = 1;
     private ImageButton button_add_contact;
@@ -51,8 +46,8 @@ public class ContactsActivity extends Fragment{
     private List<String> nameList = new ArrayList<>();
 
 
-    public static ContactsActivity newInstance(int index) {
-        ContactsActivity f = new ContactsActivity();
+    public static ContactsFragment newInstance(int index) {
+        ContactsFragment f = new ContactsFragment();
         Bundle args = new Bundle();
         args.putInt("index", index);
         f.setArguments(args);
@@ -65,30 +60,30 @@ public class ContactsActivity extends Fragment{
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_contacts, container, false);
         return view;
     }
 
 
-    private List<Map<String,Object>> getData() {
-        List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+    private List<Map<String, Object>> getData() {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         nameList.clear();
-        Cursor cursor = MainActivity.db.query(MainActivity.contactDao.getTablename(), MainActivity.contactDao.getAllColumns(), null, null, null, null,"pinyin ASC");
-        while(cursor.moveToNext()) {
-            Map<String,Object> map = new HashMap<String, Object>();
-            map.put("name",cursor.getString(cursor.getColumnIndex("NAME")));
-            map.put("title",cursor.getString(cursor.getColumnIndex("RELATIONSHIP")));
-            map.put("id",cursor.getString(cursor.getColumnIndex("_id")));
-            map.put("pinyin",cursor.getString(cursor.getColumnIndex("PINYIN")));
+        index.clear();
+        Cursor cursor = MainActivity.db.query(MainActivity.contactDao.getTablename(), MainActivity.contactDao.getAllColumns(), null, null, null, null, "pinyin ASC");
+        while (cursor.moveToNext()) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("name", cursor.getString(cursor.getColumnIndex("NAME")));
+            map.put("title", cursor.getString(cursor.getColumnIndex("RELATIONSHIP")));
+            map.put("id", cursor.getString(cursor.getColumnIndex("_id")));
+            map.put("pinyin", cursor.getString(cursor.getColumnIndex("PINYIN")));
             list.add(map);
-            //nameList.clear();
             nameList.add(cursor.getString(cursor.getColumnIndex("NAME")));
+            index.add(map.get("name").toString());
         }
         return list;
     }
-
 
 
     static class ViewHoder {
@@ -97,37 +92,41 @@ public class ContactsActivity extends Fragment{
     }
 
     public class MyAdapter extends BaseAdapter {
-        private LayoutInflater mInflater =null;
+        private LayoutInflater mInflater = null;
 
         private MyAdapter(Context context) {
             this.mInflater = LayoutInflater.from(context);
         }
+
         @Override
         public int getCount() {
             return data.size();
         }
+
         @Override
         public Object getItem(int position) {
             return position;
         }
+
         @Override
         public long getItemId(int position) {
             return position;
         }
+
         @Override
         public View getView(int position, View converView, ViewGroup parent) {
             ViewHoder hoder = null;
-            if(converView == null) {
+            if (converView == null) {
                 hoder = new ViewHoder();
 
-                converView = mInflater.inflate(R.layout.list_item,null);
-                hoder.name = (TextView)converView.findViewById(R.id.contact_name);
-                hoder.title=(TextView)converView.findViewById(R.id.contact_title);
+                converView = mInflater.inflate(R.layout.list_item, null);
+                hoder.name = (TextView) converView.findViewById(R.id.contact_name);
+                hoder.title = (TextView) converView.findViewById(R.id.contact_title);
                 converView.setTag(hoder);
             } else {
-                hoder=(ViewHoder)converView.getTag();
+                hoder = (ViewHoder) converView.getTag();
             }
-            hoder.name.setText((String)data.get(position).get("name"));
+            hoder.name.setText((String) data.get(position).get("name"));
             hoder.title.setText((String) data.get(position).get("title"));
             return converView;
         }
@@ -139,7 +138,7 @@ public class ContactsActivity extends Fragment{
         super.onActivityCreated(savedInstanceState);
         //MainActivity.contactDao.deleteAll();
 
-        button_add_contact = (ImageButton)getView().findViewById(R.id.contact_add);
+        button_add_contact = (ImageButton) getView().findViewById(R.id.contact_add);
 
         button_add_contact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,50 +158,40 @@ public class ContactsActivity extends Fragment{
             }
         });
 
-        button_search_contact = (ImageButton)getView().findViewById(R.id.contact_search);
-        search_text=(AutoCompleteTextView)getView().findViewById(R.id.search_text);
-
+        button_search_contact = (ImageButton) getView().findViewById(R.id.contact_search);
+        search_text = (AutoCompleteTextView) getView().findViewById(R.id.search_text);
 
 
         button_search_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(search_text.getVisibility()==View.GONE) {
+                if (search_text.getVisibility() == View.GONE) {
                     search_text.setVisibility(View.VISIBLE);
 
-                }else {
+                } else {
                     search_text.setVisibility(View.GONE);
 
                 }
             }
         });
 
-        button_search_contact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(search_text.getVisibility()==View.GONE) {
-                    search_text.setVisibility(View.VISIBLE);
-
-                }else {
-                    search_text.setVisibility(View.GONE);
-                }
-            }
-        });
 
         search_text.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                //Toast.makeText(getActivity(),"click",Toast.LENGTH_SHORT).show();
                 ListView listview = (ListView) parent;
-                ArrayAdapter<String> adapter  =  (ArrayAdapter<String>) parent.getAdapter();
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) parent.getAdapter();
                 TextView textview = (TextView) view;
 
                 //Toast.makeText(getContext(),parent.getItemAtPosition(position).toString(),Toast.LENGTH_SHORT).show();
-                int a  = index.indexOf(parent.getItemAtPosition(position).toString());
+                String name = parent.getItemAtPosition(position).toString();
+                int a = index.indexOf(name);
+                Log.d("INDEX", String.valueOf(a));
                 stickyList.setSelection(a);
-            }});
+            }
+        });
     }
 
     /**
@@ -210,11 +199,11 @@ public class ContactsActivity extends Fragment{
      */
     private void updateData() {
         data = getData();
-        stickyList = (StickyListHeadersListView)getView().findViewById(R.id.test_list);
+        stickyList = (StickyListHeadersListView) getView().findViewById(R.id.test_list);
         MyTextAdapter adapter = new MyTextAdapter(getActivity());
         stickyList.setAdapter(adapter);
 
-        ArrayAdapter names = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,nameList);
+        ArrayAdapter names = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, nameList);
 
         search_text.setAdapter(names);
         search_text.setThreshold(1);
@@ -226,7 +215,6 @@ public class ContactsActivity extends Fragment{
         updateData();
         search_text.setText("");
     }
-
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,8 +255,8 @@ public class ContactsActivity extends Fragment{
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            index.add(position,data.get(position).get("name").toString());
-            holder.name.setText((String)data.get(position).get("name"));
+
+            holder.name.setText((String) data.get(position).get("name"));
             holder.title.setText((String) data.get(position).get("title"));
             stickyList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -301,8 +289,8 @@ public class ContactsActivity extends Fragment{
                 holder = (HeaderViewHolder) convertView.getTag();
             }
             //set header text as first char in name
-            if(data.get(position).get("pinyin")!=null) {
-                String headerText = "" +  Character.toUpperCase(data.get(position).get("pinyin").toString().subSequence(0,1).charAt(0));
+            if (data.get(position).get("pinyin") != null) {
+                String headerText = "" + Character.toUpperCase(data.get(position).get("pinyin").toString().subSequence(0, 1).charAt(0));
                 holder.text.setText(headerText);
             }
 
@@ -325,6 +313,7 @@ public class ContactsActivity extends Fragment{
         }
 
     }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
